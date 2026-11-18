@@ -45,14 +45,14 @@ function CategoryForm({ category, onCancel, onSaved }) {
     }
 
     const inputClass =
-        "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm";
+        "w-full rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-3 py-2.5 text-sm";
 
     return (
         <form
             onSubmit={handleSubmit}
-            className="mt-6 rounded-xl border border-slate-200 bg-white p-4 sm:p-5"
+            className="mt-6 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 sm:p-5"
         >
-            <h2 className="text-lg font-bold text-slate-900">
+            <h2 className="text-lg font-bold text-[var(--color-text-strong)]">
                 {isEditing ? `تعديل: ${category.name}` : "تصنيف جديد"}
             </h2>
 
@@ -60,7 +60,7 @@ function CategoryForm({ category, onCancel, onSaved }) {
                 <div>
                     <label
                         htmlFor="category-name"
-                        className="mb-1.5 block text-sm font-semibold text-slate-700"
+                        className="mb-1.5 block text-sm font-semibold text-[var(--color-text-secondary)]"
                     >
                         اسم التصنيف
                     </label>
@@ -69,7 +69,7 @@ function CategoryForm({ category, onCancel, onSaved }) {
                         required
                         value={name}
                         onChange={(e) => handleNameChange(e.target.value)}
-                        placeholder="Baby Collection"
+                        placeholder="Running Shoes"
                         className={inputClass}
                     />
                 </div>
@@ -77,7 +77,7 @@ function CategoryForm({ category, onCancel, onSaved }) {
                 <div>
                     <label
                         htmlFor="category-slug"
-                        className="mb-1.5 block text-sm font-semibold text-slate-700"
+                        className="mb-1.5 block text-sm font-semibold text-[var(--color-text-secondary)]"
                     >
                         الـ slug (جزء من رابط المتجر)
                     </label>
@@ -90,17 +90,17 @@ function CategoryForm({ category, onCancel, onSaved }) {
                             setSlugTouched(true);
                             setSlug(e.target.value.toLowerCase());
                         }}
-                        placeholder="babycollection"
+                        placeholder="runningshoes"
                         className={`${inputClass} text-start`}
                     />
-                    <p dir="ltr" className="mt-1.5 text-start text-xs text-slate-400">
+                    <p dir="ltr" className="mt-1.5 text-start text-xs text-[var(--color-subtle)]">
                         /products?category={slug || "…"}
                     </p>
                 </div>
             </div>
 
             {isEditing && slug !== category.slug && (
-                <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                <p className="mt-4 rounded-lg bg-[var(--color-warning-bg)] px-3 py-2 text-sm text-[var(--color-warning-text)]">
                     تغيير الـ slug هيغيّر رابط التصنيف، فأي رابط قديم عليه
                     (في الناف بار أو الصفحة الرئيسية) محتاج يتحدّث.
                 </p>
@@ -109,7 +109,7 @@ function CategoryForm({ category, onCancel, onSaved }) {
             {error && (
                 <p
                     role="alert"
-                    className="mt-4 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700"
+                    className="mt-4 rounded-lg bg-[var(--color-rose-50)] px-3 py-2 text-sm text-[var(--color-rose-700)]"
                 >
                     {error}
                 </p>
@@ -119,7 +119,7 @@ function CategoryForm({ category, onCancel, onSaved }) {
                 <button
                     type="submit"
                     disabled={saving}
-                    className="rounded-lg bg-[#172b45] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#223d5f] disabled:opacity-60"
+                    className="rounded-lg bg-[var(--color-navy)] px-5 py-2.5 text-sm font-bold text-[var(--color-on-primary)] hover:bg-[var(--color-navy-hover)] disabled:opacity-60"
                 >
                     {saving ? "جاري الحفظ..." : "حفظ التصنيف"}
                 </button>
@@ -127,7 +127,7 @@ function CategoryForm({ category, onCancel, onSaved }) {
                     type="button"
                     onClick={onCancel}
                     disabled={saving}
-                    className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                    className="rounded-lg border border-[var(--color-border-strong)] px-5 py-2.5 text-sm font-semibold text-[var(--color-text-secondary)] hover:bg-[var(--color-page)]"
                 >
                     إلغاء
                 </button>
@@ -189,10 +189,10 @@ export default function AdminCategories() {
         <div>
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">
+                    <h1 className="text-2xl font-bold text-[var(--color-text-strong)]">
                         التصنيفات
                     </h1>
-                    <p className="mt-1 text-sm text-slate-500">
+                    <p className="mt-1 text-sm text-[var(--color-muted)]">
                         التصنيفات اللي بتظهر في المتجر وبتختار منها لكل منتج.
                     </p>
                 </div>
@@ -201,7 +201,7 @@ export default function AdminCategories() {
                     <button
                         type="button"
                         onClick={() => setEditing("new")}
-                        className="rounded-lg bg-[#172b45] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#223d5f]"
+                        className="rounded-lg bg-[var(--color-navy)] px-4 py-2.5 text-sm font-bold text-[var(--color-on-primary)] hover:bg-[var(--color-navy-hover)]"
                     >
                         إضافة تصنيف
                     </button>
@@ -218,13 +218,13 @@ export default function AdminCategories() {
             )}
 
             {loading && (
-                <p className="mt-8 text-sm text-slate-500">جاري التحميل...</p>
+                <p className="mt-8 text-sm text-[var(--color-muted)]">جاري التحميل...</p>
             )}
 
             {error && (
                 <p
                     role="alert"
-                    className="mt-6 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700"
+                    className="mt-6 rounded-lg bg-[var(--color-rose-50)] px-3 py-2 text-sm text-[var(--color-rose-700)]"
                 >
                     {error}
                 </p>
@@ -233,23 +233,23 @@ export default function AdminCategories() {
             {actionError && (
                 <p
                     role="alert"
-                    className="mt-6 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700"
+                    className="mt-6 rounded-lg bg-[var(--color-rose-50)] px-3 py-2 text-sm text-[var(--color-rose-700)]"
                 >
                     {actionError}
                 </p>
             )}
 
             {!loading && !error && categories.length === 0 && (
-                <p className="mt-10 text-center text-sm text-slate-500">
+                <p className="mt-10 text-center text-sm text-[var(--color-muted)]">
                     لسه مفيش تصنيفات. اضغط «إضافة تصنيف» وابدأ بأول واحد.
                 </p>
             )}
 
             {!loading && categories.length > 0 && (
-                <div className="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                <div className="mt-6 overflow-x-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
                     <table className="w-full min-w-lg text-sm">
                         <thead>
-                            <tr className="border-b border-slate-200 bg-slate-50 text-xs text-slate-500">
+                            <tr className="border-b border-[var(--color-border)] bg-[var(--color-page)] text-xs text-[var(--color-muted)]">
                                 <th className="px-4 py-3 text-start font-semibold">
                                     الاسم
                                 </th>
@@ -268,17 +268,17 @@ export default function AdminCategories() {
                             {categories.map((category) => (
                                 <tr
                                     key={category.id}
-                                    className="border-b border-slate-100 last:border-0"
+                                    className="border-b border-[var(--color-border-soft)] last:border-0"
                                 >
-                                    <td className="px-4 py-3 font-semibold text-slate-900">
+                                    <td className="px-4 py-3 font-semibold text-[var(--color-text-strong)]">
                                         {category.name}
                                     </td>
-                                    <td className="px-4 py-3 text-slate-600">
+                                    <td className="px-4 py-3 text-[var(--color-text-muted)]">
                                         <span dir="ltr" className="inline-block">
                                             {category.slug}
                                         </span>
                                     </td>
-                                    <td className="px-4 py-3 text-slate-700">
+                                    <td className="px-4 py-3 text-[var(--color-text-secondary)]">
                                         {category.productsCount}
                                     </td>
                                     <td className="px-4 py-3 text-end">
@@ -286,7 +286,7 @@ export default function AdminCategories() {
                                             <button
                                                 type="button"
                                                 onClick={() => setEditing(category)}
-                                                className="font-semibold text-blue-600 hover:underline"
+                                                className="font-semibold text-[var(--color-primary)] hover:underline"
                                             >
                                                 تعديل
                                             </button>
@@ -302,7 +302,7 @@ export default function AdminCategories() {
                                                         ? "انقل المنتجات لتصنيف تاني الأول"
                                                         : undefined
                                                 }
-                                                className="font-semibold text-rose-600 hover:underline disabled:cursor-not-allowed disabled:text-slate-300 disabled:no-underline"
+                                                className="font-semibold text-[var(--color-rose-600)] hover:underline disabled:cursor-not-allowed disabled:text-[var(--color-slate-300)] disabled:no-underline"
                                             >
                                                 حذف
                                             </button>

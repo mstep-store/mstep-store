@@ -54,19 +54,18 @@ export default function Login() {
     return (
         <div
             dir="rtl"
-            className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10"
+            className="flex min-h-screen items-center justify-center bg-[var(--color-page)] px-4 py-10"
         >
             <div className="w-full max-w-sm">
                 <p
                     dir="ltr"
-                    className="mb-6 text-center text-3xl font-extrabold tracking-tight text-[#172b45]"
+                    className="mb-6 text-center text-3xl font-extrabold tracking-tight text-[var(--color-navy)]"
                 >
-                    Kids <span className="text-blue-500">&amp;</span> Co
-                    <span className="text-pink-400">.</span>
+                    M<span className="text-[var(--color-muted)]">.</span>STEP
                 </p>
 
-                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                    <h1 className="text-xl font-bold text-slate-900">
+                <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 shadow-sm">
+                    <h1 className="text-xl font-bold text-[var(--color-text-strong)]">
                         تسجيل دخول الإدارة
                     </h1>
 
@@ -74,7 +73,7 @@ export default function Login() {
                         <div className="mt-4">
                             <p
                                 role="alert"
-                                className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900"
+                                className="rounded-lg bg-[var(--color-warning-bg)] px-3 py-2 text-sm text-[var(--color-warning-text)]"
                             >
                                 الحساب{" "}
                                 <span dir="ltr" className="font-semibold">
@@ -87,7 +86,7 @@ export default function Login() {
                             <button
                                 type="button"
                                 onClick={signOut}
-                                className="mt-4 w-full rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                                className="mt-4 w-full rounded-lg border border-[var(--color-border-strong)] px-4 py-2.5 text-sm font-semibold text-[var(--color-text-secondary)] hover:bg-[var(--color-page)]"
                             >
                                 تسجيل الخروج
                             </button>
@@ -97,7 +96,7 @@ export default function Login() {
                             <div>
                                 <label
                                     htmlFor="admin-email"
-                                    className="mb-1.5 block text-sm font-semibold text-slate-700"
+                                    className="mb-1.5 block text-sm font-semibold text-[var(--color-text-secondary)]"
                                 >
                                     البريد الإلكتروني
                                 </label>
@@ -109,14 +108,14 @@ export default function Login() {
                                     autoComplete="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-start text-sm"
+                                    className="w-full rounded-lg border border-[var(--color-border-strong)] px-3 py-2.5 text-start text-sm"
                                 />
                             </div>
 
                             <div>
                                 <label
                                     htmlFor="admin-password"
-                                    className="mb-1.5 block text-sm font-semibold text-slate-700"
+                                    className="mb-1.5 block text-sm font-semibold text-[var(--color-text-secondary)]"
                                 >
                                     كلمة المرور
                                 </label>
@@ -128,14 +127,14 @@ export default function Login() {
                                     autoComplete="current-password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-start text-sm"
+                                    className="w-full rounded-lg border border-[var(--color-border-strong)] px-3 py-2.5 text-start text-sm"
                                 />
                             </div>
 
                             {error && (
                                 <p
                                     role="alert"
-                                    className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700"
+                                    className="rounded-lg bg-[var(--color-rose-50)] px-3 py-2 text-sm text-[var(--color-rose-700)]"
                                 >
                                     {error}
                                 </p>
@@ -144,7 +143,7 @@ export default function Login() {
                             <button
                                 type="submit"
                                 disabled={submitting || loading}
-                                className="w-full rounded-lg bg-[#172b45] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#223d5f] disabled:opacity-60"
+                                className="w-full rounded-lg bg-[var(--color-navy)] px-4 py-2.5 text-sm font-bold text-[var(--color-on-primary)] transition-colors hover:bg-[var(--color-navy-hover)] disabled:opacity-60"
                             >
                                 {submitting ? "جاري الدخول..." : "تسجيل الدخول"}
                             </button>

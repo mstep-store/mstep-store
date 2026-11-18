@@ -260,14 +260,14 @@ function ProductDetails() {
             <main className="min-h-[60vh] px-4 py-24">
                 <div className="mx-auto max-w-6xl animate-pulse">
                     <div className="grid gap-8 md:grid-cols-2">
-                        <div className="aspect-4/5 rounded-3xl bg-slate-100" />
+                        <div className="aspect-4/5 rounded-3xl bg-[var(--color-slate-100)]" />
                         <div className="space-y-5 py-6">
-                            <div className="h-4 w-28 rounded bg-slate-100" />
-                            <div className="h-9 w-3/4 rounded bg-slate-100" />
-                            <div className="h-7 w-36 rounded bg-slate-100" />
-                            <div className="h-20 rounded bg-slate-100" />
-                            <div className="h-12 rounded bg-slate-100" />
-                            <div className="h-12 rounded bg-slate-100" />
+                            <div className="h-4 w-28 rounded bg-[var(--color-slate-100)]" />
+                            <div className="h-9 w-3/4 rounded bg-[var(--color-slate-100)]" />
+                            <div className="h-7 w-36 rounded bg-[var(--color-slate-100)]" />
+                            <div className="h-20 rounded bg-[var(--color-slate-100)]" />
+                            <div className="h-12 rounded bg-[var(--color-slate-100)]" />
+                            <div className="h-12 rounded bg-[var(--color-slate-100)]" />
                         </div>
                     </div>
                 </div>
@@ -278,21 +278,21 @@ function ProductDetails() {
     if (error || !product) {
         return (
             <main className="flex min-h-[55vh] flex-col items-center justify-center px-4 text-center">
-                <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-pink-50 text-pink-500">
+                <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-[var(--color-pink-50)] text-[var(--color-pink)]">
                     <ShoppingBag size={34} />
                 </div>
 
-                <h1 className="mb-3 text-2xl font-extrabold text-slate-800">
+                <h1 className="mb-3 text-2xl font-extrabold text-[var(--color-text)]">
                     {error ? "Something Went Wrong" : "Product Not Found"}
                 </h1>
 
-                <p className="mb-6 text-slate-500">
+                <p className="mb-6 text-[var(--color-muted)]">
                     {error || "This product does not exist or is no longer available."}
                 </p>
 
                 <Link
                     to="/products"
-                    className="rounded-xl bg-blue-600 px-6 py-3 font-bold text-white transition hover:bg-blue-700"
+                    className="rounded-xl bg-[var(--color-primary)] px-6 py-3 font-bold text-[var(--color-on-primary)] transition hover:bg-[var(--color-primary-dark)]"
                 >
                     Browse Products
                 </Link>
@@ -303,22 +303,22 @@ function ProductDetails() {
     const hasVariants = variants.length > 0;
 
     return (
-        <main className="min-h-screen bg-white px-4 py-6 sm:px-6 lg:px-8">
+        <main className="min-h-screen bg-[var(--color-surface)] px-4 py-6 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-7xl">
                 {/* Breadcrumb */}
-                <nav className="mb-7 flex flex-wrap items-center gap-2 text-sm text-slate-500">
-                    <Link to="/" className="transition hover:text-blue-600">
+                <nav className="mb-7 flex flex-wrap items-center gap-2 text-sm text-[var(--color-muted)]">
+                    <Link to="/" className="transition hover:text-[var(--color-primary)]">
                         Home
                     </Link>
                     <span>/</span>
                     <Link
                         to="/products"
-                        className="transition hover:text-blue-600"
+                        className="transition hover:text-[var(--color-primary)]"
                     >
                         Products
                     </Link>
                     <span>/</span>
-                    <span className="max-w-55 truncate font-semibold text-slate-800">
+                    <span className="max-w-55 truncate font-semibold text-[var(--color-text)]">
                         {product.name}
                     </span>
                 </nav>
@@ -326,7 +326,7 @@ function ProductDetails() {
                 <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-14">
                     {/* Product images */}
                     <section className="min-w-0">
-                        <div className="relative overflow-hidden rounded-3xl bg-slate-50 w-75 md:w-100">
+                        <div className="relative overflow-hidden rounded-3xl bg-[var(--color-page)] w-75 md:w-100">
                             {currentImage?.image_url ? (
                                 <img
                                     src={currentImage.image_url}
@@ -334,7 +334,7 @@ function ProductDetails() {
                                     className="aspect-4/5 w-full object-cover"
                                 />
                             ) : (
-                                <div className="flex aspect-4/5 items-center justify-center text-slate-400">
+                                <div className="flex aspect-4/5 items-center justify-center text-[var(--color-subtle)]">
                                     <div className="text-center">
                                         <ShoppingBag
                                             className="mx-auto mb-3"
@@ -345,8 +345,8 @@ function ProductDetails() {
                                 </div>
                             )}
 
-                            <span className="absolute left-4 top-4 rounded-full bg-white/95 px-4 py-2 text-xs font-bold text-blue-700 shadow-sm">
-                                Kids & Co
+                            <span className="absolute left-4 top-4 rounded-full bg-[var(--color-white-95)] px-4 py-2 text-xs font-bold text-[var(--color-primary-dark)] shadow-sm">
+                                M.STEP
                             </span>
 
                             <button
@@ -358,7 +358,7 @@ function ProductDetails() {
                                         : "Add to favorites"
                                 }
                                 aria-pressed={favorite}
-                                className={`absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white shadow-sm transition hover:scale-105 ${favorite ? "text-pink-500" : "text-slate-500"
+                                className={`absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-surface)] shadow-sm transition hover:scale-105 ${favorite ? "text-[var(--color-pink)]" : "text-[var(--color-muted)]"
                                     }`}
                             >
                                 <Heart
@@ -378,8 +378,8 @@ function ProductDetails() {
                                         aria-label={`View image ${index + 1}`}
                                         aria-pressed={selectedImage === index}
                                         className={`shrink-0 overflow-hidden rounded-2xl border-2 transition ${selectedImage === index
-                                                ? "border-blue-600 ring-2 ring-blue-100"
-                                                : "border-transparent hover:border-pink-200"
+                                                ? "border-[var(--color-primary)] ring-2 ring-[var(--color-blue-100)]"
+                                                : "border-transparent hover:border-[var(--color-pink-200)]"
                                             }`}
                                     >
                                         <img
@@ -399,17 +399,17 @@ function ProductDetails() {
                     {/* Product information */}
                     <section className="py-1 lg:py-4">
                         {product.categories?.name && (
-                            <p className="mb-3 text-sm font-bold text-pink-500">
+                            <p className="mb-3 text-sm font-bold text-[var(--color-pink)]">
                                 {product.categories.name}
                             </p>
                         )}
 
-                        <h1 className="mb-4 text-3xl font-extrabold leading-tight text-slate-900 sm:text-4xl">
+                        <h1 className="mb-4 text-3xl font-extrabold leading-tight text-[var(--color-text-strong)] sm:text-4xl">
                             {product.name}
                         </h1>
 
                         <div className="mb-5 flex flex-wrap items-center gap-3">
-                            <p className="text-3xl font-extrabold text-blue-700">
+                            <p className="text-3xl font-extrabold text-[var(--color-primary-dark)]">
                                 {price.toLocaleString("en-US", {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2,
@@ -419,7 +419,7 @@ function ProductDetails() {
 
                             {priceInfo.discounted && (
                                 <>
-                                    <p className="text-lg font-medium text-slate-400 line-through">
+                                    <p className="text-lg font-medium text-[var(--color-subtle)] line-through">
                                         {priceInfo.original.toLocaleString(
                                             "en-US",
                                             {
@@ -429,31 +429,31 @@ function ProductDetails() {
                                         )}{" "}
                                         EGP
                                     </p>
-                                    <span className="rounded-full bg-rose-50 px-3 py-1.5 text-sm font-bold text-rose-600">
+                                    <span className="rounded-full bg-[var(--color-rose-50)] px-3 py-1.5 text-sm font-bold text-[var(--color-rose-600)]">
                                         -{priceInfo.percentOff}%
                                     </span>
                                 </>
                             )}
 
-                            <span className="rounded-full bg-pink-50 px-3 py-1.5 text-xs font-bold text-pink-600">
-                                Style and Comfort for Your Little One
+                            <span className="rounded-full bg-[var(--color-pink-50)] px-3 py-1.5 text-xs font-bold text-[var(--color-pink-dark)]">
+                                Style and Comfort in Every Step
                             </span>
                         </div>
 
                         {product.description && (
-                            <p className="mb-7 whitespace-pre-line text-base leading-8 text-slate-600">
+                            <p className="mb-7 whitespace-pre-line text-base leading-8 text-[var(--color-text-muted)]">
                                 {product.description}
                             </p>
                         )}
 
-                        <div className="mb-6 border-t border-slate-100 pt-6">
+                        <div className="mb-6 border-t border-[var(--color-border-soft)] pt-6">
                             <div className="mb-3 flex items-center justify-between gap-3">
-                                <h2 className="font-bold text-slate-900">
+                                <h2 className="font-bold text-[var(--color-text-strong)]">
                                     Choose a Color
                                 </h2>
 
                                 {selectedColor !== null && (
-                                    <span className="text-sm text-slate-500">
+                                    <span className="text-sm text-[var(--color-muted)]">
                                         {
                                             product.product_colors?.find(
                                                 (color) =>
@@ -465,7 +465,7 @@ function ProductDetails() {
                             </div>
 
                             {colors.length === 0 ? (
-                                <p className="text-sm text-slate-500">
+                                <p className="text-sm text-[var(--color-muted)]">
                                     {hasVariants
                                         ? "No colors are available for this product."
                                         : "This product is currently out of stock."}
@@ -482,27 +482,27 @@ function ProductDetails() {
                                                 selectedColor === color.id
                                             }
                                             className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 transition ${selectedColor === color.id
-                                                    ? "border-blue-600 bg-blue-50 ring-2 ring-blue-100"
-                                                    : "border-slate-200 hover:border-pink-300"
+                                                    ? "border-[var(--color-primary)] bg-[var(--color-blue-50)] ring-2 ring-[var(--color-blue-100)]"
+                                                    : "border-[var(--color-border)] hover:border-[var(--color-pink-300)]"
                                                 }`}
                                         >
                                             <span
-                                                className="h-5 w-5 rounded-full border border-black/10"
+                                                className="h-5 w-5 rounded-full border border-[var(--color-black-10)]"
                                                 style={{
                                                     backgroundColor:
                                                         color.hex_code ||
-                                                        "#e2e8f0",
+                                                        "var(--color-border)",
                                                 }}
                                             />
 
-                                            <span className="text-sm font-semibold text-slate-700">
+                                            <span className="text-sm font-semibold text-[var(--color-text-secondary)]">
                                                 {color.name}
                                             </span>
 
                                             {selectedColor === color.id && (
                                                 <Check
                                                     size={15}
-                                                    className="text-blue-600"
+                                                    className="text-[var(--color-primary)]"
                                                 />
                                             )}
                                         </button>
@@ -511,23 +511,23 @@ function ProductDetails() {
                             )}
                         </div>
 
-                        <div className="mb-6 border-t border-slate-100 pt-6">
+                        <div className="mb-6 border-t border-[var(--color-border-soft)] pt-6">
                             <div className="mb-3 flex items-center justify-between">
-                                <h2 className="font-bold text-slate-900">
+                                <h2 className="font-bold text-[var(--color-text-strong)]">
                                     Choose a Size
                                 </h2>
 
-                                <span className="text-xs text-slate-500">
+                                <span className="text-xs text-[var(--color-muted)]">
                                     Available sizes only
                                 </span>
                             </div>
 
                             {selectedColor === null ? (
-                                <p className="text-sm text-slate-500">
+                                <p className="text-sm text-[var(--color-muted)]">
                                     Select a color first to see available sizes.
                                 </p>
                             ) : sizes.length === 0 ? (
-                                <p className="text-sm text-slate-500">
+                                <p className="text-sm text-[var(--color-muted)]">
                                     No sizes are currently available in this color.
                                 </p>
                             ) : (
@@ -555,8 +555,8 @@ function ProductDetails() {
                                                     selectedSize === size.id
                                                 }
                                                 className={`min-w-14 rounded-xl border px-4 py-3 font-bold transition disabled:cursor-not-allowed disabled:opacity-35 ${selectedSize === size.id
-                                                        ? "border-blue-600 bg-blue-600 text-white shadow-md shadow-blue-100"
-                                                        : "border-slate-200 text-slate-700 hover:border-pink-300 hover:bg-pink-50"
+                                                        ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)] shadow-md shadow-[var(--color-blue-100)]"
+                                                        : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-pink-300)] hover:bg-[var(--color-pink-50)]"
                                                     }`}
                                             >
                                                 {size.name}
@@ -568,7 +568,7 @@ function ProductDetails() {
                         </div>
 
                         {selectedVariant && (
-                            <div className="mb-5 flex items-center gap-2 rounded-xl bg-blue-50 px-4 py-3 text-sm text-blue-800">
+                            <div className="mb-5 flex items-center gap-2 rounded-xl bg-[var(--color-blue-50)] px-4 py-3 text-sm text-[var(--color-blue-800)]">
                                 <Check size={18} />
                                 <span>
                                     In stock:{" "}
@@ -581,23 +581,23 @@ function ProductDetails() {
                         )}
 
                         <div className="mb-5 flex flex-wrap items-center gap-4">
-                            <span className="font-bold text-slate-800">
+                            <span className="font-bold text-[var(--color-text)]">
                                 Quantity
                             </span>
 
-                            <div className="flex items-center overflow-hidden rounded-xl border border-slate-200">
+                            <div className="flex items-center overflow-hidden rounded-xl border border-[var(--color-border)]">
                                 <button
                                     type="button"
                                     onClick={() => changeQuantity(-1)}
                                     disabled={!selectedVariant || quantity <= 1}
                                     aria-label="Decrease quantity"
-                                    className="flex h-11 w-11 items-center justify-center text-slate-600 transition hover:bg-slate-50 disabled:opacity-30"
+                                    className="flex h-11 w-11 items-center justify-center text-[var(--color-text-muted)] transition hover:bg-[var(--color-page)] disabled:opacity-30"
                                 >
                                     <Minus size={16} />
                                 </button>
 
                                 <span
-                                    className="min-w-12 text-center font-bold text-slate-900"
+                                    className="min-w-12 text-center font-bold text-[var(--color-text-strong)]"
                                     aria-live="polite"
                                 >
                                     {quantity}
@@ -612,7 +612,7 @@ function ProductDetails() {
                                         Number(selectedVariant.stock_quantity)
                                     }
                                     aria-label="Increase quantity"
-                                    className="flex h-11 w-11 items-center justify-center text-slate-600 transition hover:bg-slate-50 disabled:opacity-30"
+                                    className="flex h-11 w-11 items-center justify-center text-[var(--color-text-muted)] transition hover:bg-[var(--color-page)] disabled:opacity-30"
                                 >
                                     <Plus size={16} />
                                 </button>
@@ -622,7 +622,7 @@ function ProductDetails() {
                         {cartError && (
                             <p
                                 role="alert"
-                                className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700"
+                                className="mb-4 rounded-xl bg-[var(--color-danger-bg)] px-4 py-3 text-sm font-medium text-[var(--color-danger-dark)]"
                             >
                                 {cartError}
                             </p>
@@ -631,7 +631,7 @@ function ProductDetails() {
                         {addedToCart && (
                             <div
                                 role="status"
-                                className="mb-4 flex items-center gap-2 rounded-xl bg-green-50 px-4 py-3 text-sm font-semibold text-green-700"
+                                className="mb-4 flex items-center gap-2 rounded-xl bg-[var(--color-success-bg)] px-4 py-3 text-sm font-semibold text-[var(--color-success-dark)]"
                             >
                                 <Check size={18} />
                                 Product added to your cart successfully.
@@ -649,7 +649,7 @@ function ProductDetails() {
                             type="button"
                             onClick={addToCart}
                             disabled={!selectedVariant}
-                            className="flex w-full items-center justify-center gap-3 rounded-2xl bg-blue-600 px-6 py-4 text-base font-extrabold text-white shadow-lg shadow-blue-100 transition hover:-translate-y-0.5 hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
+                            className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[var(--color-primary)] px-6 py-4 text-base font-extrabold text-[var(--color-on-primary)] shadow-lg shadow-[var(--color-blue-100)] transition hover:-translate-y-0.5 hover:bg-[var(--color-primary-dark)] disabled:cursor-not-allowed disabled:bg-[var(--color-slate-300)] disabled:shadow-none"
                         >
                             <ShoppingBag size={21} />
                             {selectedVariant
@@ -657,34 +657,34 @@ function ProductDetails() {
                                 : "Select Color and Size"}
                         </button>
 
-                        <div className="mt-6 grid grid-cols-1 gap-3 border-t border-slate-100 pt-6 sm:grid-cols-2">
-                            <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
-                                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-700">
+                        <div className="mt-6 grid grid-cols-1 gap-3 border-t border-[var(--color-border-soft)] pt-6 sm:grid-cols-2">
+                            <div className="flex items-center gap-3 rounded-2xl bg-[var(--color-page)] p-4">
+                                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-blue-100)] text-[var(--color-primary-dark)]">
                                     <Truck size={20} />
                                 </span>
 
                                 <div>
-                                    <p className="text-sm font-bold text-slate-800">
+                                    <p className="text-sm font-bold text-[var(--color-text)]">
                                         Home Delivery
                                     </p>
 
-                                    <p className="mt-1 text-xs text-slate-500">
+                                    <p className="mt-1 text-xs text-[var(--color-muted)]">
                                         Shipping details at checkout
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3 rounded-2xl bg-slate-50 p-4">
-                                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-pink-100 text-pink-600">
+                            <div className="flex items-center gap-3 rounded-2xl bg-[var(--color-page)] p-4">
+                                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-pink-100)] text-[var(--color-pink-dark)]">
                                     <ShieldCheck size={20} />
                                 </span>
 
                                 <div>
-                                    <p className="text-sm font-bold text-slate-800">
+                                    <p className="text-sm font-bold text-[var(--color-text)]">
                                         Easy Shopping
                                     </p>
 
-                                    <p className="mt-1 text-xs text-slate-500">
+                                    <p className="mt-1 text-xs text-[var(--color-muted)]">
                                         Find the right product and size
                                     </p>
                                 </div>
@@ -693,7 +693,7 @@ function ProductDetails() {
 
                         <Link
                             to="/products"
-                            className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-blue-700 transition hover:text-pink-600"
+                            className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[var(--color-primary-dark)] transition hover:text-[var(--color-pink-dark)]"
                         >
                             <ArrowRight size={17} />
                             Continue Shopping

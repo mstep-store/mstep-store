@@ -43,21 +43,21 @@ export default function BestSellers() {
     return (
         <section className="mx-auto mt-16 max-w-7xl px-4 sm:px-6 lg:mt-20">
             <div className="mb-8 text-center">
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-pink-500 sm:text-sm">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--color-pink)] sm:text-sm">
                     Customer Favorites
                 </p>
 
-                <h2 className="mt-2 text-2xl font-extrabold text-slate-900 sm:text-3xl">
+                <h2 className="mt-2 text-2xl font-extrabold text-[var(--color-text-strong)] sm:text-3xl">
                     Best Sellers
                 </h2>
 
-                <p className="mt-3 text-sm text-slate-500 sm:text-base">
-                    The little favorites everyone loves.
+                <p className="mt-3 text-sm text-[var(--color-muted)] sm:text-base">
+                    The pairs our customers love most.
                 </p>
             </div>
 
             {loading && (
-                <p className="py-8 text-center text-sm text-slate-500">
+                <p className="py-8 text-center text-sm text-[var(--color-muted)]">
                     Loading best sellers...
                 </p>
             )}
@@ -65,19 +65,19 @@ export default function BestSellers() {
             {error && (
                 <p
                     role="alert"
-                    className="rounded-xl bg-red-50 p-4 text-sm text-red-600"
+                    className="rounded-xl bg-[var(--color-danger-bg)] p-4 text-sm text-[var(--color-danger)]"
                 >
                     Unable to load best-selling products: {error}
                 </p>
             )}
 
             {!loading && !error && products.length === 0 && (
-                <div className="rounded-2xl bg-slate-50 px-5 py-10 text-center">
-                    <p className="font-semibold text-slate-700">
+                <div className="rounded-2xl bg-[var(--color-page)] px-5 py-10 text-center">
+                    <p className="font-semibold text-[var(--color-text-secondary)]">
                         No best sellers yet.
                     </p>
 
-                    <p className="mt-2 text-sm text-slate-500">
+                    <p className="mt-2 text-sm text-[var(--color-muted)]">
                         Products will appear here once orders have been delivered.
                     </p>
                 </div>
@@ -92,9 +92,9 @@ export default function BestSellers() {
                             <Link
                                 key={product.id}
                                 to={`/products/${product.id}`}
-                                className="group overflow-hidden rounded-2xl border border-slate-100 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                                className="group overflow-hidden rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface)] transition duration-300 hover:-translate-y-1 hover:shadow-xl"
                             >
-                                <div className="relative aspect-4/5 overflow-hidden bg-slate-50">
+                                <div className="relative aspect-4/5 overflow-hidden bg-[var(--color-page)]">
                                     {image?.image_url ? (
                                         <img
                                             src={image.image_url}
@@ -103,24 +103,24 @@ export default function BestSellers() {
                                             className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                                         />
                                     ) : (
-                                        <div className="flex h-full items-center justify-center text-sm text-slate-400">
+                                        <div className="flex h-full items-center justify-center text-sm text-[var(--color-subtle)]">
                                             No Image Available
                                         </div>
                                     )}
 
-                                    <span className="absolute left-2 top-2 rounded-full bg-pink-100 px-3 py-1 text-[10px] font-bold text-pink-600 sm:text-xs">
+                                    <span className="absolute left-2 top-2 rounded-full bg-[var(--color-pink-100)] px-3 py-1 text-[10px] font-bold text-[var(--color-pink-dark)] sm:text-xs">
                                         Best Seller
                                     </span>
                                 </div>
 
                                 <div className="p-3 sm:p-4">
                                     {product.categories?.name && (
-                                        <p className="mb-1 truncate text-xs text-slate-400">
+                                        <p className="mb-1 truncate text-xs text-[var(--color-subtle)]">
                                             {product.categories.name}
                                         </p>
                                     )}
 
-                                    <h3 className="line-clamp-2 min-h-10 text-sm font-bold text-slate-800 group-hover:text-blue-600 sm:text-base">
+                                    <h3 className="line-clamp-2 min-h-10 text-sm font-bold text-[var(--color-text)] group-hover:text-[var(--color-primary)] sm:text-base">
                                         {product.name}
                                     </h3>
 
@@ -137,7 +137,7 @@ export default function BestSellers() {
             <div className="mt-8 text-center">
                 <Link
                     to="/products"
-                    className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-6 py-3 text-sm font-bold text-slate-700 transition hover:border-blue-500 hover:text-blue-600"
+                    className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] px-6 py-3 text-sm font-bold text-[var(--color-text-secondary)] transition hover:border-[var(--color-primary-hover)] hover:text-[var(--color-primary)]"
                 >
                     Shop All Products <span>→</span>
                 </Link>

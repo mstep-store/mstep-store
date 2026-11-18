@@ -329,7 +329,7 @@ function cleanCategoryFields({ name, slug }) {
 
     if (!/^[a-z0-9]+$/.test(trimmedSlug)) {
         throw new Error(
-            "الـ slug لازم يكون حروف إنجليزي صغيرة وأرقام بس، من غير مسافات (مثال: babycollection)."
+            "الـ slug لازم يكون حروف إنجليزي صغيرة وأرقام بس، من غير مسافات (مثال: runningshoes)."
         );
     }
 

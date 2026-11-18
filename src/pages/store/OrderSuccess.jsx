@@ -19,34 +19,34 @@ export default function OrderSuccess() {
 
     return (
         <section className="mx-auto flex min-h-[60vh] max-w-xl flex-col items-center justify-center px-4 py-16 text-center">
-            <CheckCircle2 size={64} strokeWidth={1.5} className="text-green-500" />
+            <CheckCircle2 size={64} strokeWidth={1.5} className="text-[var(--color-success)]" />
 
-            <h1 className="mt-5 text-2xl font-extrabold text-slate-900 sm:text-3xl">
+            <h1 className="mt-5 text-2xl font-extrabold text-[var(--color-text-strong)] sm:text-3xl">
                 Thank you for your order!
             </h1>
 
-            <p className="mt-3 text-sm leading-7 text-slate-500 sm:text-base">
+            <p className="mt-3 text-sm leading-7 text-[var(--color-muted)] sm:text-base">
                 We've received your order and will contact you soon to confirm
                 the details.
             </p>
 
-            <div className="mt-6 w-full rounded-2xl bg-slate-50 px-5 py-4 text-sm">
-                <p className="text-slate-500">Order number</p>
-                <p className="mt-1 text-lg font-extrabold text-slate-900">
+            <div className="mt-6 w-full rounded-2xl bg-[var(--color-page)] px-5 py-4 text-sm">
+                <p className="text-[var(--color-muted)]">Order number</p>
+                <p className="mt-1 text-lg font-extrabold text-[var(--color-text-strong)]">
                     {state.orderNumber}
                 </p>
 
                 {state.total != null && (
-                    <p className="mt-3 text-slate-500">
+                    <p className="mt-3 text-[var(--color-muted)]">
                         Total:{" "}
-                        <span className="font-bold text-slate-900">
+                        <span className="font-bold text-[var(--color-text-strong)]">
                             {Number(state.total).toFixed(2)} EGP
                         </span>
                     </p>
                 )}
             </div>
 
-            <p className="mt-4 text-xs leading-6 text-slate-400">
+            <p className="mt-4 text-xs leading-6 text-[var(--color-subtle)]">
                 Keep your order number and the phone number you used. You can
                 use them to track or cancel your order.
             </p>
@@ -54,13 +54,13 @@ export default function OrderSuccess() {
             <div className="mt-6 flex flex-wrap justify-center gap-3">
                 <Link
                     to={`/track-order?order=${encodeURIComponent(state.orderNumber)}`}
-                    className="rounded-full bg-blue-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-blue-500"
+                    className="rounded-full bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-[var(--color-on-primary)] transition hover:bg-[var(--color-primary-hover)]"
                 >
                     Track your order
                 </Link>
                 <Link
                     to="/products"
-                    className="rounded-full border border-slate-200 px-6 py-3 text-sm font-bold text-slate-700 transition hover:border-blue-300 hover:text-blue-600"
+                    className="rounded-full border border-[var(--color-border)] px-6 py-3 text-sm font-bold text-[var(--color-text-secondary)] transition hover:border-[var(--color-blue-300)] hover:text-[var(--color-primary)]"
                 >
                     Continue shopping
                 </Link>

@@ -30,14 +30,14 @@ function describeChange(next) {
 const CANCEL_REASONS = [
     "I changed my mind",
     "I ordered by mistake",
-    "I need a different size or color",
+    "I need a different size",
     "I found a better price elsewhere",
     "Delivery is taking too long",
     "Other",
 ];
 
 const inputClass =
-    "w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:ring-4 focus:ring-blue-100";
+    "w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-sm text-[var(--color-text)] outline-none transition placeholder:text-[var(--color-subtle)] focus:border-[var(--color-primary-hover)] focus:ring-4 focus:ring-[var(--color-blue-100)]";
 
 function formatDate(value) {
     if (!value) return "";
@@ -72,14 +72,14 @@ function Timeline({ status }) {
                         <div className="flex w-16 flex-col items-center text-center sm:w-20">
                             <span
                                 className={`flex h-9 w-9 items-center justify-center rounded-full border-2 text-sm font-bold ${done
-                                        ? "border-blue-600 bg-blue-600 text-white"
-                                        : "border-slate-200 bg-white text-slate-300"
+                                    ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+                                    : "border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-slate-300)]"
                                     }`}
                             >
                                 {done ? <Check size={18} /> : index + 1}
                             </span>
                             <span
-                                className={`mt-2 text-xs font-semibold ${done ? "text-slate-900" : "text-slate-400"
+                                className={`mt-2 text-xs font-semibold ${done ? "text-[var(--color-text-strong)]" : "text-[var(--color-subtle)]"
                                     }`}
                             >
                                 {step.label}
@@ -90,8 +90,8 @@ function Timeline({ status }) {
                             <span
                                 aria-hidden="true"
                                 className={`mt-4.25 h-0.5 flex-1 ${index < currentIndex
-                                        ? "bg-blue-600"
-                                        : "bg-slate-200"
+                                    ? "bg-(--color-primary)"
+                                    : "bg-[var(--color-slate-200)]"
                                     }`}
                             />
                         )}
@@ -293,15 +293,15 @@ export default function TrackOrder() {
     const isLive = hasOrder && !TERMINAL_STATUSES.includes(orderStatus);
 
     return (
-        <div className="bg-white pb-12">
-            <section className="bg-slate-50">
+        <div className="bg-(--color-surface) pb-12">
+            <section className="bg-(--color-page)">
                 <div className="mx-auto max-w-7xl px-4 py-12 text-center sm:px-6 lg:py-16">
-                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+                    <h1 className="text-3xl font-extrabold tracking-tight text-(--color-text-strong) sm:text-4xl">
                         Track your order
                     </h1>
-                    <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-slate-500 sm:text-base">
+                    <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-(--color-muted) sm:text-base">
                         Enter your order number and the phone number you used at
-                        checkout.
+                        checkout to see where your shoes are.
                     </p>
                 </div>
             </section>
@@ -310,12 +310,12 @@ export default function TrackOrder() {
                 <form
                     onSubmit={handleSearch}
                     noValidate
-                    className="space-y-4 rounded-2xl border border-slate-100 p-5 shadow-sm sm:p-8"
+                    className="space-y-4 rounded-2xl border border-(--color-border-soft) p-5 shadow-sm sm:p-8"
                 >
                     <div>
                         <label
                             htmlFor="order-number"
-                            className="mb-1.5 block text-sm font-bold text-slate-700"
+                            className="mb-1.5 block text-sm font-bold text-(--color-text-secondary)"
                         >
                             Order number
                         </label>
@@ -323,14 +323,14 @@ export default function TrackOrder() {
                             id="order-number"
                             value={orderNumber}
                             onChange={(e) => setOrderNumber(e.target.value)}
-                            placeholder="KC-1234567890123-1234"
+                            placeholder="ORD-20260101120000-A1B2C3"
                             autoComplete="off"
                             className={inputClass}
                         />
 
                         {recentOrders.length > 0 && (
                             <div className="mt-3">
-                                <p className="text-xs text-slate-500">
+                                <p className="text-xs text-(--color-muted)">
                                     Recent orders on this device:
                                 </p>
                                 <div className="mt-2 flex flex-wrap gap-2">
@@ -342,8 +342,8 @@ export default function TrackOrder() {
                                                 setOrderNumber(recent.orderNumber)
                                             }
                                             className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${orderNumber === recent.orderNumber
-                                                    ? "border-blue-500 bg-blue-50 text-blue-700"
-                                                    : "border-slate-200 text-slate-600 hover:border-blue-300"
+                                                ? "border-(--color-primary-hover) bg-[var(--color-blue-50)] text-(--color-primary-dark)"
+                                                : "border-(--color-border) text-(--color-text-muted) hover:border-[var(--color-blue-300)]"
                                                 }`}
                                         >
                                             {recent.orderNumber}
@@ -353,23 +353,23 @@ export default function TrackOrder() {
                             </div>
                         )}
 
-                        <p className="mt-3 text-xs leading-5 text-slate-500">
+                        <p className="mt-3 text-xs leading-5 text-(--color-muted)">
                             Forgot your order number?{" "}
                             <Link
                                 to="/contact"
-                                className="font-bold text-blue-600! underline!"
+                                className="font-bold text-(--color-primary)! underline!"
                             >
                                 Contact us
                             </Link>{" "}
                             with the phone number and date of your order and
-                            we'll find it for you.
+                            we&apos;ll find it for you.
                         </p>
                     </div>
 
                     <div>
                         <label
                             htmlFor="order-phone"
-                            className="mb-1.5 block text-sm font-bold text-slate-700"
+                            className="mb-1.5 block text-sm font-bold text-(--color-text-secondary)"
                         >
                             Phone number
                         </label>
@@ -387,7 +387,7 @@ export default function TrackOrder() {
                     {searchError && (
                         <p
                             role="alert"
-                            className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600"
+                            className="rounded-xl bg-(--color-danger-bg) px-4 py-3 text-sm text-(--color-danger)"
                         >
                             {searchError}
                         </p>
@@ -396,7 +396,7 @@ export default function TrackOrder() {
                     <button
                         type="submit"
                         disabled={searching}
-                        className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60"
+                        className="inline-flex items-center gap-2 rounded-full bg-(--color-primary) px-6 py-3 text-sm font-bold text-(--color-on-primary) transition hover:bg-(--color-primary-hover) disabled:cursor-not-allowed disabled:opacity-60"
                     >
                         <PackageSearch size={18} />
                         {searching ? "Searching..." : "Track order"}
@@ -406,27 +406,27 @@ export default function TrackOrder() {
                 {order && (
                     <section
                         aria-live="polite"
-                        className="mt-8 rounded-2xl border border-slate-100 p-5 shadow-sm sm:p-8"
+                        className="mt-8 rounded-2xl border border-(--color-border-soft) p-5 shadow-sm sm:p-8"
                     >
                         <div className="flex flex-wrap items-start justify-between gap-2">
                             <div>
-                                <p className="text-xs text-slate-400">
+                                <p className="text-xs text-[var(--color-subtle)]">
                                     Order number
                                 </p>
-                                <p className="text-lg font-extrabold text-slate-900">
+                                <p className="text-lg font-extrabold text-[var(--color-text-strong)]">
                                     {order.order_number}
                                 </p>
                             </div>
-                            <p className="text-sm text-slate-500">
+                            <p className="text-sm text-[var(--color-muted)]">
                                 Placed {formatDate(order.created_at)}
                             </p>
                         </div>
 
                         {isLive && (
-                            <p className="mt-3 flex items-center gap-2 text-xs text-slate-400">
+                            <p className="mt-3 flex items-center gap-2 text-xs text-[var(--color-subtle)]">
                                 <span className="relative flex h-2 w-2">
-                                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
-                                    <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+                                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--color-green-400)] opacity-75" />
+                                    <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--color-success)]" />
                                 </span>
                                 Live — this page updates automatically
                                 {lastChecked &&
@@ -440,7 +440,7 @@ export default function TrackOrder() {
                         {changeNotice && (
                             <p
                                 role="status"
-                                className="mt-4 rounded-xl bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700"
+                                className="mt-4 rounded-xl bg-[var(--color-blue-50)] px-4 py-3 text-sm font-semibold text-[var(--color-primary-dark)]"
                             >
                                 {changeNotice}
                             </p>
@@ -448,13 +448,13 @@ export default function TrackOrder() {
 
                         <div className="mt-8">
                             {cancelled ? (
-                                <div className="rounded-2xl bg-red-50 p-5">
-                                    <p className="flex items-center gap-2 font-extrabold text-red-700">
+                                <div className="rounded-2xl bg-[var(--color-danger-bg)] p-5">
+                                    <p className="flex items-center gap-2 font-extrabold text-[var(--color-danger-dark)]">
                                         <XCircle size={20} />
                                         This order was cancelled
                                     </p>
                                     {order.cancelled_at && (
-                                        <p className="mt-1 text-xs text-red-600/80">
+                                        <p className="mt-1 text-xs text-[var(--color-danger-80)]">
                                             {formatDate(order.cancelled_at)}
                                             {order.cancelled_by === "customer"
                                                 ? " · cancelled by you"
@@ -464,7 +464,7 @@ export default function TrackOrder() {
                                         </p>
                                     )}
                                     {order.cancel_reason && (
-                                        <p className="mt-3 text-sm leading-6 text-red-700">
+                                        <p className="mt-3 text-sm leading-6 text-[var(--color-danger-dark)]">
                                             <span className="font-bold">
                                                 Reason:
                                             </span>{" "}
@@ -477,17 +477,17 @@ export default function TrackOrder() {
                             )}
                         </div>
 
-                        <ul className="mt-8 divide-y divide-slate-100 border-y border-slate-100">
+                        <ul className="mt-8 divide-y border-y border-[var(--color-border-soft)]">
                             {order.items.map((item, index) => (
                                 <li
                                     key={index}
                                     className="flex items-start justify-between gap-4 py-3 text-sm"
                                 >
                                     <div>
-                                        <p className="font-bold text-slate-800">
+                                        <p className="font-bold text-[var(--color-text)]">
                                             {item.product_name}
                                         </p>
-                                        <p className="mt-0.5 text-xs text-slate-500">
+                                        <p className="mt-0.5 text-xs text-[var(--color-muted)]">
                                             {[item.color_name, item.size_name]
                                                 .filter(Boolean)
                                                 .join(" · ")}
@@ -496,7 +496,7 @@ export default function TrackOrder() {
                                             Qty {item.quantity}
                                         </p>
                                     </div>
-                                    <p className="shrink-0 font-bold text-slate-800">
+                                    <p className="shrink-0 font-bold text-[var(--color-text)]">
                                         {money(item.line_total)}
                                     </p>
                                 </li>
@@ -504,15 +504,15 @@ export default function TrackOrder() {
                         </ul>
 
                         <dl className="mt-4 space-y-1.5 text-sm">
-                            <div className="flex justify-between text-slate-500">
+                            <div className="flex justify-between text-[var(--color-muted)]">
                                 <dt>Subtotal</dt>
                                 <dd>{money(order.subtotal)}</dd>
                             </div>
-                            <div className="flex justify-between text-slate-500">
+                            <div className="flex justify-between text-[var(--color-muted)]">
                                 <dt>Shipping</dt>
                                 <dd>{money(order.shipping_cost)}</dd>
                             </div>
-                            <div className="flex justify-between text-base font-extrabold text-slate-900">
+                            <div className="flex justify-between text-base font-extrabold text-[var(--color-text-strong)]">
                                 <dt>Total</dt>
                                 <dd>{money(order.total)}</dd>
                             </div>
@@ -522,19 +522,19 @@ export default function TrackOrder() {
                             <button
                                 type="button"
                                 onClick={openCancel}
-                                className="mt-8 rounded-full border border-red-200 px-6 py-3 text-sm font-bold text-red-600 transition hover:bg-red-50"
+                                className="mt-8 rounded-full border border-[var(--color-danger-border)] px-6 py-3 text-sm font-bold text-[var(--color-danger)] transition hover:bg-[var(--color-danger-bg)]"
                             >
                                 Cancel this order
                             </button>
                         )}
 
                         {!order.can_cancel && !cancelled && (
-                            <p className="mt-8 rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-500!">
+                            <p className="mt-8 rounded-xl bg-[var(--color-page)] px-4 py-3 text-sm text-[var(--color-muted)]!">
                                 This order can no longer be cancelled online.
                                 Please{" "}
                                 <Link
                                     to="/contact"
-                                    className="font-bold text-blue-600! underline!"
+                                    className="font-bold text-[var(--color-primary)]! underline!"
                                 >
                                     contact us
                                 </Link>{" "}
@@ -546,10 +546,10 @@ export default function TrackOrder() {
                             <form
                                 onSubmit={handleCancel}
                                 noValidate
-                                className="mt-8 space-y-4 rounded-2xl border border-red-100 bg-red-50/40 p-5"
+                                className="mt-8 space-y-4 rounded-2xl border border-[var(--color-danger-border-soft)] bg-[var(--color-danger-bg-soft)] p-5"
                             >
                                 <fieldset>
-                                    <legend className="text-sm font-extrabold text-slate-900">
+                                    <legend className="text-sm font-extrabold text-[var(--color-text-strong)]">
                                         Why are you cancelling?
                                     </legend>
 
@@ -557,7 +557,7 @@ export default function TrackOrder() {
                                         {CANCEL_REASONS.map((option) => (
                                             <label
                                                 key={option}
-                                                className="flex cursor-pointer items-center gap-3 text-sm text-slate-700"
+                                                className="flex cursor-pointer items-center gap-3 text-sm text-[var(--color-text-secondary)]"
                                             >
                                                 <input
                                                     type="radio"
@@ -567,7 +567,7 @@ export default function TrackOrder() {
                                                     onChange={() =>
                                                         setReason(option)
                                                     }
-                                                    className="h-4 w-4 accent-red-600"
+                                                    className="h-4 w-4 accent-[var(--color-danger)]"
                                                 />
                                                 {option}
                                             </label>
@@ -578,7 +578,7 @@ export default function TrackOrder() {
                                 <div>
                                     <label
                                         htmlFor="cancel-details"
-                                        className="mb-1.5 block text-sm font-bold text-slate-700"
+                                        className="mb-1.5 block text-sm font-bold text-[var(--color-text-secondary)]"
                                     >
                                         {reason === "Other"
                                             ? "Tell us more"
@@ -599,7 +599,7 @@ export default function TrackOrder() {
                                 {cancelError && (
                                     <p
                                         role="alert"
-                                        className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600"
+                                        className="rounded-xl bg-[var(--color-danger-bg)] px-4 py-3 text-sm text-[var(--color-danger)]"
                                     >
                                         {cancelError}
                                     </p>
@@ -609,7 +609,7 @@ export default function TrackOrder() {
                                     <button
                                         type="submit"
                                         disabled={cancelling}
-                                        className="rounded-full bg-red-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
+                                        className="rounded-full bg-[var(--color-danger)] px-6 py-3 text-sm font-bold text-[var(--color-on-primary)] transition hover:bg-[var(--color-danger)] disabled:cursor-not-allowed disabled:opacity-60"
                                     >
                                         {cancelling
                                             ? "Cancelling..."
@@ -619,7 +619,7 @@ export default function TrackOrder() {
                                         type="button"
                                         onClick={() => setCancelOpen(false)}
                                         disabled={cancelling}
-                                        className="rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-bold text-slate-700 transition hover:border-slate-300"
+                                        className="rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-3 text-sm font-bold text-[var(--color-text-secondary)] transition hover:border-[var(--color-border-strong)]"
                                     >
                                         Keep my order
                                     </button>

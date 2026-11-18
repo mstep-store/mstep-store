@@ -9,14 +9,14 @@ import formatPrice, { formatDate } from "../../utils/formatPrice";
 
 function Stat({ label, value, hint }) {
     return (
-        <div className="rounded-xl border border-slate-200 bg-white p-4">
-            <p className="text-sm text-slate-500">{label}</p>
-            <p className="mt-1 text-2xl font-extrabold text-[#172b45]">
+        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+            <p className="text-sm text-[var(--color-muted)]">{label}</p>
+            <p className="mt-1 text-2xl font-extrabold text-[var(--color-navy)]">
                 <span dir="ltr" className="inline-block">
                     {value}
                 </span>
             </p>
-            {hint && <p className="mt-1 text-xs text-slate-400">{hint}</p>}
+            {hint && <p className="mt-1 text-xs text-[var(--color-subtle)]">{hint}</p>}
         </div>
     );
 }
@@ -78,19 +78,19 @@ export default function Dashboard() {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold text-slate-900">الرئيسية</h1>
-            <p className="mt-1 text-sm text-slate-500">
+            <h1 className="text-2xl font-bold text-[var(--color-text-strong)]">الرئيسية</h1>
+            <p className="mt-1 text-sm text-[var(--color-muted)]">
                 ملخص سريع لحالة المتجر.
             </p>
 
             {loading && (
-                <p className="mt-8 text-sm text-slate-500">جاري التحميل...</p>
+                <p className="mt-8 text-sm text-[var(--color-muted)]">جاري التحميل...</p>
             )}
 
             {error && (
                 <p
                     role="alert"
-                    className="mt-6 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700"
+                    className="mt-6 rounded-lg bg-[var(--color-rose-50)] px-3 py-2 text-sm text-[var(--color-rose-700)]"
                 >
                     {error}
                 </p>
@@ -117,25 +117,25 @@ export default function Dashboard() {
                     </div>
 
                     <div className="mt-8 grid gap-6 lg:grid-cols-3">
-                        <section className="rounded-xl border border-slate-200 bg-white lg:col-span-2">
-                            <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
-                                <h2 className="font-bold text-slate-900">
+                        <section className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] lg:col-span-2">
+                            <div className="flex items-center justify-between border-b border-[var(--color-border-soft)] px-4 py-3">
+                                <h2 className="font-bold text-[var(--color-text-strong)]">
                                     آخر الطلبات
                                 </h2>
                                 <Link
                                     to="/admin/orders"
-                                    className="text-sm font-semibold text-blue-600 hover:underline"
+                                    className="text-sm font-semibold text-[var(--color-primary)] hover:underline"
                                 >
                                     كل الطلبات
                                 </Link>
                             </div>
 
                             {recentOrders.length === 0 ? (
-                                <p className="px-4 py-8 text-center text-sm text-slate-500">
+                                <p className="px-4 py-8 text-center text-sm text-[var(--color-muted)]">
                                     لسه مفيش طلبات. أول طلب هيظهر هنا.
                                 </p>
                             ) : (
-                                <ul className="divide-y divide-slate-100">
+                                <ul className="divide-y bg">
                                     {recentOrders.map((order) => (
                                         <li
                                             key={order.id}
@@ -144,11 +144,11 @@ export default function Dashboard() {
                                             <div className="min-w-0">
                                                 <p
                                                     dir="ltr"
-                                                    className="text-start text-sm font-bold text-slate-900"
+                                                    className="text-start text-sm font-bold text-[var(--color-text-strong)]"
                                                 >
                                                     {order.order_number}
                                                 </p>
-                                                <p className="truncate text-sm text-slate-500">
+                                                <p className="truncate text-sm text-[var(--color-muted)]">
                                                     {order.customer_name} ·{" "}
                                                     {formatDate(order.created_at)}
                                                 </p>
@@ -157,7 +157,7 @@ export default function Dashboard() {
                                             <div className="flex items-center gap-3">
                                                 <span
                                                     dir="ltr"
-                                                    className="text-sm font-semibold text-slate-800"
+                                                    className="text-sm font-semibold text-[var(--color-text)]"
                                                 >
                                                     {formatPrice(order.total)}
                                                 </span>
@@ -169,19 +169,19 @@ export default function Dashboard() {
                             )}
                         </section>
 
-                        <section className="rounded-xl border border-slate-200 bg-white">
-                            <div className="border-b border-slate-100 px-4 py-3">
-                                <h2 className="font-bold text-slate-900">
+                        <section className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
+                            <div className="border-b border-[var(--color-border-soft)] px-4 py-3">
+                                <h2 className="font-bold text-[var(--color-text-strong)]">
                                     الأكثر مبيعًا
                                 </h2>
                             </div>
 
                             {bestSellers.length === 0 ? (
-                                <p className="px-4 py-8 text-center text-sm text-slate-500">
+                                <p className="px-4 py-8 text-center text-sm text-[var(--color-muted)]">
                                     هيظهر هنا بعد أول مبيعات.
                                 </p>
                             ) : (
-                                <ol className="divide-y divide-slate-100">
+                                <ol className="divide-y bg">
                                     {bestSellers.map((product) => (
                                         <li
                                             key={
@@ -190,10 +190,10 @@ export default function Dashboard() {
                                             }
                                             className="flex items-center justify-between gap-3 px-4 py-3"
                                         >
-                                            <span className="min-w-0 truncate text-sm text-slate-800">
+                                            <span className="min-w-0 truncate text-sm text-[var(--color-text)]">
                                                 {product.product_name}
                                             </span>
-                                            <span className="shrink-0 text-sm font-semibold text-slate-600">
+                                            <span className="shrink-0 text-sm font-semibold text-[var(--color-text-muted)]">
                                                 {product.total_quantity} قطعة
                                             </span>
                                         </li>

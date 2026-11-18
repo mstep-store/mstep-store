@@ -14,7 +14,7 @@ export default function Home() {
     const { products, loading, error } = useProducts();
 
     return (
-        <main className="min-h-screen bg-white pb-16">
+        <main className="min-h-screen bg-[var(--color-surface)] pb-16">
             {/* Hero */}
             <Hero />
 
@@ -25,29 +25,29 @@ export default function Home() {
             <section className="mx-auto mt-16 max-w-7xl px-4 sm:px-6 lg:mt-20">
                 <div className="mb-8 flex items-end justify-between gap-4">
                     <div>
-                        <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-pink-500 sm:text-sm">
-                            Fresh Picks for Little Ones
+                        <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-[var(--color-pink)] sm:text-sm">
+                            Fresh Picks for Every Step
                         </p>
 
-                        <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+                        <h2 className="text-2xl font-extrabold tracking-tight text-[var(--color-text-strong)] sm:text-3xl">
                             Latest Arrivals
                         </h2>
 
-                        <p className="mt-2 text-sm text-slate-500 sm:text-base">
-                            Discover Their Next Favorite Outfit.
+                        <p className="mt-2 text-sm text-[var(--color-muted)] sm:text-base">
+                            Discover your next favorite pair.
                         </p>
                     </div>
 
                     <Link
                         to="/products"
-                        className="shrink-0 text-sm font-bold text-blue-600 transition-colors duration-300 hover:text-pink-500"
+                        className="shrink-0 text-sm font-bold text-[var(--color-primary)] transition-colors duration-300 hover:text-[var(--color-pink)]"
                     >
                         View All <span aria-hidden="true">→</span>
                     </Link>
                 </div>
 
                 {loading && (
-                    <p className="py-12 text-center text-sm text-slate-500">
+                    <p className="py-12 text-center text-sm text-[var(--color-muted)]">
                         Loading products...
                     </p>
                 )}
@@ -55,19 +55,19 @@ export default function Home() {
                 {error && (
                     <p
                         role="alert"
-                        className="rounded-xl bg-red-50 px-4 py-5 text-sm text-red-600"
+                        className="rounded-xl bg-[var(--color-danger-bg)] px-4 py-5 text-sm text-[var(--color-danger)]"
                     >
                         Unable to load products: {error}
                     </p>
                 )}
 
                 {!loading && !error && products.length === 0 && (
-                    <div className="rounded-2xl border border-dashed border-slate-200 px-4 py-12 text-center">
-                        <p className="font-semibold text-slate-700">
+                    <div className="rounded-2xl border border-dashed border-[var(--color-border)] px-4 py-12 text-center">
+                        <p className="font-semibold text-[var(--color-text-secondary)]">
                             No Products Available Yet.
                         </p>
 
-                        <p className="mt-2 text-sm text-slate-500">
+                        <p className="mt-2 text-sm text-[var(--color-muted)]">
                             Newly published products will appear here.
                         </p>
                     </div>
@@ -81,14 +81,14 @@ export default function Home() {
                             return (
                                 <article
                                     key={product.id}
-                                    className="group min-w-0 overflow-hidden rounded-2xl border border-slate-100 bg-white transition duration-300 hover:-translate-y-1 hover:border-blue-100 hover:shadow-xl hover:shadow-slate-200/60"
+                                    className="group min-w-0 overflow-hidden rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface)] transition duration-300 hover:-translate-y-1 hover:border-[var(--color-blue-100)] hover:shadow-xl hover:shadow-[var(--color-shadow-page)]"
                                 >
                                     <Link
                                         to={`/products/${product.id}`}
                                         className="block"
                                         aria-label={`View ${product.name}`}
                                     >
-                                        <div className="relative aspect-4/5 overflow-hidden bg-slate-50">
+                                        <div className="relative aspect-4/5 overflow-hidden bg-[var(--color-page)]">
                                             {image?.image_url ? (
                                                 <img
                                                     src={image.image_url}
@@ -97,24 +97,24 @@ export default function Home() {
                                                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                                                 />
                                             ) : (
-                                                <div className="flex h-full items-center justify-center text-sm text-slate-400">
+                                                <div className="flex h-full items-center justify-center text-sm text-[var(--color-subtle)]">
                                                     No Image Available
                                                 </div>
                                             )}
 
-                                            <span className="absolute left-2 top-2 rounded-full bg-white/95 px-3 py-1 text-[10px] font-bold text-slate-700 shadow-sm sm:left-3 sm:top-3 sm:text-xs">
+                                            <span className="absolute left-2 top-2 rounded-full bg-[var(--color-white-95)] px-3 py-1 text-[10px] font-bold text-[var(--color-text-secondary)] shadow-sm sm:left-3 sm:top-3 sm:text-xs">
                                                 New Arrival
                                             </span>
                                         </div>
 
                                         <div className="p-3 sm:p-4">
                                             {product.categories?.name && (
-                                                <p className="mb-1 truncate text-xs font-medium text-slate-400">
+                                                <p className="mb-1 truncate text-xs font-medium text-[var(--color-subtle)]">
                                                     {product.categories.name}
                                                 </p>
                                             )}
 
-                                            <h3 className="line-clamp-2 min-h-10 text-sm font-bold leading-5 text-slate-800 transition-colors group-hover:text-blue-600 sm:text-base">
+                                            <h3 className="line-clamp-2 min-h-10 text-sm font-bold leading-5 text-[var(--color-text)] transition-colors group-hover:text-[var(--color-primary)] sm:text-base">
                                                 {product.name}
                                             </h3>
 

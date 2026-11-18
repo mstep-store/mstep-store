@@ -15,20 +15,20 @@ const info = [
 ];
 
 const inputClass =
-    "w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-400 focus:ring-4 focus:ring-blue-100";
+    "w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 text-sm text-[var(--color-text)] outline-none transition placeholder:text-[var(--color-subtle)] focus:border-[var(--color-primary-hover)] focus:ring-4 focus:ring-[var(--color-blue-100)]";
 
 function Field({ id, label, error, children }) {
     return (
         <div>
             <label
                 htmlFor={id}
-                className="mb-1.5 block text-sm font-bold text-slate-700"
+                className="mb-1.5 block text-sm font-bold text-[var(--color-text-secondary)]"
             >
                 {label}
             </label>
             {children}
             {error && (
-                <p id={`${id}-error`} className="mt-1.5 text-xs text-red-600">
+                <p id={`${id}-error`} className="mt-1.5 text-xs text-[var(--color-danger)]">
                     {error}
                 </p>
             )}
@@ -75,15 +75,15 @@ export default function Contact() {
     }
 
     return (
-        <div className="bg-white pb-8">
-            <section className="bg-slate-50">
+        <div className="bg-(--color-surface) pb-8">
+            <section className="bg-(--color-page)">
                 <div className="mx-auto max-w-7xl px-4 py-12 text-center sm:px-6 lg:py-16">
-                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
+                    <h1 className="text-3xl font-extrabold tracking-tight text-(--color-text-strong) sm:text-4xl">
                         Get in touch
                     </h1>
-                    <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-slate-500 sm:text-base">
-                        Questions about an order, sizes, or a product? Send us a
-                        message and we'll get back to you as soon as we can.
+                    <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-(--color-muted) sm:text-base">
+                        Questions about an order, shoe sizes, or a product? Send us a
+                        message and we&apos;ll get back to you as soon as we can.
                     </p>
                 </div>
             </section>
@@ -94,14 +94,14 @@ export default function Contact() {
                     <ul className="space-y-5">
                         {info.map(({ icon: Icon, title, text }) => (
                             <li key={title} className="flex items-start gap-4">
-                                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+                                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--color-blue-50)] text-[var(--color-primary)]">
                                     <Icon size={22} strokeWidth={1.8} />
                                 </span>
                                 <div>
-                                    <h2 className="text-sm font-extrabold text-slate-900">
+                                    <h2 className="text-sm font-extrabold text-[var(--color-text-strong)]">
                                         {title}
                                     </h2>
-                                    <p className="mt-0.5 text-sm text-slate-500">
+                                    <p className="mt-0.5 text-sm text-[var(--color-muted)]">
                                         {text}
                                     </p>
                                 </div>
@@ -109,17 +109,17 @@ export default function Contact() {
                         ))}
                     </ul>
 
-                    <p className="mt-8 rounded-2xl bg-pink-50 px-5 py-4 text-sm leading-6 text-pink-700">
-                        Looking for something specific? Browse the{" "}
+                    <p className="mt-8 rounded-2xl bg-[var(--color-pink-50)] px-5 py-4 text-sm leading-6 text-[var(--color-pink-darker)]">
+                        Not sure about your size or style? Browse the{" "}
                         <Link to="/products" className="font-bold underline">
                             full collection
                         </Link>{" "}
-                        first — you might find your answer on the product page.
+                        first, you might find your answer on the product page.
                     </p>
                 </aside>
 
                 {/* Form */}
-                <div className="rounded-2xl border border-slate-100 p-5 shadow-sm sm:p-8">
+                <div className="rounded-2xl border border-[var(--color-border-soft)] p-5 shadow-sm sm:p-8">
                     {sent ? (
                         <div
                             role="status"
@@ -128,19 +128,19 @@ export default function Contact() {
                             <CheckCircle2
                                 size={52}
                                 strokeWidth={1.6}
-                                className="text-green-500"
+                                className="text-(--color-success)"
                             />
-                            <h2 className="mt-4 text-xl font-extrabold text-slate-900">
+                            <h2 className="mt-4 text-xl font-extrabold text-(--color-text-strong)">
                                 Message sent
                             </h2>
-                            <p className="mt-2 max-w-sm text-sm leading-6 text-slate-500">
-                                Thanks for reaching out. We'll reply to the
-                                email you provided.
+                            <p className="mt-2 max-w-sm text-sm leading-6 text-(--color-muted)">
+                                Thanks for reaching out. We&apos;ll reply to the email you provided
+                                as soon as possible.
                             </p>
                             <button
                                 type="button"
                                 onClick={() => setSent(false)}
-                                className="mt-6 rounded-full bg-blue-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-blue-500"
+                                className="mt-6 rounded-full bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-[var(--color-on-primary)] transition hover:bg-[var(--color-primary-hover)]"
                             >
                                 Send another message
                             </button>
@@ -214,7 +214,7 @@ export default function Contact() {
                             {submitError && (
                                 <p
                                     role="alert"
-                                    className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600"
+                                    className="rounded-xl bg-[var(--color-danger-bg)] px-4 py-3 text-sm text-[var(--color-danger)]"
                                 >
                                     {submitError}
                                 </p>
@@ -223,7 +223,7 @@ export default function Contact() {
                             <button
                                 type="submit"
                                 disabled={sending}
-                                className="w-full rounded-full bg-blue-600 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                                className="w-full rounded-full bg-(--color-primary) px-6 py-3.5 text-sm font-bold text-(--color-on-primary) transition hover:bg-[var(--color-primary-hover)] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                             >
                                 {sending ? "Sending..." : "Send message"}
                             </button>

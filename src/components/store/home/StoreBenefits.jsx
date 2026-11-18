@@ -8,8 +8,8 @@ import {
 const benefits = [
     {
         icon: Heart,
-        title: "Made with Love",
-        description: "Comfortable styles for your little ones.",
+        title: "Made for Comfort",
+        description: "Cushioned, lightweight pairs you can wear all day.",
     },
     {
         icon: ShoppingBag,
@@ -19,7 +19,7 @@ const benefits = [
     {
         icon: BadgeCheck,
         title: "Quality First",
-        description: "Carefully selected styles for everyday wear.",
+        description: "Carefully selected styles built to last.",
     },
     {
         icon: RefreshCw,
@@ -34,14 +34,14 @@ export default function StoreBenefits() {
             id="store-benefits"
             className="mx-auto mt-16 max-w-7xl px-4 sm:px-6 lg:mt-20"
         >
-            <div className="rounded-2xl bg-slate-50 px-5 py-10 sm:px-8 lg:py-12">
+            <div className="rounded-2xl bg-[var(--color-page)] px-5 py-10 sm:px-8 lg:py-12">
                 <div className="mb-8 text-center">
-                    <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600 sm:text-sm">
-                        The Kids & Co. Difference
+                    <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--color-primary)] sm:text-sm">
+                        The M.STEP Difference
                     </p>
 
-                    <h2 className="mt-2 text-2xl font-extrabold text-slate-900 sm:text-3xl">
-                        Shopping Made Special
+                    <h2 className="mt-2 text-2xl font-extrabold text-[var(--color-text-strong)] sm:text-3xl">
+                        Shopping Made Easy
                     </h2>
                 </div>
 
@@ -54,15 +54,15 @@ export default function StoreBenefits() {
                                 key={benefit.title}
                                 className="text-center"
                             >
-                                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-blue-600 shadow-sm transition duration-300 hover:-translate-y-1 hover:text-pink-500">
+                                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--color-surface)] text-[var(--color-primary)] shadow-sm transition duration-300 hover:-translate-y-1 hover:text-[var(--color-pink)]">
                                     <Icon size={26} strokeWidth={1.8} />
                                 </div>
 
-                                <h3 className="mt-4 font-extrabold text-slate-900">
+                                <h3 className="mt-4 font-extrabold text-[var(--color-text-strong)]">
                                     {benefit.title}
                                 </h3>
 
-                                <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-slate-500">
+                                <p className="mx-auto mt-2 max-w-xs text-sm leading-6 text-[var(--color-muted)]">
                                     {benefit.description}
                                 </p>
                             </div>

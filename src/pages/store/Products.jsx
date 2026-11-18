@@ -168,39 +168,39 @@ export default function Products() {
         <main className="mx-auto min-h-screen max-w-7xl px-4 py-8 sm:px-6 lg:py-12">
             {/* Page Header */}
             <header className="mb-8 text-center sm:mb-10">
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-pink-500 sm:text-sm">
-                    Made for Little Moments
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-(--color-pink) sm:text-sm">
+                    Step Up Your Style
                 </p>
 
-                <h1 className="mt-2 text-3xl font-extrabold text-slate-900 sm:text-4xl">
+                <h1 className="mt-2 text-3xl font-extrabold text-(--color-text-strong) sm:text-4xl">
                     {pageTitle}
                 </h1>
 
-                <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-slate-500 sm:text-base">
-                    Discover comfortable, playful styles for every little
-                    adventure.
+                <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-(--color-muted) sm:text-base">
+                    Premium men&apos;s shoes designed for comfort, quality, and style in
+                    every step.
                 </p>
             </header>
 
             {/* Search, Sort and Categories */}
             <section
                 aria-label="Product filters"
-                className="mb-8 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm sm:p-5"
+                className="mb-8 rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-4 shadow-sm sm:p-5"
             >
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-[1fr_220px]">
                     {/* Search */}
                     <div>
                         <label
                             htmlFor="product-search"
-                            className="mb-2 block text-sm font-bold text-slate-700"
+                            className="mb-2 block text-sm font-bold text-[var(--color-text-secondary)]"
                         >
                             Search Products
                         </label>
 
-                        <div className="flex h-12 items-center gap-3 rounded-xl border border-slate-200 px-4 transition focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100">
+                        <div className="flex h-12 items-center gap-3 rounded-xl border border-[var(--color-border)] px-4 transition focus-within:border-[var(--color-primary-hover)] focus-within:ring-2 focus-within:ring-[var(--color-blue-100)]">
                             <Search
                                 size={19}
-                                className="shrink-0 text-slate-400"
+                                className="shrink-0 text-[var(--color-subtle)]"
                             />
 
                             <input
@@ -211,7 +211,7 @@ export default function Products() {
                                     setSearch(event.target.value)
                                 }
                                 placeholder="Search by product name..."
-                                className="w-full bg-transparent text-sm text-slate-800 outline-none placeholder:text-slate-400"
+                                className="w-full bg-transparent text-sm text-[var(--color-text)] outline-none placeholder:text-[var(--color-subtle)]"
                             />
 
                             {search && (
@@ -219,7 +219,7 @@ export default function Products() {
                                     type="button"
                                     onClick={() => setSearch("")}
                                     aria-label="Clear search"
-                                    className="text-slate-400 hover:text-slate-700"
+                                    className="text-[var(--color-subtle)] hover:text-[var(--color-text-secondary)]"
                                 >
                                     <X size={18} />
                                 </button>
@@ -231,15 +231,15 @@ export default function Products() {
                     <div>
                         <label
                             htmlFor="product-sort"
-                            className="mb-2 block text-sm font-bold text-slate-700"
+                            className="mb-2 block text-sm font-bold text-[var(--color-text-secondary)]"
                         >
                             Sort By
                         </label>
 
-                        <div className="flex h-12 items-center gap-2 rounded-xl border border-slate-200 px-3 focus-within:border-blue-500">
+                        <div className="flex h-12 items-center gap-2 rounded-xl border border-[var(--color-border)] px-3 focus-within:border-[var(--color-primary-hover)]">
                             <SlidersHorizontal
                                 size={17}
-                                className="shrink-0 text-slate-400"
+                                className="shrink-0 text-[var(--color-subtle)]"
                             />
 
                             <select
@@ -248,7 +248,7 @@ export default function Products() {
                                 onChange={(event) =>
                                     setSortBy(event.target.value)
                                 }
-                                className="w-full bg-transparent text-sm text-slate-700 outline-none"
+                                className="w-full bg-transparent text-sm text-[var(--color-text-secondary)] outline-none"
                             >
                                 <option value="newest">Newest First</option>
                                 <option value="price-low">
@@ -264,7 +264,7 @@ export default function Products() {
 
                 {/* Dynamic Categories */}
                 <div className="mt-5">
-                    <p className="mb-3 text-sm font-bold text-slate-700">
+                    <p className="mb-3 text-sm font-bold text-[var(--color-text-secondary)]">
                         Categories
                     </p>
 
@@ -273,8 +273,8 @@ export default function Products() {
                             type="button"
                             onClick={() => handleCategoryChange("all")}
                             className={`rounded-full px-4 py-2 text-sm font-semibold transition ${selectedCategory === "all"
-                                    ? "bg-blue-600 text-white"
-                                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                                ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+                                : "bg-[var(--color-slate-100)] text-[var(--color-text-muted)] hover:bg-[var(--color-slate-200)]"
                                 }`}
                         >
                             All Products
@@ -296,8 +296,8 @@ export default function Products() {
                                         )
                                     }
                                     className={`rounded-full px-4 py-2 text-sm font-semibold transition ${isSelected
-                                            ? "bg-blue-600 text-white"
-                                            : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                                        ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+                                        : "bg-[var(--color-slate-100)] text-[var(--color-text-muted)] hover:bg-[var(--color-slate-200)]"
                                         }`}
                                 >
                                     {category.name}
@@ -312,7 +312,7 @@ export default function Products() {
             {loading && (
                 <div
                     role="status"
-                    className="py-20 text-center text-sm text-slate-500"
+                    className="py-20 text-center text-sm text-[var(--color-muted)]"
                 >
                     Loading products...
                 </div>
@@ -322,7 +322,7 @@ export default function Products() {
             {!loading && error && (
                 <div
                     role="alert"
-                    className="rounded-2xl bg-red-50 p-6 text-center text-sm text-red-600"
+                    className="rounded-2xl bg-[var(--color-danger-bg)] p-6 text-center text-sm text-[var(--color-danger)]"
                 >
                     <p className="font-semibold">
                         Unable to load products.
@@ -333,7 +333,7 @@ export default function Products() {
                     <button
                         type="button"
                         onClick={() => window.location.reload()}
-                        className="mt-4 rounded-full bg-red-600 px-5 py-2 font-bold text-white transition hover:bg-red-700"
+                        className="mt-4 rounded-full bg-[var(--color-danger)] px-5 py-2 font-bold text-[var(--color-on-primary)] transition hover:bg-[var(--color-danger-dark)]"
                     >
                         Try Again
                     </button>
@@ -344,8 +344,8 @@ export default function Products() {
             {!loading && !error && (
                 <>
                     <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-                        <p className="text-sm text-slate-500">
-                            <span className="font-bold text-slate-900">
+                        <p className="text-sm text-[var(--color-muted)]">
+                            <span className="font-bold text-[var(--color-text-strong)]">
                                 {filteredProducts.length}
                             </span>{" "}
                             {filteredProducts.length === 1
@@ -360,7 +360,7 @@ export default function Products() {
                                 <button
                                     type="button"
                                     onClick={clearFilters}
-                                    className="text-sm font-semibold text-blue-600 hover:text-blue-700"
+                                    className="text-sm font-semibold text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]"
                                 >
                                     Clear Filters
                                 </button>
@@ -368,16 +368,16 @@ export default function Products() {
                     </div>
 
                     {filteredProducts.length === 0 ? (
-                        <div className="rounded-2xl bg-slate-50 px-5 py-16 text-center">
-                            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white text-slate-400 shadow-sm">
+                        <div className="rounded-2xl bg-[var(--color-page)] px-5 py-16 text-center">
+                            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-surface)] text-[var(--color-subtle)] shadow-sm">
                                 <Search size={24} />
                             </div>
 
-                            <h2 className="mt-4 text-lg font-extrabold text-slate-800">
+                            <h2 className="mt-4 text-lg font-extrabold text-[var(--color-text)]">
                                 No Products Found
                             </h2>
 
-                            <p className="mt-2 text-sm text-slate-500">
+                            <p className="mt-2 text-sm text-[var(--color-muted)]">
                                 Try another search or choose a different
                                 category.
                             </p>
@@ -385,7 +385,7 @@ export default function Products() {
                             <button
                                 type="button"
                                 onClick={clearFilters}
-                                className="mt-5 rounded-full bg-blue-600 px-6 py-3 text-sm font-bold text-white transition hover:bg-blue-700"
+                                className="mt-5 rounded-full bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-[var(--color-on-primary)] transition hover:bg-[var(--color-primary-dark)]"
                             >
                                 View All Products
                             </button>
@@ -399,9 +399,9 @@ export default function Products() {
                                     <Link
                                         key={product.id}
                                         to={`/products/${product.id}`}
-                                        className="group overflow-hidden rounded-2xl border border-slate-100 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                                        className="group overflow-hidden rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface)] transition duration-300 hover:-translate-y-1 hover:shadow-xl"
                                     >
-                                        <div className="relative aspect-4/5 overflow-hidden bg-slate-50">
+                                        <div className="relative aspect-4/5 overflow-hidden bg-[var(--color-page)]">
                                             {image?.image_url ? (
                                                 <img
                                                     src={image.image_url}
@@ -414,7 +414,7 @@ export default function Products() {
                                                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                                                 />
                                             ) : (
-                                                <div className="flex h-full items-center justify-center text-center text-sm text-slate-400">
+                                                <div className="flex h-full items-center justify-center text-center text-sm text-[var(--color-subtle)]">
                                                     No Image Available
                                                 </div>
                                             )}
@@ -422,12 +422,12 @@ export default function Products() {
 
                                         <div className="p-3 sm:p-4">
                                             {product.categories?.name && (
-                                                <p className="mb-1 truncate text-xs text-slate-400">
+                                                <p className="mb-1 truncate text-xs text-[var(--color-subtle)]">
                                                     {product.categories.name}
                                                 </p>
                                             )}
 
-                                            <h2 className="line-clamp-2 min-h-10 text-sm font-bold text-slate-800 transition group-hover:text-blue-600 sm:text-base">
+                                            <h2 className="line-clamp-2 min-h-10 text-sm font-bold text-[var(--color-text)] transition group-hover:text-[var(--color-primary)] sm:text-base">
                                                 {product.name}
                                             </h2>
 

@@ -62,15 +62,15 @@ export default function Messages() {
         <div>
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">
+                    <h1 className="text-2xl font-bold text-[var(--color-text-strong)]">
                         الرسائل
                     </h1>
-                    <p className="mt-1 text-sm text-slate-500">
+                    <p className="mt-1 text-sm text-[var(--color-muted)]">
                         {messages.length} رسالة — {unread} غير مقروءة
                     </p>
                 </div>
 
-                <div className="flex gap-1 rounded-lg bg-slate-200/60 p-1">
+                <div className="flex gap-1 rounded-lg bg-[var(--color-slate-200-60)] p-1">
                     {[
                         ["all", "الكل"],
                         ["unread", "غير المقروءة"],
@@ -81,8 +81,8 @@ export default function Messages() {
                             onClick={() => setFilter(value)}
                             className={`rounded-md px-3 py-1.5 text-sm font-semibold ${
                                 filter === value
-                                    ? "bg-white text-slate-900 shadow-sm"
-                                    : "text-slate-600"
+                                    ? "bg-[var(--color-surface)] text-[var(--color-text-strong)] shadow-sm"
+                                    : "text-[var(--color-text-muted)]"
                             }`}
                         >
                             {label}
@@ -94,16 +94,16 @@ export default function Messages() {
             {error && (
                 <p
                     role="alert"
-                    className="mt-4 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700"
+                    className="mt-4 rounded-lg bg-[var(--color-rose-50)] px-3 py-2 text-sm text-[var(--color-rose-700)]"
                 >
                     {error}
                 </p>
             )}
 
             {loading ? (
-                <p className="mt-8 text-sm text-slate-500">جاري التحميل...</p>
+                <p className="mt-8 text-sm text-[var(--color-muted)]">جاري التحميل...</p>
             ) : visible.length === 0 ? (
-                <p className="mt-8 rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500">
+                <p className="mt-8 rounded-xl border border-dashed border-[var(--color-border-strong)] bg-[var(--color-surface)] p-8 text-center text-sm text-[var(--color-muted)]">
                     مفيش رسائل لحد دلوقتي.
                 </p>
             ) : (
@@ -111,29 +111,29 @@ export default function Messages() {
                     {visible.map((message) => (
                         <li
                             key={message.id}
-                            className={`rounded-xl border bg-white p-4 sm:p-5 ${
+                            className={`rounded-xl border bg-[var(--color-surface)] p-4 sm:p-5 ${
                                 message.is_read
-                                    ? "border-slate-200"
-                                    : "border-blue-300 shadow-sm shadow-blue-100"
+                                    ? "border-[var(--color-border)]"
+                                    : "border-[var(--color-blue-300)] shadow-sm shadow-[var(--color-blue-100)]"
                             }`}
                         >
                             <div className="flex flex-wrap items-start justify-between gap-2">
                                 <div>
-                                    <p className="font-bold text-slate-900">
+                                    <p className="font-bold text-[var(--color-text-strong)]">
                                         {message.name}
                                         {!message.is_read && (
-                                            <span className="me-2 ms-2 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-700">
+                                            <span className="me-2 ms-2 rounded-full bg-[var(--color-blue-100)] px-2 py-0.5 text-xs font-bold text-[var(--color-primary-dark)]">
                                                 جديدة
                                             </span>
                                         )}
                                     </p>
                                     <p
                                         dir="ltr"
-                                        className="mt-1 text-start text-sm text-slate-500"
+                                        className="mt-1 text-start text-sm text-[var(--color-muted)]"
                                     >
                                         <a
                                             href={`mailto:${message.email}`}
-                                            className="text-blue-600 hover:underline"
+                                            className="text-[var(--color-primary)] hover:underline"
                                         >
                                             {message.email}
                                         </a>
@@ -141,12 +141,12 @@ export default function Messages() {
                                     </p>
                                 </div>
 
-                                <time className="text-xs text-slate-400">
+                                <time className="text-xs text-[var(--color-subtle)]">
                                     {formatDate(message.created_at)}
                                 </time>
                             </div>
 
-                            <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-7 text-slate-700">
+                            <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-7 text-[var(--color-text-secondary)]">
                                 {message.message}
                             </p>
 
@@ -154,7 +154,7 @@ export default function Messages() {
                                 <button
                                     type="button"
                                     onClick={() => toggleRead(message)}
-                                    className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                                    className="rounded-lg border border-[var(--color-border-strong)] px-3 py-1.5 text-sm font-semibold text-[var(--color-text-secondary)] hover:bg-[var(--color-page)]"
                                 >
                                     {message.is_read
                                         ? "علّم كغير مقروءة"
@@ -163,7 +163,7 @@ export default function Messages() {
                                 <button
                                     type="button"
                                     onClick={() => remove(message)}
-                                    className="rounded-lg border border-rose-200 px-3 py-1.5 text-sm font-semibold text-rose-600 hover:bg-rose-50"
+                                    className="rounded-lg border border-[var(--color-rose-200)] px-3 py-1.5 text-sm font-semibold text-[var(--color-rose-600)] hover:bg-[var(--color-rose-50)]"
                                 >
                                     حذف
                                 </button>

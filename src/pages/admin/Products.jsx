@@ -128,14 +128,14 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
     }
 
     const inputClass =
-        "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm";
+        "w-full rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-3 py-2.5 text-sm";
 
     return (
         <form
             onSubmit={handleSubmit}
-            className="mt-6 rounded-xl border border-slate-200 bg-white p-4 sm:p-5"
+            className="mt-6 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 sm:p-5"
         >
-            <h2 className="text-lg font-bold text-slate-900">
+            <h2 className="text-lg font-bold text-[var(--color-text-strong)]">
                 {isEditing ? `تعديل: ${product.name}` : "منتج جديد"}
             </h2>
 
@@ -143,7 +143,7 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                 <div className="sm:col-span-2">
                     <label
                         htmlFor="product-name"
-                        className="mb-1.5 block text-sm font-semibold text-slate-700"
+                        className="mb-1.5 block text-sm font-semibold text-[var(--color-text-secondary)]"
                     >
                         اسم المنتج
                     </label>
@@ -159,7 +159,7 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                 <div>
                     <label
                         htmlFor="product-price"
-                        className="mb-1.5 block text-sm font-semibold text-slate-700"
+                        className="mb-1.5 block text-sm font-semibold text-[var(--color-text-secondary)]"
                     >
                         السعر الأساسي (EGP)
                     </label>
@@ -179,7 +179,7 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                 <div>
                     <label
                         htmlFor="product-category"
-                        className="mb-1.5 block text-sm font-semibold text-slate-700"
+                        className="mb-1.5 block text-sm font-semibold text-[var(--color-text-secondary)]"
                     >
                         التصنيف
                     </label>
@@ -201,7 +201,7 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                 <div className="sm:col-span-2">
                     <label
                         htmlFor="product-description"
-                        className="mb-1.5 block text-sm font-semibold text-slate-700"
+                        className="mb-1.5 block text-sm font-semibold text-[var(--color-text-secondary)]"
                     >
                         الوصف
                     </label>
@@ -214,8 +214,8 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                     />
                 </div>
 
-                <fieldset className="rounded-lg border border-slate-200 p-4 sm:col-span-2">
-                    <legend className="px-2 text-sm font-semibold text-slate-700">
+                <fieldset className="rounded-lg border border-[var(--color-border)] p-4 sm:col-span-2">
+                    <legend className="px-2 text-sm font-semibold text-[var(--color-text-secondary)]">
                         الخصم على المنتج كله
                     </legend>
 
@@ -223,7 +223,7 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                         <div>
                             <label
                                 htmlFor="product-discount-type"
-                                className="mb-1.5 block text-sm font-semibold text-slate-700"
+                                className="mb-1.5 block text-sm font-semibold text-[var(--color-text-secondary)]"
                             >
                                 نوع الخصم
                             </label>
@@ -245,7 +245,7 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                             <div>
                                 <label
                                     htmlFor="product-discount-value"
-                                    className="mb-1.5 block text-sm font-semibold text-slate-700"
+                                    className="mb-1.5 block text-sm font-semibold text-[var(--color-text-secondary)]"
                                 >
                                     {form.discount_type === "percentage"
                                         ? "نسبة الخصم (1 – 99)"
@@ -271,7 +271,7 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                                 <div>
                                     <label
                                         htmlFor="product-discount-start"
-                                        className="mb-1.5 block text-sm font-semibold text-slate-700"
+                                        className="mb-1.5 block text-sm font-semibold text-[var(--color-text-secondary)]"
                                     >
                                         يبدأ من (اختياري)
                                     </label>
@@ -293,7 +293,7 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                                 <div>
                                     <label
                                         htmlFor="product-discount-end"
-                                        className="mb-1.5 block text-sm font-semibold text-slate-700"
+                                        className="mb-1.5 block text-sm font-semibold text-[var(--color-text-secondary)]"
                                     >
                                         ينتهي في (اختياري)
                                     </label>
@@ -315,7 +315,7 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                         )}
                     </div>
 
-                    <p className="mt-3 text-xs text-slate-500">
+                    <p className="mt-3 text-xs text-[var(--color-muted)]">
                         الخصم بيتطبق على سعر كل ألوان ومقاسات المنتج. بداية
                         الخصم شاملة ونهايته غير شاملة. لإلغاء الخصم اختار
                         «بدون خصم» واحفظ.
@@ -323,13 +323,13 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                 </fieldset>
 
                 {isEditing && (
-                    <p className="text-sm text-slate-500 sm:col-span-2">
+                    <p className="text-sm text-[var(--color-muted)] sm:col-span-2">
                         الصور والألوان والمقاسات بتتعدّل من صفحة «الألوان
                         والمقاسات والصور» للمنتج.
                     </p>
                 )}
 
-                <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 sm:col-span-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-[var(--color-text-secondary)] sm:col-span-2">
                     <input
                         type="checkbox"
                         checked={form.is_published}
@@ -342,11 +342,11 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
 
             {!isEditing && (
                 <div className="mt-5">
-                    <p className="mb-1.5 text-sm font-semibold text-slate-700">
+                    <p className="mb-1.5 text-sm font-semibold text-[var(--color-text-secondary)]">
                         صور المنتج
                     </p>
 
-                    <label className="inline-block cursor-pointer rounded-lg border border-dashed border-slate-400 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                    <label className="inline-block cursor-pointer rounded-lg border border-dashed border-[var(--color-slate-400)] px-4 py-2.5 text-sm font-semibold text-[var(--color-text-secondary)] hover:bg-[var(--color-page)]">
                         اختار صور
                         <input
                             type="file"
@@ -357,14 +357,14 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                             className="sr-only"
                         />
                     </label>
-                    <span className="ms-3 text-xs text-slate-400">
+                    <span className="ms-3 text-xs text-[var(--color-subtle)]">
                         JPG أو PNG أو WebP، لحد 5 ميجا. أول صورة هي الرئيسية.
                     </span>
 
                     {fileError && (
                         <p
                             role="alert"
-                            className="mt-2 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700"
+                            className="mt-2 rounded-lg bg-[var(--color-rose-50)] px-3 py-2 text-sm text-[var(--color-rose-700)]"
                         >
                             {fileError}
                         </p>
@@ -380,7 +380,7 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                                         className="h-20 w-20 rounded-lg object-cover"
                                     />
                                     {index === 0 && (
-                                        <span className="absolute start-1 top-1 rounded bg-emerald-500 px-1.5 text-[10px] font-bold text-white">
+                                        <span className="absolute start-1 top-1 rounded bg-[var(--color-success)] px-1.5 text-[10px] font-bold text-[var(--color-on-primary)]">
                                             رئيسية
                                         </span>
                                     )}
@@ -389,7 +389,7 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                                         onClick={() => removeFile(index)}
                                         disabled={saving}
                                         aria-label={`شيل ${preview.file.name}`}
-                                        className="absolute -end-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-slate-800 text-sm text-white"
+                                        className="absolute -end-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-slate-800)] text-sm text-[var(--color-on-primary)]"
                                     >
                                         ×
                                     </button>
@@ -401,7 +401,7 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
             )}
 
             {!isEditing && (
-                <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                <p className="mt-4 rounded-lg bg-[var(--color-warning-bg)] px-3 py-2 text-sm text-[var(--color-warning-text)]">
                     بعد الحفظ هننقلك لصفحة الألوان والمقاسات والكميات، عشان
                     العملاء يقدروا يشتروا المنتج.
                 </p>
@@ -410,7 +410,7 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
             {error && (
                 <p
                     role="alert"
-                    className="mt-4 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700"
+                    className="mt-4 rounded-lg bg-[var(--color-rose-50)] px-3 py-2 text-sm text-[var(--color-rose-700)]"
                 >
                     {error}
                 </p>
@@ -420,7 +420,7 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                 <button
                     type="submit"
                     disabled={saving}
-                    className="rounded-lg bg-[#172b45] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#223d5f] disabled:opacity-60"
+                    className="rounded-lg bg-[var(--color-navy)] px-5 py-2.5 text-sm font-bold text-[var(--color-on-primary)] hover:bg-[var(--color-navy-hover)] disabled:opacity-60"
                 >
                     {saving ? "جاري الحفظ..." : "حفظ المنتج"}
                 </button>
@@ -428,7 +428,7 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                     type="button"
                     onClick={onCancel}
                     disabled={saving}
-                    className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                    className="rounded-lg border border-[var(--color-border-strong)] px-5 py-2.5 text-sm font-semibold text-[var(--color-text-secondary)] hover:bg-[var(--color-page)]"
                 >
                     إلغاء
                 </button>
@@ -507,10 +507,10 @@ export default function AdminProducts() {
         <div>
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">
+                    <h1 className="text-2xl font-bold text-[var(--color-text-strong)]">
                         المنتجات
                     </h1>
-                    <p className="mt-1 text-sm text-slate-500">
+                    <p className="mt-1 text-sm text-[var(--color-muted)]">
                         {products.length} منتج، المنشور منهم{" "}
                         {products.filter((p) => p.is_published).length}.
                     </p>
@@ -520,7 +520,7 @@ export default function AdminProducts() {
                     <button
                         type="button"
                         onClick={() => setEditing("new")}
-                        className="rounded-lg bg-[#172b45] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#223d5f]"
+                        className="rounded-lg bg-[var(--color-navy)] px-4 py-2.5 text-sm font-bold text-[var(--color-on-primary)] hover:bg-[var(--color-navy-hover)]"
                     >
                         إضافة منتج
                     </button>
@@ -538,13 +538,13 @@ export default function AdminProducts() {
             )}
 
             {loading && (
-                <p className="mt-8 text-sm text-slate-500">جاري التحميل...</p>
+                <p className="mt-8 text-sm text-[var(--color-muted)]">جاري التحميل...</p>
             )}
 
             {error && (
                 <p
                     role="alert"
-                    className="mt-6 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700"
+                    className="mt-6 rounded-lg bg-[var(--color-rose-50)] px-3 py-2 text-sm text-[var(--color-rose-700)]"
                 >
                     {error}
                 </p>
@@ -553,23 +553,23 @@ export default function AdminProducts() {
             {actionError && (
                 <p
                     role="alert"
-                    className="mt-6 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700"
+                    className="mt-6 rounded-lg bg-[var(--color-rose-50)] px-3 py-2 text-sm text-[var(--color-rose-700)]"
                 >
                     {actionError}
                 </p>
             )}
 
             {!loading && !error && products.length === 0 && (
-                <p className="mt-10 text-center text-sm text-slate-500">
+                <p className="mt-10 text-center text-sm text-[var(--color-muted)]">
                     لسه مفيش منتجات. اضغط «إضافة منتج» وابدأ بأول منتج.
                 </p>
             )}
 
             {!loading && products.length > 0 && (
-                <div className="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+                <div className="mt-6 overflow-x-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
                     <table className="w-full min-w-[40rem] text-sm">
                         <thead>
-                            <tr className="border-b border-slate-200 bg-slate-50 text-xs text-slate-500">
+                            <tr className="border-b border-[var(--color-border)] bg-[var(--color-page)] text-xs text-[var(--color-muted)]">
                                 <th className="px-4 py-3 text-start font-semibold">
                                     المنتج
                                 </th>
@@ -594,7 +594,7 @@ export default function AdminProducts() {
                             {products.map((product) => (
                                 <tr
                                     key={product.id}
-                                    className="border-b border-slate-100 last:border-0"
+                                    className="border-b border-[var(--color-border-soft)] last:border-0"
                                 >
                                     <td className="px-4 py-3">
                                         <div className="flex items-center gap-3">
@@ -611,17 +611,17 @@ export default function AdminProducts() {
                                             ) : (
                                                 <div
                                                     aria-hidden="true"
-                                                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-[10px] text-slate-400"
+                                                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[var(--color-slate-100)] text-[10px] text-[var(--color-subtle)]"
                                                 >
                                                     بدون صورة
                                                 </div>
                                             )}
-                                            <span className="font-semibold text-slate-900">
+                                            <span className="font-semibold text-[var(--color-text-strong)]">
                                                 {product.name}
                                             </span>
                                         </div>
                                     </td>
-                                    <td className="px-4 py-3 text-slate-600">
+                                    <td className="px-4 py-3 text-[var(--color-text-muted)]">
                                         {product.categories?.name ?? "—"}
                                     </td>
                                     <td className="px-4 py-3">
@@ -633,8 +633,8 @@ export default function AdminProducts() {
                                                 className={`ms-2 inline-block rounded-full px-2 py-0.5 text-xs font-bold ${
                                                     getDiscountStatus(product) ===
                                                     "active"
-                                                        ? "bg-rose-50 text-rose-600"
-                                                        : "bg-slate-100 text-slate-500"
+                                                        ? "bg-[var(--color-rose-50)] text-[var(--color-rose-600)]"
+                                                        : "bg-[var(--color-slate-100)] text-[var(--color-muted)]"
                                                 }`}
                                             >
                                                 خصم {describeDiscount(product)} (
@@ -651,7 +651,7 @@ export default function AdminProducts() {
                                         {product.variantsCount === 0 ? (
                                             <Link
                                                 to={`/admin/products/${product.id}/variants`}
-                                                className="text-amber-700 underline"
+                                                className="text-[var(--color-warning-dark)] underline"
                                             >
                                                 ضيف ألوان ومقاسات
                                             </Link>
@@ -659,8 +659,8 @@ export default function AdminProducts() {
                                             <span
                                                 className={
                                                     product.totalStock === 0
-                                                        ? "font-semibold text-rose-700"
-                                                        : "text-slate-700"
+                                                        ? "font-semibold text-[var(--color-rose-700)]"
+                                                        : "text-[var(--color-text-secondary)]"
                                                 }
                                             >
                                                 {product.totalStock === 0
@@ -682,13 +682,13 @@ export default function AdminProducts() {
                                             className={[
                                                 "relative h-6 w-11 rounded-full transition-colors disabled:opacity-60",
                                                 product.is_published
-                                                    ? "bg-emerald-500"
-                                                    : "bg-slate-300",
+                                                    ? "bg-[var(--color-success)]"
+                                                    : "bg-[var(--color-slate-300)]",
                                             ].join(" ")}
                                         >
                                             <span
                                                 className={[
-                                                    "absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all",
+                                                    "absolute top-0.5 h-5 w-5 rounded-full bg-[var(--color-surface)] shadow transition-all",
                                                     product.is_published
                                                         ? "end-0.5"
                                                         : "start-0.5",
@@ -700,14 +700,14 @@ export default function AdminProducts() {
                                         <div className="flex justify-end gap-4 whitespace-nowrap font-semibold">
                                             <Link
                                                 to={`/admin/products/${product.id}/variants`}
-                                                className="text-blue-600 hover:underline"
+                                                className="text-[var(--color-primary)] hover:underline"
                                             >
                                                 الألوان والمقاسات والصور
                                             </Link>
                                             <button
                                                 type="button"
                                                 onClick={() => setEditing(product)}
-                                                className="text-blue-600 hover:underline"
+                                                className="text-[var(--color-primary)] hover:underline"
                                             >
                                                 تعديل
                                             </button>

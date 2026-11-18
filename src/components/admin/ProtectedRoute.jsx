@@ -9,7 +9,7 @@ export default function ProtectedRoute({ children }) {
         return (
             <div
                 dir="rtl"
-                className="flex min-h-screen items-center justify-center bg-slate-50 text-sm text-slate-500"
+                className="flex min-h-screen items-center justify-center bg-[var(--color-page)] text-sm text-[var(--color-muted)]"
             >
                 جاري التحقق من الصلاحيات...
             </div>

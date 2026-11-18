@@ -7,11 +7,11 @@ function NavLink({ to, children }) {
     return (
         <Link
             to={to}
-            className="group relative py-2 transition-colors duration-300 hover:text-blue-500"
+            className="group relative py-2 transition-colors duration-300 hover:text-(--color-primary-hover)"
         >
             {children}
 
-            <span className="absolute bottom-0 left-0 h-0.5 w-0 rounded-full bg-blue-500 transition-all duration-300 ease-out group-hover:w-full" />
+            <span className="absolute bottom-0 left-0 h-0.5 w-0 rounded-full bg-(--color-primary-hover) transition-all duration-300 ease-out group-hover:w-full" />
         </Link>
     );
 }
@@ -47,9 +47,9 @@ export default function Navbar() {
     const closeMenu = () => setMenuOpen(false);
 
     return (
-        <header className="sticky top-0 z-50 bg-white text-slate-800 shadow-sm">
+        <header className="sticky top-0 z-50 bg-(--color-surface) text-(--color-text) shadow-sm">
             {/* Announcement Bar */}
-            <div className="bg-[#111827] px-3 py-1.5 text-center text-[10px] tracking-wide text-white sm:text-xs">
+            <div className="bg-(--color-topbar) px-3 py-1.5 text-center text-[10px] tracking-wide text-(--color-on-primary) sm:text-xs">
                 Free Shipping on Orders Over 750 EGP | 30-Day Returns
             </div>
 
@@ -58,11 +58,10 @@ export default function Navbar() {
                 {/* Logo */}
                 <Link
                     to="/"
-                    className="shrink-0 text-2xl font-extrabold tracking-tight transition-transform duration-300 hover:scale-[1.03] sm:text-3xl"
-                    aria-label="Kids and Co Home"
+                    className="shrink-0 text-2xl font-extrabold tracking-wider transition-transform duration-300 hover:scale-[1.03] sm:text-3xl"
+                    aria-label="MSTEP Home"
                 >
-                    Kids <span className="text-blue-500">&amp;</span>{" "}
-                    Co<span className="text-pink-400">.</span>
+                    M<span className="text-black">.</span>STEP
                 </Link>
 
                 {/* Main Links */}
@@ -71,10 +70,10 @@ export default function Navbar() {
                     <NavLink to="/products">Shop</NavLink>
                     <a
                         href="/#store-benefits"
-                        className="group relative py-2 transition-colors duration-300 hover:text-blue-500"
+                        className="group relative py-2 transition-colors duration-300 hover:text-(--color-primary-hover)"
                     >
                         Our Services
-                        <span className="absolute bottom-0 left-0 h-0.5 w-0 rounded-full bg-blue-500 transition-all duration-300 ease-out group-hover:w-full" />
+                        <span className="absolute bottom-0 left-0 h-0.5 w-0 rounded-full bg-(--color-primary-hover) transition-all duration-300 ease-out group-hover:w-full" />
                     </a>
                     <NavLink to="/contact">Contact</NavLink>
                     <NavLink to="/track-order">Track Order</NavLink>
@@ -89,7 +88,7 @@ export default function Navbar() {
                         aria-label={menuOpen ? "Close menu" : "Open menu"}
                         aria-expanded={menuOpen}
                         aria-controls="mobile-menu"
-                        className="transition-colors hover:text-blue-500 md:hidden"
+                        className="transition-colors hover:text-(--color-primary-hover) md:hidden"
                     >
                         {menuOpen ? <X size={22} /> : <Menu size={22} />}
                     </button>
@@ -99,7 +98,7 @@ export default function Navbar() {
                         to="/products"
                         aria-label="Search products"
                         title="Search"
-                        className="transition-all duration-300 hover:scale-110 hover:text-blue-500"
+                        className="transition-all duration-300 hover:scale-110 hover:text-(--color-primary-hover)"
                     >
                         <svg
                             viewBox="0 0 24 24"
@@ -121,7 +120,7 @@ export default function Navbar() {
                         to="/cart"
                         aria-label="Shopping cart"
                         title="Cart"
-                        className="relative transition-all duration-300 hover:scale-110 hover:text-blue-500"
+                        className="relative transition-all duration-300 hover:scale-110 hover:text-(--color-primary-hover)"
                     >
                         <svg
                             viewBox="0 0 24 24"
@@ -138,7 +137,7 @@ export default function Navbar() {
                         </svg>
 
                         {cartCount > 0 && (
-                            <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-pink-500 px-1 text-[10px] font-bold leading-none text-white">
+                            <span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-(--color-pink) px-1 text-[10px] font-bold leading-none text-(--color-on-primary)">
                                 {cartCount > 99 ? "99+" : cartCount}
                             </span>
                         )}
@@ -150,7 +149,7 @@ export default function Navbar() {
             {menuOpen && (
                 <div
                     id="mobile-menu"
-                    className="border-t border-slate-100 bg-white px-4 py-3 md:hidden"
+                    className="border-t border-(--color-border-soft) bg-(--color-surface) px-4 py-3 md:hidden"
                 >
                     <ul className="flex flex-col text-sm font-semibold">
                         {[
@@ -164,7 +163,7 @@ export default function Navbar() {
                                 <Link
                                     to={item.to}
                                     onClick={closeMenu}
-                                    className="block rounded-lg px-3 py-3 transition-colors hover:bg-slate-50 hover:text-blue-500"
+                                    className="block rounded-lg px-3 py-3 transition-colors hover:bg-(--color-page) hover:text-(--color-primary-hover)"
                                 >
                                     {item.label}
                                 </Link>

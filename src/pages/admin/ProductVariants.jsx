@@ -17,13 +17,13 @@ import {
 import formatPrice from "../../utils/formatPrice";
 
 const inputClass =
-    "rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm";
+    "rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-3 py-2 text-sm";
 
 function Section({ title, hint, children }) {
     return (
-        <section className="mt-6 rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
-            <h2 className="text-lg font-bold text-slate-900">{title}</h2>
-            {hint && <p className="mt-1 text-sm text-slate-500">{hint}</p>}
+        <section className="mt-6 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 sm:p-5">
+            <h2 className="text-lg font-bold text-[var(--color-text-strong)]">{title}</h2>
+            {hint && <p className="mt-1 text-sm text-[var(--color-muted)]">{hint}</p>}
             {children}
         </section>
     );
@@ -67,7 +67,7 @@ function ColorRow({ color, run }) {
                     value={hex}
                     onChange={(e) => setHex(e.target.value)}
                     aria-label="كود اللون"
-                    className="h-9 w-12 cursor-pointer rounded border border-slate-300 bg-white p-1"
+                    className="h-9 w-12 cursor-pointer rounded border border-[var(--color-border-strong)] bg-[var(--color-surface)] p-1"
                 />
                 <input
                     value={name}
@@ -79,14 +79,14 @@ function ColorRow({ color, run }) {
                     type="button"
                     onClick={save}
                     disabled={busy}
-                    className="rounded-lg bg-[#172b45] px-3 py-2 text-sm font-bold text-white disabled:opacity-60"
+                    className="rounded-lg bg-[var(--color-navy)] px-3 py-2 text-sm font-bold text-[var(--color-on-primary)] disabled:opacity-60"
                 >
                     حفظ
                 </button>
                 <button
                     type="button"
                     onClick={() => setEditing(false)}
-                    className="px-2 text-sm font-semibold text-slate-600"
+                    className="px-2 text-sm font-semibold text-[var(--color-text-muted)]"
                 >
                     إلغاء
                 </button>
@@ -99,11 +99,11 @@ function ColorRow({ color, run }) {
             <span className="flex items-center gap-3">
                 <span
                     aria-hidden="true"
-                    className="h-6 w-6 rounded-full border border-slate-300"
-                    style={{ backgroundColor: color.hex_code || "#ffffff" }}
+                    className="h-6 w-6 rounded-full border border-[var(--color-border-strong)]"
+                    style={{ backgroundColor: color.hex_code || "var(--color-surface)" }}
                 />
-                <span className="font-semibold text-slate-900">{color.name}</span>
-                <span dir="ltr" className="text-xs text-slate-400">
+                <span className="font-semibold text-[var(--color-text-strong)]">{color.name}</span>
+                <span dir="ltr" className="text-xs text-[var(--color-subtle)]">
                     {color.hex_code}
                 </span>
             </span>
@@ -112,7 +112,7 @@ function ColorRow({ color, run }) {
                 <button
                     type="button"
                     onClick={() => setEditing(true)}
-                    className="text-blue-600 hover:underline"
+                    className="text-[var(--color-primary)] hover:underline"
                 >
                     تعديل
                 </button>
@@ -120,7 +120,7 @@ function ColorRow({ color, run }) {
                     type="button"
                     onClick={remove}
                     disabled={busy}
-                    className="text-rose-600 hover:underline disabled:opacity-50"
+                    className="text-[var(--color-rose-600)] hover:underline disabled:opacity-50"
                 >
                     حذف
                 </button>
@@ -136,9 +136,9 @@ function ColorsSection({ colors, run }) {
             hint="الألوان بتتضاف تلقائيًا لما تكتبها في فورم الإضافة فوق. من هنا تقدر تغيّر اسم اللون أو درجته أو تحذفه."
         >
             {colors.length === 0 ? (
-                <p className="mt-4 text-sm text-slate-500">لسه مفيش ألوان.</p>
+                <p className="mt-4 text-sm text-[var(--color-muted)]">لسه مفيش ألوان.</p>
             ) : (
-                <ul className="mt-2 divide-y divide-slate-100">
+                <ul className="mt-2 divide-y bg">
                     {colors.map((color) => (
                         <ColorRow key={color.id} color={color} run={run} />
                     ))}
@@ -200,14 +200,14 @@ function SizeRow({ size, run }) {
                     type="button"
                     onClick={save}
                     disabled={busy}
-                    className="rounded-lg bg-[#172b45] px-3 py-2 text-sm font-bold text-white disabled:opacity-60"
+                    className="rounded-lg bg-[var(--color-navy)] px-3 py-2 text-sm font-bold text-[var(--color-on-primary)] disabled:opacity-60"
                 >
                     حفظ
                 </button>
                 <button
                     type="button"
                     onClick={() => setEditing(false)}
-                    className="px-2 text-sm font-semibold text-slate-600"
+                    className="px-2 text-sm font-semibold text-[var(--color-text-muted)]"
                 >
                     إلغاء
                 </button>
@@ -218,15 +218,15 @@ function SizeRow({ size, run }) {
     return (
         <li className="flex items-center justify-between gap-3 py-3">
             <span className="flex items-center gap-3">
-                <span className="font-semibold text-slate-900">{size.name}</span>
-                <span className="text-xs text-slate-400">الترتيب {size.sort_order ?? 0}</span>
+                <span className="font-semibold text-[var(--color-text-strong)]">{size.name}</span>
+                <span className="text-xs text-[var(--color-subtle)]">الترتيب {size.sort_order ?? 0}</span>
             </span>
 
             <span className="flex gap-4 text-sm font-semibold">
                 <button
                     type="button"
                     onClick={() => setEditing(true)}
-                    className="text-blue-600 hover:underline"
+                    className="text-[var(--color-primary)] hover:underline"
                 >
                     تعديل
                 </button>
@@ -234,7 +234,7 @@ function SizeRow({ size, run }) {
                     type="button"
                     onClick={remove}
                     disabled={busy}
-                    className="text-rose-600 hover:underline disabled:opacity-50"
+                    className="text-[var(--color-rose-600)] hover:underline disabled:opacity-50"
                 >
                     حذف
                 </button>
@@ -250,9 +250,9 @@ function SizesSection({ sizes, run }) {
             hint="المقاسات بتتضاف تلقائيًا لما تكتبها في فورم الإضافة فوق وبتظهر للعميل بترتيبها. من هنا تقدر تغيّر الاسم أو الترتيب أو تحذف."
         >
             {sizes.length === 0 ? (
-                <p className="mt-4 text-sm text-slate-500">لسه مفيش مقاسات.</p>
+                <p className="mt-4 text-sm text-[var(--color-muted)]">لسه مفيش مقاسات.</p>
             ) : (
-                <ul className="mt-2 divide-y divide-slate-100">
+                <ul className="mt-2 divide-y bg">
                     {sizes.map((size) => (
                         <SizeRow key={size.id} size={size} run={run} />
                     ))}
@@ -299,8 +299,8 @@ function VariantRow({ variant, label, basePrice, run }) {
     }
 
     return (
-        <tr className="border-b border-slate-100 last:border-0">
-            <td className="px-3 py-2 font-semibold text-slate-900">{label}</td>
+        <tr className="border-b border-[var(--color-border-soft)] last:border-0">
+            <td className="px-3 py-2 font-semibold text-[var(--color-text-strong)]">{label}</td>
             <td className="px-3 py-2">
                 <input
                     type="number"
@@ -349,7 +349,7 @@ function VariantRow({ variant, label, basePrice, run }) {
                         type="button"
                         onClick={save}
                         disabled={!dirty || busy}
-                        className="rounded-lg bg-[#172b45] px-3 py-1.5 font-bold text-white disabled:bg-slate-200 disabled:text-slate-400"
+                        className="rounded-lg bg-[var(--color-navy)] px-3 py-1.5 font-bold text-[var(--color-on-primary)] disabled:bg-[var(--color-slate-200)] disabled:text-[var(--color-subtle)]"
                     >
                         حفظ
                     </button>
@@ -357,7 +357,7 @@ function VariantRow({ variant, label, basePrice, run }) {
                         type="button"
                         onClick={remove}
                         disabled={busy}
-                        className="text-rose-600 hover:underline disabled:opacity-50"
+                        className="text-[var(--color-rose-600)] hover:underline disabled:opacity-50"
                     >
                         حذف
                     </button>
@@ -422,7 +422,7 @@ function VariantsSection({ product, run }) {
         );
     }
 
-    const labelClass = "mb-1.5 block text-sm font-semibold text-slate-700";
+    const labelClass = "mb-1.5 block text-sm font-semibold text-[var(--color-text-secondary)]";
 
     return (
         <Section
@@ -451,7 +451,7 @@ function VariantsSection({ product, run }) {
                                     ? "اللون ده موجود، درجته محفوظة"
                                     : "اختار درجة اللون"
                             }
-                            className="h-10 w-12 shrink-0 cursor-pointer rounded border border-slate-300 bg-white p-1 disabled:cursor-not-allowed disabled:opacity-60"
+                            className="h-10 w-12 shrink-0 cursor-pointer rounded border border-[var(--color-border-strong)] bg-[var(--color-surface)] p-1 disabled:cursor-not-allowed disabled:opacity-60"
                         />
                         <input
                             id="variant-color"
@@ -527,21 +527,21 @@ function VariantsSection({ product, run }) {
                 <button
                     type="submit"
                     disabled={busy}
-                    className="rounded-lg bg-[#172b45] px-5 py-2.5 text-sm font-bold text-white hover:bg-[#223d5f] disabled:opacity-60"
+                    className="rounded-lg bg-[var(--color-navy)] px-5 py-2.5 text-sm font-bold text-[var(--color-on-primary)] hover:bg-[var(--color-navy-hover)] disabled:opacity-60"
                 >
                     {busy ? "جاري الإضافة..." : "إضافة"}
                 </button>
             </form>
 
             {variants.length === 0 ? (
-                <p className="mt-6 text-sm text-slate-500">
+                <p className="mt-6 text-sm text-[var(--color-muted)]">
                     لسه مفيش ألوان ومقاسات للمنتج ده. أضف أول واحد من الفورم فوق.
                 </p>
             ) : (
                 <div className="mt-6 overflow-x-auto">
                     <table className="w-full min-w-[44rem] text-sm">
                         <thead>
-                            <tr className="border-b border-slate-200 text-xs text-slate-500">
+                            <tr className="border-b border-[var(--color-border)] text-xs text-[var(--color-muted)]">
                                 <th className="px-3 py-2 text-start font-semibold">اللون / المقاس</th>
                                 <th className="px-3 py-2 text-start font-semibold">السعر (EGP)</th>
                                 <th className="px-3 py-2 text-start font-semibold">الكمية</th>
@@ -620,7 +620,7 @@ function ImagesSection({ product, run }) {
                 <div>
                     <label
                         htmlFor="upload-color"
-                        className="mb-1.5 block text-sm font-semibold text-slate-700"
+                        className="mb-1.5 block text-sm font-semibold text-[var(--color-text-secondary)]"
                     >
                         الصور الجديدة تتربط بـ
                     </label>
@@ -641,7 +641,7 @@ function ImagesSection({ product, run }) {
 
                 <label
                     className={[
-                        "cursor-pointer rounded-lg bg-[#172b45] px-4 py-2.5 text-sm font-bold text-white hover:bg-[#223d5f]",
+                        "cursor-pointer rounded-lg bg-[var(--color-navy)] px-4 py-2.5 text-sm font-bold text-[var(--color-on-primary)] hover:bg-[var(--color-navy-hover)]",
                         uploading ? "pointer-events-none opacity-60" : "",
                     ].join(" ")}
                 >
@@ -658,7 +658,7 @@ function ImagesSection({ product, run }) {
             </div>
 
             {images.length === 0 ? (
-                <p className="mt-6 text-sm text-slate-500">
+                <p className="mt-6 text-sm text-[var(--color-muted)]">
                     لسه مفيش صور للمنتج ده.
                 </p>
             ) : (
@@ -669,9 +669,9 @@ function ImagesSection({ product, run }) {
                         return (
                             <li
                                 key={image.id}
-                                className="overflow-hidden rounded-xl border border-slate-200"
+                                className="overflow-hidden rounded-xl border border-[var(--color-border)]"
                             >
-                                <div className="relative aspect-square bg-slate-100">
+                                <div className="relative aspect-square bg-[var(--color-slate-100)]">
                                     <img
                                         src={image.image_url}
                                         alt={image.alt_text || product.name}
@@ -679,7 +679,7 @@ function ImagesSection({ product, run }) {
                                         className="h-full w-full object-cover"
                                     />
                                     {image.is_primary && (
-                                        <span className="absolute start-2 top-2 rounded-full bg-emerald-500 px-2 py-0.5 text-xs font-bold text-white">
+                                        <span className="absolute start-2 top-2 rounded-full bg-[var(--color-success)] px-2 py-0.5 text-xs font-bold text-[var(--color-on-primary)]">
                                             رئيسية
                                         </span>
                                     )}
@@ -712,7 +712,7 @@ function ImagesSection({ product, run }) {
 
                                     <div className="flex items-center justify-between text-sm font-semibold">
                                         {image.is_primary ? (
-                                            <span className="text-slate-400">
+                                            <span className="text-[var(--color-subtle)]">
                                                 الصورة الرئيسية
                                             </span>
                                         ) : (
@@ -724,7 +724,7 @@ function ImagesSection({ product, run }) {
                                                         setPrimaryImage(product.id, image.id)
                                                     )
                                                 }
-                                                className="text-blue-600 hover:underline disabled:opacity-50"
+                                                className="text-[var(--color-primary)] hover:underline disabled:opacity-50"
                                             >
                                                 اجعلها رئيسية
                                             </button>
@@ -733,7 +733,7 @@ function ImagesSection({ product, run }) {
                                             type="button"
                                             disabled={busy}
                                             onClick={() => handleDelete(image)}
-                                            className="text-rose-600 hover:underline disabled:opacity-50"
+                                            className="text-[var(--color-rose-600)] hover:underline disabled:opacity-50"
                                         >
                                             حذف
                                         </button>
@@ -801,32 +801,32 @@ export default function ProductVariants() {
         <div>
             <Link
                 to="/admin/products"
-                className="text-sm font-semibold text-blue-600 hover:underline"
+                className="text-sm font-semibold text-[var(--color-primary)] hover:underline"
             >
                 رجوع للمنتجات
             </Link>
 
-            {loading && <p className="mt-6 text-sm text-slate-500">جاري التحميل...</p>}
+            {loading && <p className="mt-6 text-sm text-[var(--color-muted)]">جاري التحميل...</p>}
 
             {error && (
-                <p role="alert" className="mt-6 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                <p role="alert" className="mt-6 rounded-lg bg-[var(--color-rose-50)] px-3 py-2 text-sm text-[var(--color-rose-700)]">
                     {error}
                 </p>
             )}
 
             {product && (
                 <>
-                    <h1 className="mt-3 text-2xl font-bold text-slate-900">
+                    <h1 className="mt-3 text-2xl font-bold text-[var(--color-text-strong)]">
                         {product.name}
                     </h1>
-                    <p className="mt-1 text-sm text-slate-500">
+                    <p className="mt-1 text-sm text-[var(--color-muted)]">
                         الألوان والمقاسات والأسعار والكميات والصور.
                     </p>
 
                     {notice && (
                         <p
                             role="alert"
-                            className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900"
+                            className="mt-4 rounded-lg bg-[var(--color-warning-bg)] px-3 py-2 text-sm text-[var(--color-warning-text)]"
                         >
                             {notice}
                         </p>
@@ -835,7 +835,7 @@ export default function ProductVariants() {
                     {actionError && (
                         <p
                             role="alert"
-                            className="mt-4 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700"
+                            className="mt-4 rounded-lg bg-[var(--color-rose-50)] px-3 py-2 text-sm text-[var(--color-rose-700)]"
                         >
                             {actionError}
                         </p>

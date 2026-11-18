@@ -17,8 +17,8 @@ function matchesQuery(order, query) {
 function Detail({ label, children }) {
     return (
         <div>
-            <dt className="text-xs text-slate-400">{label}</dt>
-            <dd className="mt-0.5 text-sm text-slate-800">{children}</dd>
+            <dt className="text-xs text-[var(--color-subtle)]">{label}</dt>
+            <dd className="mt-0.5 text-sm text-[var(--color-text)]">{children}</dd>
         </div>
     );
 }
@@ -126,19 +126,19 @@ export default function AdminOrders() {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold text-slate-900">الطلبات</h1>
-            <p className="mt-1 text-sm text-slate-500">
+            <h1 className="text-2xl font-bold text-[var(--color-text-strong)]">الطلبات</h1>
+            <p className="mt-1 text-sm text-[var(--color-muted)]">
                 راجع الطلبات وغيّر حالتها.
             </p>
 
             {loading && (
-                <p className="mt-8 text-sm text-slate-500">جاري التحميل...</p>
+                <p className="mt-8 text-sm text-[var(--color-muted)]">جاري التحميل...</p>
             )}
 
             {error && (
                 <p
                     role="alert"
-                    className="mt-6 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700"
+                    className="mt-6 rounded-lg bg-[var(--color-rose-50)] px-3 py-2 text-sm text-[var(--color-rose-700)]"
                 >
                     {error}
                 </p>
@@ -165,8 +165,8 @@ export default function AdminOrders() {
                                         className={[
                                             "shrink-0 rounded-full px-3 py-1.5 text-sm font-semibold transition-colors",
                                             selected
-                                                ? "bg-[#172b45] text-white"
-                                                : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-100",
+                                                ? "bg-[var(--color-navy)] text-[var(--color-on-primary)]"
+                                                : "bg-[var(--color-surface)] text-[var(--color-text-muted)] ring-1 ring-[var(--color-border)] hover:bg-[var(--color-slate-100)]",
                                         ].join(" ")}
                                     >
                                         {tab.label}{" "}
@@ -184,12 +184,12 @@ export default function AdminOrders() {
                             onChange={(e) => setQuery(e.target.value)}
                             placeholder="ابحث برقم الطلب أو الاسم أو الموبايل"
                             aria-label="بحث في الطلبات"
-                            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm lg:w-80"
+                            className="w-full rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-3 py-2 text-sm lg:w-80"
                         />
                     </div>
 
                     {visibleOrders.length === 0 ? (
-                        <p className="mt-10 text-center text-sm text-slate-500">
+                        <p className="mt-10 text-center text-sm text-[var(--color-muted)]">
                             {orders.length === 0
                                 ? "لسه مفيش طلبات."
                                 : "مفيش طلبات مطابقة للتصفية أو البحث."}
@@ -203,7 +203,7 @@ export default function AdminOrders() {
                                 return (
                                     <li
                                         key={order.id}
-                                        className="rounded-xl border border-slate-200 bg-white"
+                                        className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]"
                                     >
                                         <div className="flex flex-wrap items-center gap-3 p-3 sm:p-4">
                                             <button
@@ -218,11 +218,11 @@ export default function AdminOrders() {
                                             >
                                                 <span
                                                     dir="ltr"
-                                                    className="block text-start text-sm font-bold text-slate-900"
+                                                    className="block text-start text-sm font-bold text-[var(--color-text-strong)]"
                                                 >
                                                     {order.order_number}
                                                 </span>
-                                                <span className="mt-0.5 block truncate text-sm text-slate-500">
+                                                <span className="mt-0.5 block truncate text-sm text-[var(--color-muted)]">
                                                     {order.customer_name} ·{" "}
                                                     {formatDate(order.created_at)}
                                                 </span>
@@ -230,7 +230,7 @@ export default function AdminOrders() {
 
                                             <span
                                                 dir="ltr"
-                                                className="text-sm font-bold text-slate-900"
+                                                className="text-sm font-bold text-[var(--color-text-strong)]"
                                             >
                                                 {formatPrice(order.total)}
                                             </span>
@@ -247,7 +247,7 @@ export default function AdminOrders() {
                                                             e.target.value
                                                         )
                                                     }
-                                                    className="rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-sm disabled:opacity-60"
+                                                    className="rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-2 py-1.5 text-sm disabled:opacity-60"
                                                 >
                                                     {ORDER_STATUSES.map((status) => (
                                                         <option
@@ -264,14 +264,14 @@ export default function AdminOrders() {
                                         {rowErrors[order.id] && (
                                             <p
                                                 role="alert"
-                                                className="mx-4 mb-3 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700"
+                                                className="mx-4 mb-3 rounded-lg bg-[var(--color-rose-50)] px-3 py-2 text-sm text-[var(--color-rose-700)]"
                                             >
                                                 {rowErrors[order.id]}
                                             </p>
                                         )}
 
                                         {expanded && (
-                                            <div className="border-t border-slate-100 p-4">
+                                            <div className="border-t border-[var(--color-border-soft)] p-4">
                                                 <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                                                     <Detail label="العميل">
                                                         {order.customer_name}
@@ -280,7 +280,7 @@ export default function AdminOrders() {
                                                         <a
                                                             href={`tel:${order.customer_phone}`}
                                                             dir="ltr"
-                                                            className="font-semibold text-blue-600 hover:underline"
+                                                            className="font-semibold text-[var(--color-primary)] hover:underline"
                                                         >
                                                             {order.customer_phone}
                                                         </a>
@@ -325,7 +325,7 @@ export default function AdminOrders() {
                                                 <div className="mt-4 overflow-x-auto">
                                                     <table className="w-full min-w-[32rem] text-sm">
                                                         <thead>
-                                                            <tr className="border-b border-slate-200 text-start text-xs text-slate-500">
+                                                            <tr className="border-b border-[var(--color-border)] text-start text-xs text-[var(--color-muted)]">
                                                                 <th className="py-2 text-start font-semibold">
                                                                     المنتج
                                                                 </th>
@@ -348,14 +348,14 @@ export default function AdminOrders() {
                                                                 (item) => (
                                                                     <tr
                                                                         key={item.id}
-                                                                        className="border-b border-slate-100 last:border-0"
+                                                                        className="border-b border-[var(--color-border-soft)] last:border-0"
                                                                     >
                                                                         <td className="py-2 pe-3">
                                                                             {item.product_name}
                                                                             {item.sku && (
                                                                                 <span
                                                                                     dir="ltr"
-                                                                                    className="block text-start text-xs text-slate-400"
+                                                                                    className="block text-start text-xs text-[var(--color-subtle)]"
                                                                                 >
                                                                                     {item.sku}
                                                                                 </span>
@@ -395,14 +395,14 @@ export default function AdminOrders() {
                                                     className="mt-4 me-auto w-full max-w-xs space-y-1 text-sm"
                                                 >
                                                     <div className="flex justify-between">
-                                                        <dt className="text-slate-500">Subtotal</dt>
+                                                        <dt className="text-[var(--color-muted)]">Subtotal</dt>
                                                         <dd>{formatPrice(order.subtotal)}</dd>
                                                     </div>
                                                     <div className="flex justify-between">
-                                                        <dt className="text-slate-500">Shipping</dt>
+                                                        <dt className="text-[var(--color-muted)]">Shipping</dt>
                                                         <dd>{formatPrice(order.shipping_cost)}</dd>
                                                     </div>
-                                                    <div className="flex justify-between border-t border-slate-200 pt-1 font-bold">
+                                                    <div className="flex justify-between border-t border-[var(--color-border)] pt-1 font-bold">
                                                         <dt>Total</dt>
                                                         <dd>{formatPrice(order.total)}</dd>
                                                     </div>

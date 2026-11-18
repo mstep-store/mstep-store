@@ -74,10 +74,10 @@ function Cart() {
         >
             <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-slate-900">
+                    <h1 className="text-3xl font-bold text-[var(--color-text-strong)]">
                         Shopping Cart
                     </h1>
-                    <p className="mt-2 text-gray-500">
+                    <p className="mt-2 text-[var(--color-gray-500)]">
                         {totalQuantity} {totalQuantity === 1 ? "item" : "items"} in your cart
                     </p>
                 </div>
@@ -86,7 +86,7 @@ function Cart() {
                     <button
                         type="button"
                         onClick={clearCart}
-                        className="text-sm text-red-600 underline transition hover:text-red-700"
+                        className="text-sm text-[var(--color-danger)] underline transition hover:text-[var(--color-danger-dark)]"
                     >
                         Clear Cart
                     </button>
@@ -94,22 +94,22 @@ function Cart() {
             </div>
 
             {cart.length === 0 ? (
-                <section className="rounded-2xl border border-gray-200 px-6 py-16 text-center">
-                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-50 text-3xl">
+                <section className="rounded-2xl border border-[var(--color-border)] px-6 py-16 text-center">
+                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[var(--color-blue-50)] text-3xl">
                         🛍️
                     </div>
 
-                    <h2 className="mt-5 text-xl font-semibold text-slate-900">
+                    <h2 className="mt-5 text-xl font-semibold text-[var(--color-text-strong)]">
                         Your Cart Is Empty
                     </h2>
 
-                    <p className="mt-3 text-gray-500">
+                    <p className="mt-3 text-[var(--color-gray-500)]">
                         Explore our collection and find something you love.
                     </p>
 
                     <Link
                         to="/products"
-                        className="mt-6 inline-block rounded-lg bg-blue-600 px-6 py-3 text-white! transition hover:bg-blue-700"
+                        className="mt-6 inline-block rounded-lg bg-[var(--color-primary)] px-6 py-3 text-[var(--color-on-primary)]! transition hover:bg-[var(--color-primary-dark)]"
                     >
                         Browse Products
                     </Link>
@@ -120,9 +120,9 @@ function Cart() {
                         {cart.map((item) => (
                             <article
                                 key={item.variant_id}
-                                className="flex flex-col gap-4 rounded-2xl border border-gray-200 p-4 sm:flex-row"
+                                className="flex flex-col gap-4 rounded-2xl border border-[var(--color-border)] p-4 sm:flex-row"
                             >
-                                <div className="h-32 w-full shrink-0 overflow-hidden rounded-xl bg-gray-100 sm:w-32">
+                                <div className="h-32 w-full shrink-0 overflow-hidden rounded-xl bg-[var(--color-gray-100)] sm:w-32">
                                     {item.image_url ? (
                                         <img
                                             src={item.image_url}
@@ -130,7 +130,7 @@ function Cart() {
                                             className="h-full w-full object-cover"
                                         />
                                     ) : (
-                                        <div className="flex h-full items-center justify-center text-sm text-gray-400">
+                                        <div className="flex h-full items-center justify-center text-sm text-[var(--color-gray-400)]">
                                             No Image Available
                                         </div>
                                     )}
@@ -138,21 +138,21 @@ function Cart() {
 
                                 <div className="flex flex-1 flex-col justify-between gap-4">
                                     <div>
-                                        <h2 className="text-lg font-semibold text-slate-900">
+                                        <h2 className="text-lg font-semibold text-[var(--color-text-strong)]">
                                             {item.name}
                                         </h2>
 
-                                        <p className="mt-2 text-sm text-gray-500">
+                                        <p className="mt-2 text-sm text-[var(--color-gray-500)]">
                                             Color: {item.color_name || "Not specified"}
                                             {" · "}
                                             Size: {item.size_name || "Not specified"}
                                         </p>
 
-                                        <p className="mt-2 font-medium text-slate-800">
+                                        <p className="mt-2 font-medium text-[var(--color-text)]">
                                             {formatPrice(item.price)}
                                             {Number(item.original_price) >
                                                 Number(item.price) && (
-                                                <span className="ml-2 text-sm font-normal text-gray-400 line-through">
+                                                <span className="ml-2 text-sm font-normal text-[var(--color-gray-400)] line-through">
                                                     {formatPrice(
                                                         item.original_price
                                                     )}
@@ -170,7 +170,7 @@ function Cart() {
                                                 }
                                                 disabled={Number(item.quantity) <= 1}
                                                 aria-label="Decrease quantity"
-                                                className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 transition hover:bg-gray-50 disabled:opacity-40"
+                                                className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--color-border)] transition hover:bg-[var(--color-gray-50)] disabled:opacity-40"
                                             >
                                                 −
                                             </button>
@@ -185,7 +185,7 @@ function Cart() {
                                                     updateQuantity(item.variant_id, 1)
                                                 }
                                                 aria-label="Increase quantity"
-                                                className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 transition hover:bg-gray-50"
+                                                className="flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--color-border)] transition hover:bg-[var(--color-gray-50)]"
                                             >
                                                 +
                                             </button>
@@ -194,14 +194,14 @@ function Cart() {
                                         <button
                                             type="button"
                                             onClick={() => removeItem(item.variant_id)}
-                                            className="text-sm text-red-600 underline transition hover:text-red-700"
+                                            className="text-sm text-[var(--color-danger)] underline transition hover:text-[var(--color-danger-dark)]"
                                         >
                                             Remove Item
                                         </button>
                                     </div>
                                 </div>
 
-                                <div className="font-bold text-slate-900 sm:min-w-28 sm:text-right">
+                                <div className="font-bold text-[var(--color-text-strong)] sm:min-w-28 sm:text-right">
                                     {formatPrice(
                                         Number(item.price || 0) *
                                         Number(item.quantity || 0)
@@ -211,42 +211,42 @@ function Cart() {
                         ))}
                     </section>
 
-                    <aside className="h-fit rounded-2xl border border-gray-200 p-6">
-                        <h2 className="text-xl font-bold text-slate-900">
+                    <aside className="h-fit rounded-2xl border border-[var(--color-border)] p-6">
+                        <h2 className="text-xl font-bold text-[var(--color-text-strong)]">
                             Order Summary
                         </h2>
 
-                        <div className="mt-6 flex justify-between gap-3 text-gray-600">
+                        <div className="mt-6 flex justify-between gap-3 text-[var(--color-gray-600)]">
                             <span>Total Items</span>
                             <span>{totalQuantity}</span>
                         </div>
 
-                        <div className="mt-4 flex justify-between gap-3 text-gray-600">
+                        <div className="mt-4 flex justify-between gap-3 text-[var(--color-gray-600)]">
                             <span>Subtotal</span>
                             <span>{formatPrice(subtotal)}</span>
                         </div>
 
-                        <p className="mt-3 text-sm text-gray-500">
+                        <p className="mt-3 text-sm text-[var(--color-gray-500)]">
                             Shipping costs will be calculated at checkout.
                         </p>
 
-                        <div className="my-6 border-t border-gray-200" />
+                        <div className="my-6 border-t border-[var(--color-border)]" />
 
-                        <div className="flex justify-between gap-3 text-lg font-bold text-slate-900">
+                        <div className="flex justify-between gap-3 text-lg font-bold text-[var(--color-text-strong)]">
                             <span>Total</span>
                             <span>{formatPrice(subtotal)}</span>
                         </div>
 
                         <Link
                             to="/checkout"
-                            className="mt-6 block rounded-lg bg-blue-600 px-5 py-3 text-center font-semibold text-white! transition hover:bg-blue-700"
+                            className="mt-6 block rounded-lg bg-[var(--color-primary)] px-5 py-3 text-center font-semibold text-[var(--color-on-primary)]! transition hover:bg-[var(--color-primary-dark)]"
                         >
                             Proceed to Checkout
                         </Link>
 
                         <Link
                             to="/products"
-                            className="mt-4 block text-center text-sm text-slate-600 underline transition hover:text-blue-600"
+                            className="mt-4 block text-center text-sm text-[var(--color-text-muted)] underline transition hover:text-[var(--color-primary)]"
                         >
                             Continue Shopping
                         </Link>
