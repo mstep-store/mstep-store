@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import {
     createProduct,
+    deleteProduct,
     getAdminProducts,
     getCategories,
     setProductPublished,
@@ -9,6 +10,7 @@ import {
     uploadProductImages,
     validateImageFile,
 } from "../../services/adminProductService";
+import { getBrandOptions } from "../../services/brandService";
 import formatPrice from "../../utils/formatPrice";
 import { describeDiscount, getDiscountStatus } from "../../utils/pricing";
 
@@ -32,6 +34,7 @@ const EMPTY_FORM = {
     description: "",
     base_price: "",
     category_id: "",
+    brand_id: "",
     is_published: false,
     discount_type: "",
     discount_value: "",
@@ -39,7 +42,7 @@ const EMPTY_FORM = {
     discount_end_at: "",
 };
 
-function ProductForm({ product, categories, onCancel, onSaved }) {
+function ProductForm({ product, categories, brands, onCancel, onSaved }) {
     const isEditing = Boolean(product);
 
     const [form, setForm] = useState(
@@ -49,6 +52,7 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                   description: product.description ?? "",
                   base_price: product.base_price ?? "",
                   category_id: product.category_id ?? "",
+                  brand_id: product.brand_id ?? "",
                   is_published: Boolean(product.is_published),
                   discount_type: product.discount_type ?? "",
                   discount_value: product.discount_value ?? "",
@@ -185,14 +189,40 @@ function ProductForm({ product, categories, onCancel, onSaved }) {
                     </label>
                     <select
                         id="product-category"
+                        required
                         value={form.category_id}
                         onChange={(e) => setField("category_id", e.target.value)}
                         className={inputClass}
                     >
-                        <option value="">بدون تصنيف</option>
+                        <option value="" disabled>
+                            اختار التصنيف
+                        </option>
                         {categories.map((category) => (
                             <option key={category.id} value={category.id}>
                                 {category.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div>
+                    <label
+                        htmlFor="product-brand"
+                        className="mb-1.5 block text-sm font-semibold text-[var(--color-text-secondary)]"
+                    >
+                        البراند (اختياري)
+                    </label>
+                    <select
+                        id="product-brand"
+                        value={form.brand_id}
+                        onChange={(e) => setField("brand_id", e.target.value)}
+                        className={inputClass}
+                    >
+                        <option value="">بدون براند</option>
+                        {brands.map((brand) => (
+                            <option key={brand.id} value={brand.id}>
+                                {brand.name}
+                                {brand.is_active ? "" : " (مخفي)"}
                             </option>
                         ))}
                     </select>
@@ -441,23 +471,28 @@ export default function AdminProducts() {
     const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [brands, setBrands] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
     // null = closed, "new" = creating, product object = editing
     const [editing, setEditing] = useState(null);
     const [togglingId, setTogglingId] = useState(null);
+    const [deletingId, setDeletingId] = useState(null);
     const [actionError, setActionError] = useState("");
 
     const load = useCallback(async () => {
         try {
-            const [productsData, categoriesData] = await Promise.all([
-                getAdminProducts(),
-                getCategories(),
-            ]);
+            const [productsData, categoriesData, brandsData] =
+                await Promise.all([
+                    getAdminProducts(),
+                    getCategories(),
+                    getBrandOptions(),
+                ]);
 
             setProducts(productsData);
             setCategories(categoriesData);
+            setBrands(brandsData);
             setError("");
         } catch (err) {
             setError(err.message || "تعذر تحميل المنتجات.");
@@ -503,6 +538,31 @@ export default function AdminProducts() {
         }
     }
 
+    async function handleDelete(product) {
+        const confirmed = window.confirm(
+            `حذف المنتج «${product.name}» نهائياً؟\n\n` +
+                "هتتحذف معاه الصور والألوان والمقاسات والكميات. الطلبات القديمة هتفضل زي ما هي." +
+                "\n\nلو عايز تخفيه عن المتجر بس من غير حذف، استخدم زرار النشر بدل الحذف."
+        );
+
+        if (!confirmed) return;
+
+        setDeletingId(product.id);
+        setActionError("");
+
+        try {
+            await deleteProduct(product.id);
+
+            setProducts((current) =>
+                current.filter((item) => item.id !== product.id)
+            );
+        } catch (err) {
+            setActionError(err.message || "تعذر حذف المنتج.");
+        } finally {
+            setDeletingId(null);
+        }
+    }
+
     return (
         <div>
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -532,6 +592,7 @@ export default function AdminProducts() {
                     key={editing === "new" ? "new" : editing.id}
                     product={editing === "new" ? null : editing}
                     categories={categories}
+                    brands={brands}
                     onCancel={() => setEditing(null)}
                     onSaved={handleSaved}
                 />
@@ -574,7 +635,7 @@ export default function AdminProducts() {
                                     المنتج
                                 </th>
                                 <th className="px-4 py-3 text-start font-semibold">
-                                    التصنيف
+                                    التصنيف / البراند
                                 </th>
                                 <th className="px-4 py-3 text-start font-semibold">
                                     السعر
@@ -623,6 +684,11 @@ export default function AdminProducts() {
                                     </td>
                                     <td className="px-4 py-3 text-[var(--color-text-muted)]">
                                         {product.categories?.name ?? "—"}
+                                        {product.brands?.name && (
+                                            <span className="mt-0.5 block text-xs text-[var(--color-subtle)]">
+                                                {product.brands.name}
+                                            </span>
+                                        )}
                                     </td>
                                     <td className="px-4 py-3">
                                         <span dir="ltr" className="inline-block">
@@ -710,6 +776,16 @@ export default function AdminProducts() {
                                                 className="text-[var(--color-primary)] hover:underline"
                                             >
                                                 تعديل
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleDelete(product)}
+                                                disabled={deletingId === product.id}
+                                                className="text-[var(--color-rose-600)] hover:underline disabled:cursor-not-allowed disabled:opacity-50 disabled:no-underline"
+                                            >
+                                                {deletingId === product.id
+                                                    ? "جاري الحذف..."
+                                                    : "حذف"}
                                             </button>
                                         </div>
                                     </td>

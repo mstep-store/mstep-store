@@ -14,6 +14,7 @@ export async function getPublishedProducts() {
       discount_start_at,
       discount_end_at,
       categories (id, name, slug),
+      brands (id, name, slug),
       product_images (
         id,
         image_url,
@@ -73,6 +74,7 @@ export async function getProductById(id) {
         name,
         slug
       ),
+      brands (id, name, slug),
       product_images (
         id,
         image_url,

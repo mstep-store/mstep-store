@@ -6,6 +6,8 @@ import { getListingPriceInfo } from "../../utils/pricing";
 
 import Hero from "../../components/store/home/Hero";
 
+import PromoBanners from "../../components/store/home/PromoBanners";
+import BrandsSection from "../../components/store/home/BrandsSection";
 import CategoryGrid from "../../components/store/home/CategoryGrid";
 import BestSellers from "../../components/store/home/BestSellers";
 import StoreBenefits from "../../components/store/home/StoreBenefits";
@@ -20,6 +22,9 @@ export default function Home() {
 
             {/* Shop by category */}
             <CategoryGrid />
+
+            {/* Shop by brand (managed from the dashboard) */}
+            <BrandsSection />
 
             {/* Latest arrivals */}
             <section className="mx-auto mt-16 max-w-7xl px-4 sm:px-6 lg:mt-20">
@@ -129,6 +134,9 @@ export default function Home() {
                     </div>
                 )}
             </section>
+
+            {/* Two promo banners (managed from the dashboard) */}
+            <PromoBanners />
 
             {/* Best sellers based on delivered orders */}
             <BestSellers />

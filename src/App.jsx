@@ -21,6 +21,8 @@ import Dashboard from "./pages/admin/Dashboard";
 import AdminProducts from "./pages/admin/Products";
 import AdminOrders from "./pages/admin/Orders";
 import AdminCategories from "./pages/admin/Categories";
+import AdminBrands from "./pages/admin/Brands";
+import AdminBanners from "./pages/admin/Banners";
 import ProductVariants from "./pages/admin/ProductVariants";
 import AdminMessages from "./pages/admin/Messages";
 import ProtectedRoute from "./components/admin/ProtectedRoute";
@@ -68,6 +70,8 @@ export default function App() {
           path="categories"
           element={<AdminCategories />}
         />
+        <Route path="brands" element={<AdminBrands />} />
+        <Route path="banners" element={<AdminBanners />} />
         <Route path="messages" element={<AdminMessages />} />
       </Route>
 

@@ -7,6 +7,8 @@ const links = [
     { to: "/admin/orders", label: "الطلبات" },
     { to: "/admin/products", label: "المنتجات" },
     { to: "/admin/categories", label: "التصنيفات" },
+    { to: "/admin/brands", label: "البراندات" },
+    { to: "/admin/banners", label: "البانرات" },
     { to: "/admin/messages", label: "الرسائل" },
 ];
 

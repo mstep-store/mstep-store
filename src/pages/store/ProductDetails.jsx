@@ -398,9 +398,23 @@ function ProductDetails() {
 
                     {/* Product information */}
                     <section className="py-1 lg:py-4">
-                        {product.categories?.name && (
-                            <p className="mb-3 text-sm font-bold text-[var(--color-pink)]">
-                                {product.categories.name}
+                        {(product.brands?.name || product.categories?.name) && (
+                            <p className="mb-3 flex flex-wrap items-center gap-x-2 text-sm font-bold text-[var(--color-pink)]">
+                                {product.brands?.name && (
+                                    <Link
+                                        to={`/products?brand=${product.brands.slug}`}
+                                        className="hover:underline"
+                                    >
+                                        {product.brands.name}
+                                    </Link>
+                                )}
+                                {product.brands?.name &&
+                                    product.categories?.name && (
+                                        <span aria-hidden="true">·</span>
+                                    )}
+                                {product.categories?.name && (
+                                    <span>{product.categories.name}</span>
+                                )}
                             </p>
                         )}
 

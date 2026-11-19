@@ -16,6 +16,7 @@ export default function Products() {
     const [sortBy, setSortBy] = useState("newest");
 
     const selectedCategory = searchParams.get("category") || "all";
+    const selectedBrand = searchParams.get("brand") || "all";
 
     useEffect(() => {
         let active = true;
@@ -72,10 +73,32 @@ export default function Products() {
         );
     }, [products]);
 
+    // Brands that have at least one published product.
+    const brands = useMemo(() => {
+        const uniqueBrands = new Map();
+
+        products.forEach((product) => {
+            const brand = product.brands;
+
+            if (brand?.id != null) {
+                uniqueBrands.set(String(brand.id), {
+                    id: String(brand.id),
+                    name: brand.name || "Brand",
+                    slug: String(brand.slug || "").toLowerCase(),
+                });
+            }
+        });
+
+        return Array.from(uniqueBrands.values()).sort((a, b) =>
+            a.name.localeCompare(b.name)
+        );
+    }, [products]);
+
     // Filter and sort products.
     const filteredProducts = useMemo(() => {
         const normalizedSearch = search.trim().toLowerCase();
         const normalizedCategory = normalizeCategorySlug(selectedCategory);
+        const normalizedBrand = selectedBrand.toLowerCase();
 
         const result = products.filter((product) => {
             const productName = String(product.name || "").toLowerCase();
@@ -86,11 +109,20 @@ export default function Products() {
                 product.categories?.name || ""
             ).toLowerCase();
 
+            const brandName = String(product.brands?.name || "").toLowerCase();
+
             const matchesSearch =
                 !normalizedSearch ||
                 productName.includes(normalizedSearch) ||
                 productDescription.includes(normalizedSearch) ||
-                categoryName.includes(normalizedSearch);
+                categoryName.includes(normalizedSearch) ||
+                brandName.includes(normalizedSearch);
+
+            const matchesBrand =
+                selectedBrand === "all" ||
+                String(product.brands?.slug || "").toLowerCase() ===
+                    normalizedBrand ||
+                String(product.brands?.id ?? "") === selectedBrand;
 
             const productCategorySlug = normalizeCategorySlug(
                 product.categories?.slug
@@ -105,7 +137,7 @@ export default function Products() {
                 productCategorySlug === normalizedCategory ||
                 productCategoryId === selectedCategory;
 
-            return matchesSearch && matchesCategory;
+            return matchesSearch && matchesCategory && matchesBrand;
         });
 
         return [...result].sort((a, b) => {
@@ -127,7 +159,7 @@ export default function Products() {
                 numeric: true,
             });
         });
-    }, [products, search, selectedCategory, sortBy]);
+    }, [products, search, selectedCategory, selectedBrand, sortBy]);
 
     function handleCategoryChange(value) {
         const nextParams = new URLSearchParams(searchParams);
@@ -141,6 +173,27 @@ export default function Products() {
         setSearchParams(nextParams);
     }
 
+    function handleBrandChange(value) {
+        const nextParams = new URLSearchParams(searchParams);
+
+        if (value === "all") {
+            nextParams.delete("brand");
+        } else {
+            nextParams.set("brand", value);
+        }
+
+        setSearchParams(nextParams);
+    }
+
+    const activeBrand =
+        selectedBrand === "all"
+            ? null
+            : brands.find(
+                (brand) =>
+                    brand.slug === selectedBrand.toLowerCase() ||
+                    brand.id === selectedBrand
+            );
+
     const activeCategory =
         selectedCategory === "all"
             ? null
@@ -150,13 +203,23 @@ export default function Products() {
                     category.id === selectedCategory
             );
 
-    const pageTitle =
+    const categoryTitle =
         activeCategory?.name ||
         (selectedCategory !== "all"
             ? normalizeCategorySlug(selectedCategory).replace(/^./, (c) =>
                 c.toUpperCase()
             )
-            : "Our Collection");
+            : "");
+
+    const brandTitle =
+        activeBrand?.name ||
+        (selectedBrand !== "all"
+            ? selectedBrand.replace(/^./, (c) => c.toUpperCase())
+            : "");
+
+    const pageTitle =
+        [brandTitle, categoryTitle].filter(Boolean).join(" · ") ||
+        "Our Collection";
 
     function clearFilters() {
         setSearch("");
@@ -306,6 +369,52 @@ export default function Products() {
                         })}
                     </div>
                 </div>
+
+                {/* Brands (only when at least one product has a brand) */}
+                {brands.length > 0 && (
+                    <div className="mt-5">
+                        <p className="mb-3 text-sm font-bold text-(--color-text-secondary)">
+                            Brands
+                        </p>
+
+                        <div className="flex flex-wrap gap-2">
+                            <button
+                                type="button"
+                                onClick={() => handleBrandChange("all")}
+                                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${selectedBrand === "all"
+                                    ? "bg-(--color-primary) text-(--color-on-primary)"
+                                    : "bg-(--color-slate-100) text-(--color-text-muted) hover:bg-(--color-slate-200)"
+                                    }`}
+                            >
+                                All Brands
+                            </button>
+
+                            {brands.map((brand) => {
+                                const isSelected =
+                                    selectedBrand.toLowerCase() === brand.slug ||
+                                    selectedBrand === brand.id;
+
+                                return (
+                                    <button
+                                        key={brand.id}
+                                        type="button"
+                                        onClick={() =>
+                                            handleBrandChange(
+                                                brand.slug || brand.id
+                                            )
+                                        }
+                                        className={`rounded-full px-4 py-2 text-sm font-semibold transition ${isSelected
+                                            ? "bg-(--color-primary) text-(--color-on-primary)"
+                                            : "bg-(--color-slate-100) text-(--color-text-muted) hover:bg-(--color-slate-200)"
+                                            }`}
+                                    >
+                                        {brand.name}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
             </section>
 
             {/* Loading */}
@@ -356,6 +465,7 @@ export default function Products() {
 
                         {(search ||
                             selectedCategory !== "all" ||
+                            selectedBrand !== "all" ||
                             sortBy !== "newest") && (
                                 <button
                                     type="button"

@@ -162,7 +162,9 @@ export async function getAdminProducts() {
             discount_end_at,
             is_published,
             category_id,
+            brand_id,
             categories (id, name),
+            brands (id, name),
             product_images (image_url, alt_text, sort_order, is_primary),
             product_variants (id, stock_quantity, is_available)
         `)
@@ -203,6 +205,7 @@ function cleanProductFields({
     description,
     base_price,
     category_id,
+    brand_id,
     is_published,
 }) {
     const trimmedName = String(name ?? "").trim();
@@ -216,11 +219,17 @@ function cleanProductFields({
         throw new Error("السعر لازم يكون رقم صحيح وأكبر من أو يساوي صفر.");
     }
 
+    if (!category_id) {
+        throw new Error("اختار التصنيف. التصنيف مطلوب لكل منتج.");
+    }
+
     return {
         name: trimmedName,
         description: String(description ?? "").trim() || null,
         base_price: price,
-        category_id: category_id ? Number(category_id) : null,
+        category_id: Number(category_id),
+        // The brand is optional: an empty choice stores NULL.
+        brand_id: brand_id ? Number(brand_id) : null,
         is_published: Boolean(is_published),
     };
 }
@@ -295,6 +304,54 @@ export async function setProductPublished(id, isPublished) {
     if (error) {
         console.error("Error changing product visibility:", error);
         throw new Error("تعذر تغيير حالة النشر.");
+    }
+}
+
+/**
+ * Deletes a product with its colors, sizes, variants and image rows (the
+ * database cascades). Past orders are kept: they store the product name,
+ * price and quantity themselves.
+ */
+export async function deleteProduct(id) {
+    const { data: images } = await supabase
+        .from("product_images")
+        .select("image_url")
+        .eq("product_id", id);
+
+    const { data, error } = await supabase
+        .from("products")
+        .delete()
+        .eq("id", id)
+        .select("id");
+
+    if (error) {
+        console.error("Error deleting product:", error);
+
+        throw new Error(
+            error.code === "42501"
+                ? "مفيش صلاحية حذف. شغّل ملف 20261119000002_allow_product_delete.sql في Supabase."
+                : `تعذر حذف المنتج: ${error.message}`
+        );
+    }
+
+    if (!data?.length) {
+        throw new Error("تعذر حذف المنتج: المنتج مش موجود أو مفيش صلاحية.");
+    }
+
+    // Clean up the image files too. A leftover file is harmless, so a failure
+    // here must not report the delete as failed.
+    const paths = (images ?? [])
+        .map((image) => storagePathFromUrl(image.image_url))
+        .filter(Boolean);
+
+    if (paths.length) {
+        const { error: storageError } = await supabase.storage
+            .from(IMAGE_BUCKET)
+            .remove(paths);
+
+        if (storageError) {
+            console.error("Product deleted, image cleanup failed:", storageError);
+        }
     }
 }
 

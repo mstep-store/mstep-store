@@ -41,7 +41,7 @@ export default function Footer() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="Facebook"
-                                className="flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition-colors bg-blue-600 hover:bg-blue-500"
+                                className="flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition-colors bg-white/10 hover:bg-white/20"
                             >
                                 f
                             </a>
