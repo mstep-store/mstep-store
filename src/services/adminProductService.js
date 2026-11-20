@@ -154,6 +154,7 @@ export async function getAdminProducts() {
         .from("products")
         .select(`
             id,
+            display_order,
             name,
             description,
             base_price,
@@ -169,6 +170,7 @@ export async function getAdminProducts() {
             product_images (image_url, alt_text, sort_order, is_primary),
             product_variants (id, stock_quantity, is_available)
         `)
+        .order("display_order", { ascending: true })
         .order("id", { ascending: false });
 
     if (error) {
@@ -199,6 +201,21 @@ export async function getAdminProducts() {
                 ),
         };
     });
+}
+
+/**
+ * Saves the complete manual order of products from the admin list.
+ * The database function validates admin access and updates the order atomically.
+ */
+export async function reorderProducts(productIds) {
+    const { error } = await supabase.rpc("admin_reorder_products", {
+        p_product_ids: productIds,
+    });
+
+    if (error) {
+        console.error("Error reordering products:", error);
+        throw new Error(`تعذر حفظ ترتيب المنتجات: ${error.message}`);
+    }
 }
 
 function cleanProductFields({

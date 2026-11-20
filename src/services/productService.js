@@ -6,6 +6,7 @@ export async function getPublishedProducts() {
         .from("products")
         .select(`
       id,
+      display_order,
       name,
       description,
       base_price,
@@ -30,6 +31,7 @@ export async function getPublishedProducts() {
       )
     `)
         .eq("is_published", true)
+        .order("display_order", { ascending: true })
         .order("id", { ascending: false });
 
     if (error) {

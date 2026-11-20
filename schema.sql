@@ -1057,6 +1057,7 @@ CREATE TABLE IF NOT EXISTS "public"."products" (
     "name" "text" NOT NULL,
     "description" "text",
     "base_price" numeric(10,2) NOT NULL,
+    "display_order" integer DEFAULT 0 NOT NULL,
     "is_published" boolean DEFAULT false NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
     "updated_at" timestamp with time zone DEFAULT "now"() NOT NULL,

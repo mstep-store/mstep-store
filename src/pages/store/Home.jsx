@@ -14,6 +14,7 @@ import StoreBenefits from "../../components/store/home/StoreBenefits";
 
 export default function Home() {
     const { products, loading, error } = useProducts();
+    const latestProducts = products.slice(0, 8);
 
     return (
         <main className="min-h-screen bg-[var(--color-surface)] pb-16">
@@ -80,7 +81,7 @@ export default function Home() {
 
                 {!loading && !error && products.length > 0 && (
                     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4">
-                        {products.map((product) => {
+                        {latestProducts.map((product) => {
                             const image = product.images?.[0];
 
                             return (

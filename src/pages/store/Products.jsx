@@ -13,7 +13,7 @@ export default function Products() {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [search, setSearch] = useState("");
-    const [sortBy, setSortBy] = useState("newest");
+    const [sortBy, setSortBy] = useState("manual");
 
     const selectedCategory = searchParams.get("category") || "all";
     const selectedBrand = searchParams.get("brand") || "all";
@@ -141,6 +141,16 @@ export default function Products() {
         });
 
         return [...result].sort((a, b) => {
+            if (sortBy === "manual") {
+                return (
+                    (Number(a.display_order) || 0) -
+                        (Number(b.display_order) || 0) ||
+                    String(b.id).localeCompare(String(a.id), undefined, {
+                        numeric: true,
+                    })
+                );
+            }
+
             if (sortBy === "price-low") {
                 return (
                     getListingPriceInfo(a).effective -
@@ -223,7 +233,7 @@ export default function Products() {
 
     function clearFilters() {
         setSearch("");
-        setSortBy("newest");
+        setSortBy("manual");
         setSearchParams({});
     }
 
@@ -313,6 +323,7 @@ export default function Products() {
                                 }
                                 className="w-full bg-transparent text-sm text-[var(--color-text-secondary)] outline-none"
                             >
+                                <option value="manual">Store Order</option>
                                 <option value="newest">Newest First</option>
                                 <option value="price-low">
                                     Price: Low to High

@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { ArrowDown, ArrowUp, GripVertical } from "lucide-react";
 import {
     createProduct,
     deleteProduct,
     getAdminProducts,
     getCategories,
+    reorderProducts,
     setProductPublished,
     updateProduct,
     uploadProductImages,
@@ -480,6 +482,8 @@ export default function AdminProducts() {
     const [togglingId, setTogglingId] = useState(null);
     const [deletingId, setDeletingId] = useState(null);
     const [actionError, setActionError] = useState("");
+    const [reordering, setReordering] = useState(false);
+    const [draggedProductId, setDraggedProductId] = useState(null);
 
     const load = useCallback(async () => {
         try {
@@ -515,6 +519,52 @@ export default function AdminProducts() {
                 state: imageError ? { notice: imageError } : undefined,
             });
         }
+    }
+
+    async function saveProductOrder(nextProducts) {
+        setReordering(true);
+        setActionError("");
+
+        try {
+            await reorderProducts(nextProducts.map((product) => product.id));
+            setProducts(
+                nextProducts.map((product, index) => ({
+                    ...product,
+                    display_order: index + 1,
+                }))
+            );
+        } catch (err) {
+            setActionError(err.message || "تعذر حفظ ترتيب المنتجات.");
+        } finally {
+            setReordering(false);
+        }
+    }
+
+    async function moveProduct(productId, targetId) {
+        if (reordering || productId == null || productId === targetId) return;
+
+        const nextProducts = [...products];
+        const fromIndex = nextProducts.findIndex(
+            (product) => String(product.id) === String(productId)
+        );
+        const toIndex = nextProducts.findIndex(
+            (product) => String(product.id) === String(targetId)
+        );
+
+        if (fromIndex < 0 || toIndex < 0) return;
+
+        const [movedProduct] = nextProducts.splice(fromIndex, 1);
+        nextProducts.splice(toIndex, 0, movedProduct);
+
+        await saveProductOrder(nextProducts);
+    }
+
+    function handleProductDrop(event, targetId) {
+        event.preventDefault();
+        const draggedId =
+            draggedProductId ?? event.dataTransfer.getData("text/plain");
+        setDraggedProductId(null);
+        moveProduct(draggedId, targetId);
     }
 
     async function handleTogglePublished(product) {
@@ -628,9 +678,16 @@ export default function AdminProducts() {
 
             {!loading && products.length > 0 && (
                 <div className="mt-6 overflow-x-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)]">
+                    <p className="border-b border-[var(--color-border-soft)] px-4 py-3 text-xs text-[var(--color-muted)]">
+                        غيّر ترتيب المنتجات بسحب الصف لأعلى أو لأسفل، أو باستخدام الأسهم. الترتيب المحفوظ يظهر في المتجر.
+                        {reordering && " جاري حفظ الترتيب..."}
+                    </p>
                     <table className="w-full min-w-[40rem] text-sm">
                         <thead>
                             <tr className="border-b border-[var(--color-border)] bg-[var(--color-page)] text-xs text-[var(--color-muted)]">
+                                <th className="px-3 py-3 text-center font-semibold">
+                                    الترتيب
+                                </th>
                                 <th className="px-4 py-3 text-start font-semibold">
                                     المنتج
                                 </th>
@@ -655,8 +712,71 @@ export default function AdminProducts() {
                             {products.map((product) => (
                                 <tr
                                     key={product.id}
-                                    className="border-b border-[var(--color-border-soft)] last:border-0"
+                                    draggable={!reordering}
+                                    onDragStart={(event) => {
+                                        setDraggedProductId(product.id);
+                                        event.dataTransfer.effectAllowed = "move";
+                                        event.dataTransfer.setData(
+                                            "text/plain",
+                                            String(product.id)
+                                        );
+                                    }}
+                                    onDragOver={(event) => {
+                                        event.preventDefault();
+                                        event.dataTransfer.dropEffect = "move";
+                                    }}
+                                    onDrop={(event) =>
+                                        handleProductDrop(event, product.id)
+                                    }
+                                    onDragEnd={() => setDraggedProductId(null)}
+                                    className={[
+                                        "border-b border-[var(--color-border-soft)] last:border-0",
+                                        reordering ? "opacity-60" : "hover:bg-[var(--color-page)]",
+                                        draggedProductId === product.id ? "opacity-40" : "",
+                                    ].join(" ")}
                                 >
+                                    <td className="px-3 py-3">
+                                        <div className="flex items-center justify-center gap-1">
+                                            <span
+                                                title="اسحب الصف لتغيير الترتيب"
+                                                className="cursor-grab text-[var(--color-subtle)] active:cursor-grabbing"
+                                            >
+                                                <GripVertical size={18} />
+                                            </span>
+                                            <div className="flex flex-col">
+                                                <button
+                                                    type="button"
+                                                    title="تحريك لأعلى"
+                                                    aria-label={`تحريك ${product.name} لأعلى`}
+                                                    disabled={reordering || products[0]?.id === product.id}
+                                                    onClick={() =>
+                                                        moveProduct(
+                                                            product.id,
+                                                            products[products.findIndex((item) => item.id === product.id) - 1]?.id
+                                                        )
+                                                    }
+                                                    className="rounded p-0.5 text-[var(--color-text-secondary)] hover:bg-[var(--color-slate-100)] disabled:opacity-25"
+                                                >
+                                                    <ArrowUp size={14} />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    title="تحريك لأسفل"
+                                                    aria-label={`تحريك ${product.name} لأسفل`}
+                                                    disabled={reordering || products[products.length - 1]?.id === product.id}
+                                                    onClick={() =>
+                                                        moveProduct(
+                                                            product.id,
+                                                            products[products.findIndex((item) => item.id === product.id) + 1]?.id
+                                                        )
+                                                    }
+                                                    className="rounded p-0.5 text-[var(--color-text-secondary)] hover:bg-[var(--color-slate-100)] disabled:opacity-25"
+                                                >
+                                                    <ArrowDown size={14} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
                                     <td className="px-4 py-3">
                                         <div className="flex items-center gap-3">
                                             {product.thumbnail ? (
