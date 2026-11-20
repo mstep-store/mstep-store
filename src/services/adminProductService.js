@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { LOW_STOCK_THRESHOLD } from "../utils/stock";
 
 function normalizeDiscount({
     discount_type,
@@ -440,6 +441,43 @@ export async function deleteCategory(id) {
 
         throw new Error(categoryErrorMessage(error, "تعذر حذف التصنيف"));
     }
+}
+
+/**
+ * Variants (one color + size) of published products that are running out:
+ * `threshold` pieces or fewer, including 0. Variants switched off with
+ * "is_available" are skipped on purpose. Lowest stock first.
+ */
+export async function getLowStockVariants(threshold = LOW_STOCK_THRESHOLD) {
+    const { data, error } = await supabase
+        .from("product_variants")
+        .select(`
+            id,
+            stock_quantity,
+            products!inner (id, name, is_published),
+            product_colors (name, hex_code),
+            product_sizes (name)
+        `)
+        .eq("is_available", true)
+        .eq("products.is_published", true)
+        .lte("stock_quantity", threshold)
+        .order("stock_quantity", { ascending: true })
+        .order("id", { ascending: true });
+
+    if (error) {
+        console.error("Error fetching low stock variants:", error);
+        throw new Error("تعذر تحميل تنبيهات المخزون.");
+    }
+
+    return (data ?? []).map((variant) => ({
+        id: variant.id,
+        stock: Number(variant.stock_quantity) || 0,
+        productId: variant.products?.id,
+        productName: variant.products?.name ?? "—",
+        colorName: variant.product_colors?.name ?? "",
+        colorHex: variant.product_colors?.hex_code ?? "",
+        sizeName: variant.product_sizes?.name ?? "",
+    }));
 }
 
 /* ------------------- Colors, sizes and variants ------------------- */

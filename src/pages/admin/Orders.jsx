@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { getOrders, updateOrderStatus } from "../../services/orderService";
 import StatusBadge from "../../components/admin/StatusBadge";
+import OrderDetails from "../../components/admin/OrderDetails";
 import formatPrice, { formatDate } from "../../utils/formatPrice";
 import { ORDER_STATUSES } from "../../utils/orderStatus";
 
@@ -12,15 +13,6 @@ function matchesQuery(order, query) {
     return [order.order_number, order.customer_name, order.customer_phone]
         .filter(Boolean)
         .some((value) => String(value).toLowerCase().includes(q));
-}
-
-function Detail({ label, children }) {
-    return (
-        <div>
-            <dt className="text-xs text-[var(--color-subtle)]">{label}</dt>
-            <dd className="mt-0.5 text-sm text-[var(--color-text)]">{children}</dd>
-        </div>
-    );
 }
 
 export default function AdminOrders() {
@@ -272,141 +264,7 @@ export default function AdminOrders() {
 
                                         {expanded && (
                                             <div className="border-t border-[var(--color-border-soft)] p-4">
-                                                <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                                                    <Detail label="العميل">
-                                                        {order.customer_name}
-                                                    </Detail>
-                                                    <Detail label="الموبايل">
-                                                        <a
-                                                            href={`tel:${order.customer_phone}`}
-                                                            dir="ltr"
-                                                            className="font-semibold text-[var(--color-primary)] hover:underline"
-                                                        >
-                                                            {order.customer_phone}
-                                                        </a>
-                                                    </Detail>
-                                                    <Detail label="العنوان">
-                                                        {order.shipping_address}،{" "}
-                                                        {order.shipping_city}
-                                                    </Detail>
-                                                    <Detail label="الدفع">
-                                                        {order.payment_method ===
-                                                        "cash_on_delivery"
-                                                            ? "الدفع عند الاستلام"
-                                                            : order.payment_method}
-                                                    </Detail>
-                                                    {order.customer_email && (
-                                                        <Detail label="البريد">
-                                                            <span dir="ltr">
-                                                                {order.customer_email}
-                                                            </span>
-                                                        </Detail>
-                                                    )}
-                                                    {order.status === "cancelled" && (
-                                                        <Detail label="سبب الإلغاء">
-                                                            {order.cancel_reason ||
-                                                                "لم يُذكر سبب"}
-                                                            {order.cancelled_by &&
-                                                                ` (${
-                                                                    order.cancelled_by ===
-                                                                    "customer"
-                                                                        ? "ألغاه العميل"
-                                                                        : "ألغاه الأدمن"
-                                                                })`}
-                                                        </Detail>
-                                                    )}
-                                                    {order.shipping_notes && (
-                                                        <Detail label="ملاحظات العميل">
-                                                            {order.shipping_notes}
-                                                        </Detail>
-                                                    )}
-                                                </dl>
-
-                                                <div className="mt-4 overflow-x-auto">
-                                                    <table className="w-full min-w-[32rem] text-sm">
-                                                        <thead>
-                                                            <tr className="border-b border-[var(--color-border)] text-start text-xs text-[var(--color-muted)]">
-                                                                <th className="py-2 text-start font-semibold">
-                                                                    المنتج
-                                                                </th>
-                                                                <th className="py-2 text-start font-semibold">
-                                                                    اللون / المقاس
-                                                                </th>
-                                                                <th className="py-2 text-start font-semibold">
-                                                                    الكمية
-                                                                </th>
-                                                                <th className="py-2 text-start font-semibold">
-                                                                    السعر
-                                                                </th>
-                                                                <th className="py-2 text-start font-semibold">
-                                                                    الإجمالي
-                                                                </th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {(order.order_items ?? []).map(
-                                                                (item) => (
-                                                                    <tr
-                                                                        key={item.id}
-                                                                        className="border-b border-[var(--color-border-soft)] last:border-0"
-                                                                    >
-                                                                        <td className="py-2 pe-3">
-                                                                            {item.product_name}
-                                                                            {item.sku && (
-                                                                                <span
-                                                                                    dir="ltr"
-                                                                                    className="block text-start text-xs text-[var(--color-subtle)]"
-                                                                                >
-                                                                                    {item.sku}
-                                                                                </span>
-                                                                            )}
-                                                                        </td>
-                                                                        <td className="py-2 pe-3">
-                                                                            {[
-                                                                                item.color_name,
-                                                                                item.size_name,
-                                                                            ]
-                                                                                .filter(Boolean)
-                                                                                .join(" / ") ||
-                                                                                "—"}
-                                                                        </td>
-                                                                        <td className="py-2 pe-3">
-                                                                            {item.quantity}
-                                                                        </td>
-                                                                        <td className="py-2 pe-3">
-                                                                            <span dir="ltr" className="inline-block">
-                                                                                {formatPrice(item.unit_price)}
-                                                                            </span>
-                                                                        </td>
-                                                                        <td className="py-2 font-semibold">
-                                                                            <span dir="ltr" className="inline-block">
-                                                                                {formatPrice(item.line_total)}
-                                                                            </span>
-                                                                        </td>
-                                                                    </tr>
-                                                                )
-                                                            )}
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-
-                                                <dl
-                                                    dir="ltr"
-                                                    className="mt-4 me-auto w-full max-w-xs space-y-1 text-sm"
-                                                >
-                                                    <div className="flex justify-between">
-                                                        <dt className="text-[var(--color-muted)]">Subtotal</dt>
-                                                        <dd>{formatPrice(order.subtotal)}</dd>
-                                                    </div>
-                                                    <div className="flex justify-between">
-                                                        <dt className="text-[var(--color-muted)]">Shipping</dt>
-                                                        <dd>{formatPrice(order.shipping_cost)}</dd>
-                                                    </div>
-                                                    <div className="flex justify-between border-t border-[var(--color-border)] pt-1 font-bold">
-                                                        <dt>Total</dt>
-                                                        <dd>{formatPrice(order.total)}</dd>
-                                                    </div>
-                                                </dl>
+                                                <OrderDetails order={order} />
                                             </div>
                                         )}
                                     </li>

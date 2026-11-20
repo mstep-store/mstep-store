@@ -90,7 +90,7 @@ export default function BrandsSection() {
 
             <style>{`
                 .brands-marquee-track {
-                    animation: brands-scroll-right 15s linear infinite;
+                    animation: brands-scroll-right 10s linear infinite;
                     will-change: transform;
                 }
 
