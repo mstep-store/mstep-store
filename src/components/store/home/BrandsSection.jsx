@@ -1,9 +1,8 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { getStoreBrands } from "../../../services/brandService";
 
-// Brands managed from the dashboard (Brands page). Hidden until there is at
-// least one brand with a published product.
 export default function BrandsSection() {
     const [brands, setBrands] = useState([]);
 
@@ -13,10 +12,8 @@ export default function BrandsSection() {
         async function load() {
             try {
                 const data = await getStoreBrands();
-
                 if (active) setBrands(data);
             } catch (err) {
-                // The home page works fine without brands.
                 console.error(err);
             }
         }
@@ -30,6 +27,48 @@ export default function BrandsSection() {
 
     if (brands.length === 0) return null;
 
+    const renderBrands = (isDuplicate = false) => (
+        <ul
+            className="flex shrink-0 items-stretch gap-4 pr-4"
+            aria-hidden={isDuplicate ? "true" : undefined}
+        >
+            {brands.map((brand) => (
+                <li
+                    key={`${isDuplicate ? "duplicate-" : ""}${brand.id}`}
+                    className="w-36 shrink-0 sm:w-44"
+                >
+                    <Link
+                        to={`/products?brand=${brand.slug}`}
+                        tabIndex={isDuplicate ? -1 : undefined}
+                        className="group flex h-36 flex-col items-center justify-center gap-3 rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-5 text-center transition duration-300 hover:-translate-y-1 hover:border-[var(--color-border-strong)] hover:shadow-lg sm:h-40"
+                    >
+                        <span className="flex h-16 w-full items-center justify-center sm:h-20">
+                            {brand.logo_url ? (
+                                <img
+                                    src={brand.logo_url}
+                                    alt={isDuplicate ? "" : brand.name}
+                                    loading="lazy"
+                                    className="max-h-full max-w-full object-contain transition duration-300 group-hover:scale-105"
+                                />
+                            ) : (
+                                <span
+                                    aria-hidden="true"
+                                    className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-page)] text-xl font-extrabold text-[var(--color-text-secondary)]"
+                                >
+                                    {brand.name.slice(0, 1).toUpperCase()}
+                                </span>
+                            )}
+                        </span>
+
+                        <span className="text-sm font-bold text-[var(--color-text-strong)]">
+                            {brand.name}
+                        </span>
+                    </Link>
+                </li>
+            ))}
+        </ul>
+    );
+
     return (
         <section className="mx-auto mt-16 max-w-7xl px-4 sm:px-6 lg:mt-20">
             <div className="mb-8 text-center">
@@ -42,38 +81,43 @@ export default function BrandsSection() {
                 </p>
             </div>
 
-            <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-                {brands.map((brand) => (
-                    <li key={brand.id}>
-                        <Link
-                            to={`/products?brand=${brand.slug}`}
-                            className="group flex h-full flex-col items-center justify-center gap-3 rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-5 text-center transition duration-300 hover:-translate-y-1 hover:border-[var(--color-border-strong)] hover:shadow-lg"
-                        >
-                            <span className="flex h-16 w-full items-center justify-center sm:h-20">
-                                {brand.logo_url ? (
-                                    <img
-                                        src={brand.logo_url}
-                                        alt=""
-                                        loading="lazy"
-                                        className="max-h-full max-w-full object-contain transition duration-300 group-hover:scale-105"
-                                    />
-                                ) : (
-                                    <span
-                                        aria-hidden="true"
-                                        className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-page)] text-xl font-extrabold text-[var(--color-text-secondary)]"
-                                    >
-                                        {brand.name.slice(0, 1).toUpperCase()}
-                                    </span>
-                                )}
-                            </span>
+            <div className="brands-marquee overflow-hidden">
+                <div className="brands-marquee-track flex w-max">
+                    {renderBrands()}
+                    {renderBrands(true)}
+                </div>
+            </div>
 
-                            <span className="text-sm font-bold text-[var(--color-text-strong)]">
-                                {brand.name}
-                            </span>
-                        </Link>
-                    </li>
-                ))}
-            </ul>
+            <style>{`
+                .brands-marquee-track {
+                    animation: brands-scroll-right 15s linear infinite;
+                    will-change: transform;
+                }
+
+                @keyframes brands-scroll-right {
+                    from {
+                        transform: translateX(-50%);
+                    }
+                    to {
+                        transform: translateX(0);
+                    }
+                }
+
+                .brands-marquee:hover .brands-marquee-track,
+                .brands-marquee:focus-within .brands-marquee-track {
+                    animation-play-state: paused;
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .brands-marquee-track {
+                        animation: none;
+                    }
+
+                    .brands-marquee {
+                        overflow-x: auto;
+                    }
+                }
+            `}</style>
         </section>
     );
 }
