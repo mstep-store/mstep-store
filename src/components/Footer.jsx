@@ -41,7 +41,7 @@ export default function Footer() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="Facebook"
-                                className="flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition-colors bg-white/10 hover:bg-white/20"
+                                className="flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition-colors bg-blue-600 hover:bg-blue-700"
                             >
                                 f
                             </a>
@@ -53,7 +53,7 @@ export default function Footer() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="Instagram"
-                                className="flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition-colors bg-white/10 hover:bg-white/20"
+                                className="flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold transition-colors bg-pink-500 hover:bg-pink-600"
                             >
                                 ◎
                             </a>
@@ -108,7 +108,7 @@ export default function Footer() {
 
                     <Link
                         to="/products"
-                        className="mt-5 inline-flex items-center justify-center rounded-full bg-(--color-primary) px-5 py-3 text-sm font-bold text-(--color-on-primary)! transition duration-300 hover:-translate-y-0.5 hover:bg-(--color-primary-hover)"
+                        className="mt-5 inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-bold transition duration-300 bg-white! text-black!"
                     >
                         Explore Products
                         <span className="ml-2">→</span>
