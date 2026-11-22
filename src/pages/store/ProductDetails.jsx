@@ -1,4 +1,11 @@
 
+
+
+
+
+
+
+
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router";
 import {
@@ -40,6 +47,7 @@ function ProductDetails() {
     const [selectedColor, setSelectedColor] = useState(null);
     const [selectedSize, setSelectedSize] = useState(null);
     const [selectedImage, setSelectedImage] = useState(0);
+    const [lightboxOpen, setLightboxOpen] = useState(false);
     const [quantity, setQuantity] = useState(1);
     const [addedToCart, setAddedToCart] = useState(false);
     const [cartError, setCartError] = useState("");
@@ -135,11 +143,11 @@ function ProductDetails() {
     const priceInfo = referenceVariant
         ? getPriceInfo(referenceVariant, product)
         : {
-              original: Number(product?.base_price) || 0,
-              effective: Number(product?.base_price) || 0,
-              discounted: false,
-              percentOff: 0,
-          };
+            original: Number(product?.base_price) || 0,
+            effective: Number(product?.base_price) || 0,
+            discounted: false,
+            percentOff: 0,
+        };
 
     const price = priceInfo.effective;
 
@@ -160,6 +168,31 @@ function ProductDetails() {
             setSelectedImage(colorImageIndex);
         }
     }
+
+    function showPreviousImage() {
+        setSelectedImage((current) =>
+            current === 0 ? images.length - 1 : current - 1
+        );
+    }
+
+    function showNextImage() {
+        setSelectedImage((current) =>
+            current === images.length - 1 ? 0 : current + 1
+        );
+    }
+
+    useEffect(() => {
+        if (!lightboxOpen) return;
+
+        function handleKeyDown(event) {
+            if (event.key === "Escape") setLightboxOpen(false);
+            if (event.key === "ArrowLeft") showNextImage();
+            if (event.key === "ArrowRight") showPreviousImage();
+        }
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [lightboxOpen, images.length]);
 
     function changeQuantity(amount) {
         if (!selectedVariant) return;
@@ -328,11 +361,18 @@ function ProductDetails() {
                     <section className="min-w-0">
                         <div className="relative overflow-hidden rounded-3xl bg-[var(--color-page)] w-75 md:w-100">
                             {currentImage?.image_url ? (
-                                <img
-                                    src={currentImage.image_url}
-                                    alt={currentImage.alt_text || product.name}
-                                    className="aspect-4/5 w-full object-cover"
-                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setLightboxOpen(true)}
+                                    className="block w-full cursor-zoom-in"
+                                    aria-label="Open product images"
+                                >
+                                    <img
+                                        src={currentImage.image_url}
+                                        alt={currentImage.alt_text || product.name}
+                                        className="aspect-4/5 w-full object-cover"
+                                    />
+                                </button>
                             ) : (
                                 <div className="flex aspect-4/5 items-center justify-center text-[var(--color-subtle)]">
                                     <div className="text-center">
@@ -378,8 +418,8 @@ function ProductDetails() {
                                         aria-label={`View image ${index + 1}`}
                                         aria-pressed={selectedImage === index}
                                         className={`shrink-0 overflow-hidden rounded-2xl border-2 transition ${selectedImage === index
-                                                ? "border-[var(--color-primary)] ring-2 ring-[var(--color-blue-100)]"
-                                                : "border-transparent hover:border-[var(--color-pink-200)]"
+                                            ? "border-[var(--color-primary)] ring-2 ring-[var(--color-blue-100)]"
+                                            : "border-transparent hover:border-[var(--color-pink-200)]"
                                             }`}
                                     >
                                         <img
@@ -455,7 +495,11 @@ function ProductDetails() {
                         </div>
 
                         {product.description && (
-                            <p className="mb-7 whitespace-pre-line text-base leading-8 text-[var(--color-text-muted)]">
+                            <p
+                                dir="auto"
+                                style={{ unicodeBidi: "plaintext", textAlign: "start" }}
+                                className="mb-7 whitespace-pre-line text-base leading-8 text-[var(--color-text-muted)]"
+                            >
                                 {product.description}
                             </p>
                         )}
@@ -496,8 +540,8 @@ function ProductDetails() {
                                                 selectedColor === color.id
                                             }
                                             className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 transition ${selectedColor === color.id
-                                                    ? "border-[var(--color-primary)] bg-[var(--color-blue-50)] ring-2 ring-[var(--color-blue-100)]"
-                                                    : "border-[var(--color-border)] hover:border-[var(--color-pink-300)]"
+                                                ? "border-[var(--color-primary)] bg-[var(--color-blue-50)] ring-2 ring-[var(--color-blue-100)]"
+                                                : "border-[var(--color-border)] hover:border-[var(--color-pink-300)]"
                                                 }`}
                                         >
                                             <span
@@ -569,8 +613,8 @@ function ProductDetails() {
                                                     selectedSize === size.id
                                                 }
                                                 className={`min-w-14 rounded-xl border px-4 py-3 font-bold transition disabled:cursor-not-allowed disabled:opacity-35 ${selectedSize === size.id
-                                                        ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)] shadow-md shadow-[var(--color-blue-100)]"
-                                                        : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-pink-300)] hover:bg-[var(--color-pink-50)]"
+                                                    ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)] shadow-md shadow-[var(--color-blue-100)]"
+                                                    : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-pink-300)] hover:bg-[var(--color-pink-50)]"
                                                     }`}
                                             >
                                                 {size.name}
@@ -714,9 +758,70 @@ function ProductDetails() {
                         </Link>
                     </section>
                 </div>
+
+                {lightboxOpen && currentImage?.image_url && (
+                    <div
+                        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Product image gallery"
+                        onClick={() => setLightboxOpen(false)}
+                    >
+                        <button
+                            type="button"
+                            onClick={() => setLightboxOpen(false)}
+                            aria-label="Close image gallery"
+                            className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-3xl text-white transition hover:bg-white/20"
+                        >
+                            ×
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                showPreviousImage();
+                            }}
+                            aria-label="Previous image"
+                            className="absolute left-3 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-3xl text-white transition hover:bg-white/25 sm:left-6"
+                        >
+                            ‹
+                        </button>
+
+                        <div
+                            className="flex max-h-full max-w-5xl flex-col items-center gap-3"
+                            onClick={(event) => event.stopPropagation()}
+                        >
+                            <img
+                                src={currentImage.image_url}
+                                alt={currentImage.alt_text || product.name}
+                                className="max-h-[82vh] max-w-full rounded-xl object-contain"
+                            />
+                            <p className="text-sm font-medium text-white/80" dir="ltr">
+                                {selectedImage + 1} / {images.length}
+                            </p>
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                showNextImage();
+                            }}
+                            aria-label="Next image"
+                            className="absolute right-3 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-3xl text-white transition hover:bg-white/25 sm:right-6"
+                        >
+                            ›
+                        </button>
+                    </div>
+                )}
             </div>
         </main>
     );
 }
 
 export default ProductDetails;
+
+
+
+
