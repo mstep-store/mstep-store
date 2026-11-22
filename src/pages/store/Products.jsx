@@ -14,6 +14,8 @@ export default function Products() {
 
     const [search, setSearch] = useState("");
     const [sortBy, setSortBy] = useState("manual");
+    const [showSearch, setShowSearch] = useState(false);
+    const [showFilters, setShowFilters] = useState(false);
 
     const selectedCategory = searchParams.get("category") || "all";
     const selectedBrand = searchParams.get("brand") || "all";
@@ -121,7 +123,7 @@ export default function Products() {
             const matchesBrand =
                 selectedBrand === "all" ||
                 String(product.brands?.slug || "").toLowerCase() ===
-                    normalizedBrand ||
+                normalizedBrand ||
                 String(product.brands?.id ?? "") === selectedBrand;
 
             const productCategorySlug = normalizeCategorySlug(
@@ -144,7 +146,7 @@ export default function Products() {
             if (sortBy === "manual") {
                 return (
                     (Number(a.display_order) || 0) -
-                        (Number(b.display_order) || 0) ||
+                    (Number(b.display_order) || 0) ||
                     String(b.id).localeCompare(String(a.id), undefined, {
                         numeric: true,
                     })
@@ -255,14 +257,43 @@ export default function Products() {
                 </p>
             </header>
 
-            {/* Search, Sort and Categories */}
+            {/* Search and Filters */}
             <section
-                aria-label="Product filters"
+                aria-label="Product search and filters"
                 className="mb-8 rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-4 shadow-sm sm:p-5"
             >
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-[1fr_220px]">
-                    {/* Search */}
-                    <div>
+                {/* Compact action buttons */}
+                <div className="flex items-center justify-end gap-3">
+                    <button
+                        type="button"
+                        onClick={() => setShowSearch((current) => !current)}
+                        aria-label={showSearch ? "Close search" : "Open search"}
+                        aria-expanded={showSearch}
+                        className={`flex h-11 w-11 items-center justify-center rounded-xl border transition ${showSearch
+                                ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+                                : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-page)]"
+                            }`}
+                    >
+                        <Search size={20} />
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => setShowFilters((current) => !current)}
+                        aria-label={showFilters ? "Close filters" : "Open filters"}
+                        aria-expanded={showFilters}
+                        className={`flex h-11 w-11 items-center justify-center rounded-xl border transition ${showFilters
+                                ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+                                : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-page)]"
+                            }`}
+                    >
+                        <SlidersHorizontal size={20} />
+                    </button>
+                </div>
+
+                {/* Search field - shown only when search is opened */}
+                {showSearch && (
+                    <div className="mt-4">
                         <label
                             htmlFor="product-search"
                             className="mb-2 block text-sm font-bold text-[var(--color-text-secondary)]"
@@ -280,11 +311,10 @@ export default function Products() {
                                 id="product-search"
                                 type="search"
                                 value={search}
-                                onChange={(event) =>
-                                    setSearch(event.target.value)
-                                }
+                                onChange={(event) => setSearch(event.target.value)}
                                 placeholder="Search by product name..."
-                                className="w-full bg-transparent text-sm text-[var(--color-text)] outline-none placeholder:text-[var(--color-subtle)]"
+                                autoFocus
+                                className="w-full bg-transparent text-sm text-[var(--color-text)] outline-none! placeholder:text-[var(--color-subtle)]"
                             />
 
                             {search && (
@@ -299,131 +329,125 @@ export default function Products() {
                             )}
                         </div>
                     </div>
+                )}
 
-                    {/* Sort */}
-                    <div>
-                        <label
-                            htmlFor="product-sort"
-                            className="mb-2 block text-sm font-bold text-[var(--color-text-secondary)]"
-                        >
-                            Sort By
-                        </label>
-
-                        <div className="flex h-12 items-center gap-2 rounded-xl border border-[var(--color-border)] px-3 focus-within:border-[var(--color-primary-hover)]">
-                            <SlidersHorizontal
-                                size={17}
-                                className="shrink-0 text-[var(--color-subtle)]"
-                            />
-
-                            <select
-                                id="product-sort"
-                                value={sortBy}
-                                onChange={(event) =>
-                                    setSortBy(event.target.value)
-                                }
-                                className="w-full bg-transparent text-sm text-[var(--color-text-secondary)] outline-none"
+                {/* Sort, categories and brands - shown only when filters are opened */}
+                {showFilters && (
+                    <div className="mt-4 border-t border-[var(--color-border-soft)] pt-4">
+                        {/* Sort */}
+                        <div>
+                            <label
+                                htmlFor="product-sort"
+                                className="mb-2 block text-sm font-bold text-[var(--color-text-secondary)]"
                             >
-                                <option value="manual">Store Order</option>
-                                <option value="newest">Newest First</option>
-                                <option value="price-low">
-                                    Price: Low to High
-                                </option>
-                                <option value="price-high">
-                                    Price: High to Low
-                                </option>
-                            </select>
+                                Sort By
+                            </label>
+
+                            <div className="flex h-12 items-center gap-2 rounded-xl border border-[var(--color-border)] px-3 focus-within:border-[var(--color-primary-hover)]">
+                                <SlidersHorizontal
+                                    size={17}
+                                    className="shrink-0 text-[var(--color-subtle)]"
+                                />
+
+                                <select
+                                    id="product-sort"
+                                    value={sortBy}
+                                    onChange={(event) => setSortBy(event.target.value)}
+                                    className="w-full bg-transparent text-sm text-[var(--color-text-secondary)] outline-none"
+                                >
+                                    <option value="manual">Store Order</option>
+                                    <option value="newest">Newest First</option>
+                                    <option value="price-low">Price: Low to High</option>
+                                    <option value="price-high">Price: High to Low</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                {/* Dynamic Categories */}
-                <div className="mt-5">
-                    <p className="mb-3 text-sm font-bold text-[var(--color-text-secondary)]">
-                        Categories
-                    </p>
+                        {/* Dynamic Categories */}
+                        <div className="mt-5">
+                            <p className="mb-3 text-sm font-bold text-[var(--color-text-secondary)]">
+                                Categories
+                            </p>
 
-                    <div className="flex flex-wrap gap-2">
-                        <button
-                            type="button"
-                            onClick={() => handleCategoryChange("all")}
-                            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${selectedCategory === "all"
-                                ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]"
-                                : "bg-[var(--color-slate-100)] text-[var(--color-text-muted)] hover:bg-[var(--color-slate-200)]"
-                                }`}
-                        >
-                            All Products
-                        </button>
-
-                        {categories.map((category) => {
-                            const isSelected =
-                                normalizeCategorySlug(selectedCategory) ===
-                                category.slug ||
-                                selectedCategory === category.id;
-
-                            return (
+                            <div className="flex flex-wrap gap-2">
                                 <button
-                                    key={category.id}
                                     type="button"
-                                    onClick={() =>
-                                        handleCategoryChange(
-                                            category.slug || category.id
-                                        )
-                                    }
-                                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${isSelected
-                                        ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]"
-                                        : "bg-[var(--color-slate-100)] text-[var(--color-text-muted)] hover:bg-[var(--color-slate-200)]"
+                                    onClick={() => handleCategoryChange("all")}
+                                    className={`rounded-full px-4 py-2 text-sm font-semibold transition ${selectedCategory === "all"
+                                            ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+                                            : "bg-[var(--color-slate-100)] text-[var(--color-text-muted)] hover:bg-[var(--color-slate-200)]"
                                         }`}
                                 >
-                                    {category.name}
+                                    All Products
                                 </button>
-                            );
-                        })}
-                    </div>
-                </div>
 
-                {/* Brands (only when at least one product has a brand) */}
-                {brands.length > 0 && (
-                    <div className="mt-5">
-                        <p className="mb-3 text-sm font-bold text-(--color-text-secondary)">
-                            Brands
-                        </p>
+                                {categories.map((category) => {
+                                    const isSelected =
+                                        normalizeCategorySlug(selectedCategory) === category.slug ||
+                                        selectedCategory === category.id;
 
-                        <div className="flex flex-wrap gap-2">
-                            <button
-                                type="button"
-                                onClick={() => handleBrandChange("all")}
-                                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${selectedBrand === "all"
-                                    ? "bg-(--color-primary) text-(--color-on-primary)"
-                                    : "bg-(--color-slate-100) text-(--color-text-muted) hover:bg-(--color-slate-200)"
-                                    }`}
-                            >
-                                All Brands
-                            </button>
+                                    return (
+                                        <button
+                                            key={category.id}
+                                            type="button"
+                                            onClick={() =>
+                                                handleCategoryChange(category.slug || category.id)
+                                            }
+                                            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${isSelected
+                                                    ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+                                                    : "bg-[var(--color-slate-100)] text-[var(--color-text-muted)] hover:bg-[var(--color-slate-200)]"
+                                                }`}
+                                        >
+                                            {category.name}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
 
-                            {brands.map((brand) => {
-                                const isSelected =
-                                    selectedBrand.toLowerCase() === brand.slug ||
-                                    selectedBrand === brand.id;
+                        {/* Brands */}
+                        {brands.length > 0 && (
+                            <div className="mt-5">
+                                <p className="mb-3 text-sm font-bold text-(--color-text-secondary)">
+                                    Brands
+                                </p>
 
-                                return (
+                                <div className="flex flex-wrap gap-2">
                                     <button
-                                        key={brand.id}
                                         type="button"
-                                        onClick={() =>
-                                            handleBrandChange(
-                                                brand.slug || brand.id
-                                            )
-                                        }
-                                        className={`rounded-full px-4 py-2 text-sm font-semibold transition ${isSelected
-                                            ? "bg-(--color-primary) text-(--color-on-primary)"
-                                            : "bg-(--color-slate-100) text-(--color-text-muted) hover:bg-(--color-slate-200)"
+                                        onClick={() => handleBrandChange("all")}
+                                        className={`rounded-full px-4 py-2 text-sm font-semibold transition ${selectedBrand === "all"
+                                                ? "bg-(--color-primary) text-(--color-on-primary)"
+                                                : "bg-(--color-slate-100) text-(--color-text-muted) hover:bg-(--color-slate-200)"
                                             }`}
                                     >
-                                        {brand.name}
+                                        All Brands
                                     </button>
-                                );
-                            })}
-                        </div>
+
+                                    {brands.map((brand) => {
+                                        const isSelected =
+                                            selectedBrand.toLowerCase() === brand.slug ||
+                                            selectedBrand === brand.id;
+
+                                        return (
+                                            <button
+                                                key={brand.id}
+                                                type="button"
+                                                onClick={() =>
+                                                    handleBrandChange(brand.slug || brand.id)
+                                                }
+                                                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${isSelected
+                                                        ? "bg-(--color-primary) text-(--color-on-primary)"
+                                                        : "bg-(--color-slate-100) text-(--color-text-muted) hover:bg-(--color-slate-200)"
+                                                    }`}
+                                            >
+                                                {brand.name}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </section>
