@@ -29,6 +29,14 @@ export default function Products() {
     const selectedCategory = searchParams.get("category") || "all";
     const selectedBrand = searchParams.get("brand") || "all";
 
+    // Scroll to the top whenever the product page changes.
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+    }, [currentPage]);
+
     // Debounce search so we don't send a database request on every keystroke.
     useEffect(() => {
         const timeout = window.setTimeout(() => setDebouncedSearch(search.trim()), 300);
@@ -193,8 +201,8 @@ export default function Products() {
                         aria-label={showSearch ? "Close search" : "Open search"}
                         aria-expanded={showSearch}
                         className={`flex h-11 w-11 items-center justify-center rounded-xl border transition ${showSearch
-                                ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)]"
-                                : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-page)]"
+                            ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+                            : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-page)]"
                             }`}
                     >
                         <Search size={20} />
@@ -206,8 +214,8 @@ export default function Products() {
                         aria-label={showFilters ? "Close filters" : "Open filters"}
                         aria-expanded={showFilters}
                         className={`flex h-11 w-11 items-center justify-center rounded-xl border transition ${showFilters
-                                ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)]"
-                                : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-page)]"
+                            ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+                            : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-page)]"
                             }`}
                     >
                         <SlidersHorizontal size={20} />
@@ -297,8 +305,8 @@ export default function Products() {
                                     type="button"
                                     onClick={() => handleCategoryChange("all")}
                                     className={`rounded-full px-4 py-2 text-sm font-semibold transition ${selectedCategory === "all"
-                                            ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]"
-                                            : "bg-[var(--color-slate-100)] text-[var(--color-text-muted)] hover:bg-[var(--color-slate-200)]"
+                                        ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+                                        : "bg-[var(--color-slate-100)] text-[var(--color-text-muted)] hover:bg-[var(--color-slate-200)]"
                                         }`}
                                 >
                                     All Products
@@ -317,8 +325,8 @@ export default function Products() {
                                                 handleCategoryChange(category.slug || category.id)
                                             }
                                             className={`rounded-full px-4 py-2 text-sm font-semibold transition ${isSelected
-                                                    ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]"
-                                                    : "bg-[var(--color-slate-100)] text-[var(--color-text-muted)] hover:bg-[var(--color-slate-200)]"
+                                                ? "bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+                                                : "bg-[var(--color-slate-100)] text-[var(--color-text-muted)] hover:bg-[var(--color-slate-200)]"
                                                 }`}
                                         >
                                             {category.name}
@@ -340,8 +348,8 @@ export default function Products() {
                                         type="button"
                                         onClick={() => handleBrandChange("all")}
                                         className={`rounded-full px-4 py-2 text-sm font-semibold transition ${selectedBrand === "all"
-                                                ? "bg-(--color-primary) text-(--color-on-primary)"
-                                                : "bg-(--color-slate-100) text-(--color-text-muted) hover:bg-(--color-slate-200)"
+                                            ? "bg-(--color-primary) text-(--color-on-primary)"
+                                            : "bg-(--color-slate-100) text-(--color-text-muted) hover:bg-(--color-slate-200)"
                                             }`}
                                     >
                                         All Brands
@@ -360,8 +368,8 @@ export default function Products() {
                                                     handleBrandChange(brand.slug || brand.id)
                                                 }
                                                 className={`rounded-full px-4 py-2 text-sm font-semibold transition ${isSelected
-                                                        ? "bg-(--color-primary) text-(--color-on-primary)"
-                                                        : "bg-(--color-slate-100) text-(--color-text-muted) hover:bg-(--color-slate-200)"
+                                                    ? "bg-(--color-primary) text-(--color-on-primary)"
+                                                    : "bg-(--color-slate-100) text-(--color-text-muted) hover:bg-(--color-slate-200)"
                                                     }`}
                                             >
                                                 {brand.name}
