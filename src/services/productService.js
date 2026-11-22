@@ -215,3 +215,58 @@ export async function getBestSellers(limit = 4) {
         }))
         .sort((a, b) => b.total_quantity - a.total_quantity);
 }
+
+/** Fetch one server-paginated storefront page (20 items by default). */
+export async function getPublishedProductsPage({
+    page = 1,
+    pageSize = 20,
+    search = "",
+    category = "all",
+    brand = "all",
+    sortBy = "manual",
+} = {}) {
+    const { data, error } = await supabase.rpc("get_public_products_page", {
+        p_page: page,
+        p_page_size: pageSize,
+        p_search: search,
+        p_category: category,
+        p_brand: brand,
+        p_sort_by: sortBy,
+    });
+
+    if (error) {
+        console.error("Supabase paginated products error:", error);
+        throw error;
+    }
+
+    return {
+        items: (data?.items ?? []).map((product) => ({
+            ...product,
+            images: [...(product.product_images ?? [])].sort((a, b) => {
+                if (a.is_primary !== b.is_primary) return a.is_primary ? -1 : 1;
+                return (a.sort_order ?? 0) - (b.sort_order ?? 0);
+            }),
+            variants: product.product_variants ?? [],
+        })),
+        totalCount: Number(data?.total_count ?? 0),
+        page: Number(data?.page ?? page),
+        pageSize: Number(data?.page_size ?? pageSize),
+        totalPages: Number(data?.total_pages ?? 0),
+    };
+}
+
+/** Filter choices are loaded independently so they don't depend on page contents. */
+export async function getPublishedProductFilters() {
+    const [categoriesResult, brandsResult] = await Promise.all([
+        supabase.from("categories").select("id, name, slug").order("name"),
+        supabase.from("brands").select("id, name, slug").eq("is_active", true).order("name"),
+    ]);
+
+    if (categoriesResult.error) throw categoriesResult.error;
+    if (brandsResult.error) throw brandsResult.error;
+
+    return {
+        categories: categoriesResult.data ?? [],
+        brands: brandsResult.data ?? [],
+    };
+}

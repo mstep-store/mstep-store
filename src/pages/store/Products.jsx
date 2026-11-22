@@ -1,177 +1,97 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router";
 import { Search, SlidersHorizontal, X } from "lucide-react";
-import { getPublishedProducts } from "../../services/productService";
+import { getPublishedProductsPage, getPublishedProductFilters } from "../../services/productService";
 import { getListingPriceInfo } from "../../utils/pricing";
 import PriceTag from "../../components/store/PriceTag";
 import { normalizeCategorySlug } from "../../utils/categorySlug";
 
 export default function Products() {
     const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [brands, setBrands] = useState([]);
+    const [totalCount, setTotalCount] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [searchParams, setSearchParams] = useSearchParams();
 
     const [search, setSearch] = useState("");
+    const [debouncedSearch, setDebouncedSearch] = useState("");
     const [sortBy, setSortBy] = useState("manual");
     const [showSearch, setShowSearch] = useState(false);
     const [showFilters, setShowFilters] = useState(false);
+    const [currentPage, setCurrentPage] = useState(() => {
+        const value = Number(searchParams.get("page"));
+        return Number.isInteger(value) && value > 0 ? value : 1;
+    });
 
     const selectedCategory = searchParams.get("category") || "all";
     const selectedBrand = searchParams.get("brand") || "all";
 
+    // Debounce search so we don't send a database request on every keystroke.
+    useEffect(() => {
+        const timeout = window.setTimeout(() => setDebouncedSearch(search.trim()), 300);
+        return () => window.clearTimeout(timeout);
+    }, [search]);
+
+    // Load filter choices independently from the current products page.
     useEffect(() => {
         let active = true;
+        getPublishedProductFilters()
+            .then((filters) => {
+                if (!active) return;
+                setCategories(filters.categories.map((item) => ({
+                    ...item,
+                    id: String(item.id),
+                    slug: normalizeCategorySlug(item.slug),
+                })));
+                setBrands(filters.brands.map((item) => ({
+                    ...item,
+                    id: String(item.id),
+                    slug: String(item.slug || "").toLowerCase(),
+                })));
+            })
+            .catch((err) => {
+                if (active) setError(err.message || "Unable to load product filters.");
+            });
+        return () => { active = false; };
+    }, []);
 
+    // Fetch only the requested 20 products; filtering and sorting happen in SQL.
+    useEffect(() => {
+        let active = true;
         async function loadProducts() {
             try {
                 setLoading(true);
                 setError("");
-
-                const data = await getPublishedProducts();
-
-                if (active) {
-                    setProducts(Array.isArray(data) ? data : []);
+                const result = await getPublishedProductsPage({
+                    page: currentPage,
+                    pageSize: 20,
+                    search: debouncedSearch,
+                    category: selectedCategory === "all" ? "all" : normalizeCategorySlug(selectedCategory),
+                    brand: selectedBrand,
+                    sortBy,
+                });
+                if (!active) return;
+                setProducts(result.items);
+                setTotalCount(result.totalCount);
+                setTotalPages(result.totalPages);
+                // If a filter reduces the result count, return to the last valid page.
+                if (result.totalPages > 0 && currentPage > result.totalPages) {
+                    setCurrentPage(result.totalPages);
                 }
             } catch (err) {
-                if (active) {
-                    setError(
-                        err.message ||
-                        "Unable to load products. Please try again."
-                    );
-                }
+                if (active) setError(err.message || "Unable to load products. Please try again.");
             } finally {
-                if (active) {
-                    setLoading(false);
-                }
+                if (active) setLoading(false);
             }
         }
-
         loadProducts();
+        return () => { active = false; };
+    }, [currentPage, debouncedSearch, selectedCategory, selectedBrand, sortBy]);
 
-        return () => {
-            active = false;
-        };
-    }, []);
-
-    // Get categories from published products in Supabase.
-    const categories = useMemo(() => {
-        const uniqueCategories = new Map();
-
-        products.forEach((product) => {
-            const category = product.categories;
-
-            if (category?.id != null) {
-                uniqueCategories.set(String(category.id), {
-                    id: String(category.id),
-                    name: category.name || "Uncategorized",
-                    slug: normalizeCategorySlug(category.slug),
-                });
-            }
-        });
-
-        return Array.from(uniqueCategories.values()).sort((a, b) =>
-            a.name.localeCompare(b.name)
-        );
-    }, [products]);
-
-    // Brands that have at least one published product.
-    const brands = useMemo(() => {
-        const uniqueBrands = new Map();
-
-        products.forEach((product) => {
-            const brand = product.brands;
-
-            if (brand?.id != null) {
-                uniqueBrands.set(String(brand.id), {
-                    id: String(brand.id),
-                    name: brand.name || "Brand",
-                    slug: String(brand.slug || "").toLowerCase(),
-                });
-            }
-        });
-
-        return Array.from(uniqueBrands.values()).sort((a, b) =>
-            a.name.localeCompare(b.name)
-        );
-    }, [products]);
-
-    // Filter and sort products.
-    const filteredProducts = useMemo(() => {
-        const normalizedSearch = search.trim().toLowerCase();
-        const normalizedCategory = normalizeCategorySlug(selectedCategory);
-        const normalizedBrand = selectedBrand.toLowerCase();
-
-        const result = products.filter((product) => {
-            const productName = String(product.name || "").toLowerCase();
-            const productDescription = String(
-                product.description || ""
-            ).toLowerCase();
-            const categoryName = String(
-                product.categories?.name || ""
-            ).toLowerCase();
-
-            const brandName = String(product.brands?.name || "").toLowerCase();
-
-            const matchesSearch =
-                !normalizedSearch ||
-                productName.includes(normalizedSearch) ||
-                productDescription.includes(normalizedSearch) ||
-                categoryName.includes(normalizedSearch) ||
-                brandName.includes(normalizedSearch);
-
-            const matchesBrand =
-                selectedBrand === "all" ||
-                String(product.brands?.slug || "").toLowerCase() ===
-                normalizedBrand ||
-                String(product.brands?.id ?? "") === selectedBrand;
-
-            const productCategorySlug = normalizeCategorySlug(
-                product.categories?.slug
-            );
-
-            const productCategoryId = String(
-                product.categories?.id ?? ""
-            );
-
-            const matchesCategory =
-                selectedCategory === "all" ||
-                productCategorySlug === normalizedCategory ||
-                productCategoryId === selectedCategory;
-
-            return matchesSearch && matchesCategory && matchesBrand;
-        });
-
-        return [...result].sort((a, b) => {
-            if (sortBy === "manual") {
-                return (
-                    (Number(a.display_order) || 0) -
-                    (Number(b.display_order) || 0) ||
-                    String(b.id).localeCompare(String(a.id), undefined, {
-                        numeric: true,
-                    })
-                );
-            }
-
-            if (sortBy === "price-low") {
-                return (
-                    getListingPriceInfo(a).effective -
-                    getListingPriceInfo(b).effective
-                );
-            }
-
-            if (sortBy === "price-high") {
-                return (
-                    getListingPriceInfo(b).effective -
-                    getListingPriceInfo(a).effective
-                );
-            }
-
-            return String(b.id).localeCompare(String(a.id), undefined, {
-                numeric: true,
-            });
-        });
-    }, [products, search, selectedCategory, selectedBrand, sortBy]);
+    const filteredProducts = products;
 
     function handleCategoryChange(value) {
         const nextParams = new URLSearchParams(searchParams);
@@ -183,6 +103,7 @@ export default function Products() {
         }
 
         setSearchParams(nextParams);
+        setCurrentPage(1);
     }
 
     function handleBrandChange(value) {
@@ -195,6 +116,7 @@ export default function Products() {
         }
 
         setSearchParams(nextParams);
+        setCurrentPage(1);
     }
 
     const activeBrand =
@@ -237,6 +159,7 @@ export default function Products() {
         setSearch("");
         setSortBy("manual");
         setSearchParams({});
+        setCurrentPage(1);
     }
 
     return (
@@ -311,7 +234,7 @@ export default function Products() {
                                 id="product-search"
                                 type="search"
                                 value={search}
-                                onChange={(event) => setSearch(event.target.value)}
+                                onChange={(event) => { setSearch(event.target.value); setCurrentPage(1); }}
                                 placeholder="Search by product name..."
                                 autoFocus
                                 className="w-full bg-transparent text-sm text-[var(--color-text)] outline-none! placeholder:text-[var(--color-subtle)]"
@@ -320,7 +243,7 @@ export default function Products() {
                             {search && (
                                 <button
                                     type="button"
-                                    onClick={() => setSearch("")}
+                                    onClick={() => { setSearch(""); setCurrentPage(1); }}
                                     aria-label="Clear search"
                                     className="text-[var(--color-subtle)] hover:text-[var(--color-text-secondary)]"
                                 >
@@ -352,7 +275,7 @@ export default function Products() {
                                 <select
                                     id="product-sort"
                                     value={sortBy}
-                                    onChange={(event) => setSortBy(event.target.value)}
+                                    onChange={(event) => { setSortBy(event.target.value); setCurrentPage(1); }}
                                     className="w-full bg-transparent text-sm text-[var(--color-text-secondary)] outline-none"
                                 >
                                     <option value="manual">Store Order</option>
@@ -490,9 +413,9 @@ export default function Products() {
                     <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
                         <p className="text-sm text-[var(--color-muted)]">
                             <span className="font-bold text-[var(--color-text-strong)]">
-                                {filteredProducts.length}
+                                {totalCount}
                             </span>{" "}
-                            {filteredProducts.length === 1
+                            {totalCount === 1
                                 ? "product"
                                 : "products"}{" "}
                             found
@@ -501,7 +424,7 @@ export default function Products() {
                         {(search ||
                             selectedCategory !== "all" ||
                             selectedBrand !== "all" ||
-                            sortBy !== "newest") && (
+                            sortBy !== "manual") && (
                                 <button
                                     type="button"
                                     onClick={clearFilters}
@@ -584,6 +507,38 @@ export default function Products() {
                                 );
                             })}
                         </div>
+                    )}
+
+                    {totalPages > 1 && (
+                        <nav aria-label="Product pages" className="mt-10 flex flex-wrap items-center justify-center gap-2">
+                            <button
+                                type="button"
+                                disabled={currentPage <= 1}
+                                onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                                className="rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm font-semibold text-[var(--color-text-secondary)] disabled:cursor-not-allowed disabled:opacity-40"
+                            >Previous</button>
+                            {Array.from({ length: Math.min(5, totalPages) }, (_, index) => {
+                                const firstPage = Math.max(1, Math.min(currentPage - 2, totalPages - 4));
+                                const page = firstPage + index;
+                                return (
+                                    <button
+                                        key={page}
+                                        type="button"
+                                        aria-current={currentPage === page ? "page" : undefined}
+                                        onClick={() => setCurrentPage(page)}
+                                        className={`min-w-10 rounded-lg border px-3 py-2 text-sm font-bold transition ${currentPage === page
+                                            ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)]"
+                                            : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-page)]"}`}
+                                    >{page}</button>
+                                );
+                            })}
+                            <button
+                                type="button"
+                                disabled={currentPage >= totalPages}
+                                onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                                className="rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm font-semibold text-[var(--color-text-secondary)] disabled:cursor-not-allowed disabled:opacity-40"
+                            >Next</button>
+                        </nav>
                     )}
                 </>
             )}
