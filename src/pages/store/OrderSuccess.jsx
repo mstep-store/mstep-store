@@ -54,7 +54,7 @@ export default function OrderSuccess() {
             <div className="mt-6 flex flex-wrap justify-center gap-3">
                 <Link
                     to={`/track-order?order=${encodeURIComponent(state.orderNumber)}`}
-                    className="rounded-full bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-[var(--color-on-primary)] transition hover:bg-[var(--color-primary-hover)]"
+                    className="rounded-full bg-[var(--color-primary)] px-6 py-3 text-sm font-bold text-(--color-on-primary)! transition hover:bg-[var(--color-primary-hover)]"
                 >
                     Track your order
                 </Link>

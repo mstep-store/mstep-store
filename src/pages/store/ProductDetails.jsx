@@ -1,13 +1,6 @@
 
-
-
-
-
-
-
-
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useParams, useNavigate } from "react-router";
 import {
     ArrowRight,
     Check,
@@ -40,6 +33,7 @@ function readCart() {
 
 function ProductDetails() {
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -76,7 +70,9 @@ function ProductDetails() {
                 console.error("Error loading product:", err);
 
                 if (active) {
-                    setError("An error occurred while loading the product. Please try again.");
+                    setError(
+                        "An error occurred while loading the product. Please try again."
+                    );
                 }
             } finally {
                 if (active) setLoading(false);
@@ -103,7 +99,9 @@ function ProductDetails() {
     );
 
     const colors = useMemo(() => {
-        const colorIds = new Set(variants.map((variant) => variant.color_id));
+        const colorIds = new Set(
+            variants.map((variant) => variant.color_id)
+        );
 
         return (product?.product_colors ?? []).filter(
             (color) => colorIds.has(color.id)
@@ -113,7 +111,8 @@ function ProductDetails() {
     const sizes = useMemo(() => {
         const matchingVariants = variants.filter(
             (variant) =>
-                selectedColor === null || variant.color_id === selectedColor
+                selectedColor === null ||
+                variant.color_id === selectedColor
         );
 
         const sizeIds = new Set(
@@ -122,7 +121,10 @@ function ProductDetails() {
 
         return (product?.product_sizes ?? [])
             .filter((size) => sizeIds.has(size.id))
-            .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+            .sort(
+                (a, b) =>
+                    (a.sort_order ?? 0) - (b.sort_order ?? 0)
+            );
     }, [product, variants, selectedColor]);
 
     const selectedVariant = variants.find(
@@ -133,11 +135,14 @@ function ProductDetails() {
 
     const availableVariants = variants.filter(
         (variant) =>
-            (selectedColor === null || variant.color_id === selectedColor) &&
-            (selectedSize === null || variant.size_id === selectedSize)
+            (selectedColor === null ||
+                variant.color_id === selectedColor) &&
+            (selectedSize === null ||
+                variant.size_id === selectedSize)
     );
 
-    const referenceVariant = selectedVariant ?? availableVariants[0] ?? null;
+    const referenceVariant =
+        selectedVariant ?? availableVariants[0] ?? null;
 
     // Product-level discount applies to every variant's own price.
     const priceInfo = referenceVariant
@@ -185,13 +190,23 @@ function ProductDetails() {
         if (!lightboxOpen) return;
 
         function handleKeyDown(event) {
-            if (event.key === "Escape") setLightboxOpen(false);
-            if (event.key === "ArrowLeft") showNextImage();
-            if (event.key === "ArrowRight") showPreviousImage();
+            if (event.key === "Escape") {
+                setLightboxOpen(false);
+            }
+
+            if (event.key === "ArrowLeft") {
+                showNextImage();
+            }
+
+            if (event.key === "ArrowRight") {
+                showPreviousImage();
+            }
         }
 
         window.addEventListener("keydown", handleKeyDown);
-        return () => window.removeEventListener("keydown", handleKeyDown);
+
+        return () =>
+            window.removeEventListener("keydown", handleKeyDown);
     }, [lightboxOpen, images.length]);
 
     function changeQuantity(amount) {
@@ -211,14 +226,18 @@ function ProductDetails() {
         setAddedToCart(false);
 
         if (!selectedVariant) {
-            setCartError("Please select a color and size first.");
+            setCartError(
+                "Please select a color and size first."
+            );
             return;
         }
 
         const stock = Number(selectedVariant.stock_quantity);
 
         if (quantity < 1 || quantity > stock) {
-            setCartError(`Only ${stock} item(s) are currently available.`);
+            setCartError(
+                `Only ${stock} item(s) are currently available.`
+            );
             return;
         }
 
@@ -253,12 +272,14 @@ function ProductDetails() {
 
             const existingIndex = cart.findIndex(
                 (item) =>
-                    String(item.variant_id) === String(cartItem.variant_id)
+                    String(item.variant_id) ===
+                    String(cartItem.variant_id)
             );
 
             if (existingIndex >= 0) {
                 const existingQuantity =
                     Number(cart[existingIndex].quantity) || 0;
+
                 const newQuantity = existingQuantity + quantity;
 
                 if (newQuantity > stock) {
@@ -277,11 +298,22 @@ function ProductDetails() {
                 cart.push(cartItem);
             }
 
-            localStorage.setItem(CART_KEY, JSON.stringify(cart));
-            window.dispatchEvent(new Event("cart-updated"));
-            setAddedToCart(true);
+            // Save the cart.
+            localStorage.setItem(
+                CART_KEY,
+                JSON.stringify(cart)
+            );
+
+            // Notify other components that the cart has changed.
+            window.dispatchEvent(
+                new Event("cart-updated")
+            );
+
+            // Redirect to checkout after successfully adding the product.
+            navigate("/checkout");
         } catch (err) {
             console.error("Error saving cart:", err);
+
             setCartError(
                 "Unable to save the item to your cart. Please check your browser settings."
             );
@@ -294,6 +326,7 @@ function ProductDetails() {
                 <div className="mx-auto max-w-6xl animate-pulse">
                     <div className="grid gap-8 md:grid-cols-2">
                         <div className="aspect-4/5 rounded-3xl bg-[var(--color-slate-100)]" />
+
                         <div className="space-y-5 py-6">
                             <div className="h-4 w-28 rounded bg-[var(--color-slate-100)]" />
                             <div className="h-9 w-3/4 rounded bg-[var(--color-slate-100)]" />
@@ -316,11 +349,14 @@ function ProductDetails() {
                 </div>
 
                 <h1 className="mb-3 text-2xl font-extrabold text-[var(--color-text)]">
-                    {error ? "Something Went Wrong" : "Product Not Found"}
+                    {error
+                        ? "Something Went Wrong"
+                        : "Product Not Found"}
                 </h1>
 
                 <p className="mb-6 text-[var(--color-muted)]">
-                    {error || "This product does not exist or is no longer available."}
+                    {error ||
+                        "This product does not exist or is no longer available."}
                 </p>
 
                 <Link
@@ -340,17 +376,24 @@ function ProductDetails() {
             <div className="mx-auto max-w-7xl">
                 {/* Breadcrumb */}
                 <nav className="mb-7 flex flex-wrap items-center gap-2 text-sm text-[var(--color-muted)]">
-                    <Link to="/" className="transition hover:text-[var(--color-primary)]">
+                    <Link
+                        to="/"
+                        className="transition hover:text-[var(--color-primary)]"
+                    >
                         Home
                     </Link>
+
                     <span>/</span>
+
                     <Link
                         to="/products"
                         className="transition hover:text-[var(--color-primary)]"
                     >
                         Products
                     </Link>
+
                     <span>/</span>
+
                     <span className="max-w-55 truncate font-semibold text-[var(--color-text)]">
                         {product.name}
                     </span>
@@ -359,7 +402,7 @@ function ProductDetails() {
                 <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-14">
                     {/* Product images */}
                     <section className="min-w-0">
-                        <div className="relative overflow-hidden rounded-3xl bg-[var(--color-page)] w-75 md:w-100">
+                        <div className="relative w-75 overflow-hidden rounded-3xl bg-[var(--color-page)] md:w-100">
                             {currentImage?.image_url ? (
                                 <button
                                     type="button"
@@ -369,7 +412,10 @@ function ProductDetails() {
                                 >
                                     <img
                                         src={currentImage.image_url}
-                                        alt={currentImage.alt_text || product.name}
+                                        alt={
+                                            currentImage.alt_text ||
+                                            product.name
+                                        }
                                         className="aspect-4/5 w-full object-cover"
                                     />
                                 </button>
@@ -380,7 +426,9 @@ function ProductDetails() {
                                             className="mx-auto mb-3"
                                             size={42}
                                         />
-                                        <p>No Product Image Available</p>
+                                        <p>
+                                            No Product Image Available
+                                        </p>
                                     </div>
                                 </div>
                             )}
@@ -391,19 +439,27 @@ function ProductDetails() {
 
                             <button
                                 type="button"
-                                onClick={() => setFavorite((value) => !value)}
+                                onClick={() =>
+                                    setFavorite((value) => !value)
+                                }
                                 aria-label={
                                     favorite
                                         ? "Remove from favorites"
                                         : "Add to favorites"
                                 }
                                 aria-pressed={favorite}
-                                className={`absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-surface)] shadow-sm transition hover:scale-105 ${favorite ? "text-[var(--color-pink)]" : "text-[var(--color-muted)]"
+                                className={`absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--color-surface)] shadow-sm transition hover:scale-105 ${favorite
+                                        ? "text-[var(--color-pink)]"
+                                        : "text-[var(--color-muted)]"
                                     }`}
                             >
                                 <Heart
                                     size={21}
-                                    fill={favorite ? "currentColor" : "none"}
+                                    fill={
+                                        favorite
+                                            ? "currentColor"
+                                            : "none"
+                                    }
                                 />
                             </button>
                         </div>
@@ -412,14 +468,21 @@ function ProductDetails() {
                             <div className="mt-4 flex gap-3 overflow-x-auto pb-2">
                                 {images.map((image, index) => (
                                     <button
-                                        key={image.id ?? image.image_url}
+                                        key={
+                                            image.id ??
+                                            image.image_url
+                                        }
                                         type="button"
-                                        onClick={() => setSelectedImage(index)}
+                                        onClick={() =>
+                                            setSelectedImage(index)
+                                        }
                                         aria-label={`View image ${index + 1}`}
-                                        aria-pressed={selectedImage === index}
+                                        aria-pressed={
+                                            selectedImage === index
+                                        }
                                         className={`shrink-0 overflow-hidden rounded-2xl border-2 transition ${selectedImage === index
-                                            ? "border-[var(--color-primary)] ring-2 ring-[var(--color-blue-100)]"
-                                            : "border-transparent hover:border-[var(--color-pink-200)]"
+                                                ? "border-[var(--color-primary)] ring-2 ring-[var(--color-blue-100)]"
+                                                : "border-transparent hover:border-[var(--color-pink-200)]"
                                             }`}
                                     >
                                         <img
@@ -438,25 +501,32 @@ function ProductDetails() {
 
                     {/* Product information */}
                     <section className="py-1 lg:py-4">
-                        {(product.brands?.name || product.categories?.name) && (
-                            <p className="mb-3 flex flex-wrap items-center gap-x-2 text-sm font-bold text-[var(--color-pink)]">
-                                {product.brands?.name && (
-                                    <Link
-                                        to={`/products?brand=${product.brands.slug}`}
-                                        className="hover:underline"
-                                    >
-                                        {product.brands.name}
-                                    </Link>
-                                )}
-                                {product.brands?.name &&
-                                    product.categories?.name && (
-                                        <span aria-hidden="true">·</span>
+                        {(product.brands?.name ||
+                            product.categories?.name) && (
+                                <p className="mb-3 flex flex-wrap items-center gap-x-2 text-sm font-bold text-[var(--color-pink)]">
+                                    {product.brands?.name && (
+                                        <Link
+                                            to={`/products?brand=${product.brands.slug}`}
+                                            className="hover:underline"
+                                        >
+                                            {product.brands.name}
+                                        </Link>
                                     )}
-                                {product.categories?.name && (
-                                    <span>{product.categories.name}</span>
-                                )}
-                            </p>
-                        )}
+
+                                    {product.brands?.name &&
+                                        product.categories?.name && (
+                                            <span aria-hidden="true">
+                                                ·
+                                            </span>
+                                        )}
+
+                                    {product.categories?.name && (
+                                        <span>
+                                            {product.categories.name}
+                                        </span>
+                                    )}
+                                </p>
+                            )}
 
                         <h1 className="mb-4 text-3xl font-extrabold leading-tight text-[var(--color-text-strong)] sm:text-4xl">
                             {product.name}
@@ -468,7 +538,9 @@ function ProductDetails() {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2,
                                 })}{" "}
-                                <span className="text-lg">EGP</span>
+                                <span className="text-lg">
+                                    EGP
+                                </span>
                             </p>
 
                             {priceInfo.discounted && (
@@ -483,6 +555,7 @@ function ProductDetails() {
                                         )}{" "}
                                         EGP
                                     </p>
+
                                     <span className="rounded-full bg-[var(--color-rose-50)] px-3 py-1.5 text-sm font-bold text-[var(--color-rose-600)]">
                                         -{priceInfo.percentOff}%
                                     </span>
@@ -497,13 +570,17 @@ function ProductDetails() {
                         {product.description && (
                             <p
                                 dir="auto"
-                                style={{ unicodeBidi: "plaintext", textAlign: "start" }}
+                                style={{
+                                    unicodeBidi: "plaintext",
+                                    textAlign: "start",
+                                }}
                                 className="mb-7 whitespace-pre-line text-base leading-8 text-[var(--color-text-muted)]"
                             >
                                 {product.description}
                             </p>
                         )}
 
+                        {/* Color selection */}
                         <div className="mb-6 border-t border-[var(--color-border-soft)] pt-6">
                             <div className="mb-3 flex items-center justify-between gap-3">
                                 <h2 className="font-bold text-[var(--color-text-strong)]">
@@ -534,14 +611,16 @@ function ProductDetails() {
                                         <button
                                             key={color.id}
                                             type="button"
-                                            onClick={() => chooseColor(color.id)}
+                                            onClick={() =>
+                                                chooseColor(color.id)
+                                            }
                                             aria-label={`Select color ${color.name}`}
                                             aria-pressed={
                                                 selectedColor === color.id
                                             }
                                             className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 transition ${selectedColor === color.id
-                                                ? "border-[var(--color-primary)] bg-[var(--color-blue-50)] ring-2 ring-[var(--color-blue-100)]"
-                                                : "border-[var(--color-border)] hover:border-[var(--color-pink-300)]"
+                                                    ? "border-[var(--color-primary)] bg-[var(--color-blue-50)] ring-2 ring-[var(--color-blue-100)]"
+                                                    : "border-[var(--color-border)] hover:border-[var(--color-pink-300)]"
                                                 }`}
                                         >
                                             <span
@@ -569,6 +648,7 @@ function ProductDetails() {
                             )}
                         </div>
 
+                        {/* Size selection */}
                         <div className="mb-6 border-t border-[var(--color-border-soft)] pt-6">
                             <div className="mb-3 flex items-center justify-between">
                                 <h2 className="font-bold text-[var(--color-text-strong)]">
@@ -595,7 +675,9 @@ function ProductDetails() {
                                             (variant) =>
                                                 variant.size_id === size.id &&
                                                 variant.color_id === selectedColor &&
-                                                Number(variant.stock_quantity) > 0
+                                                Number(
+                                                    variant.stock_quantity
+                                                ) > 0
                                         );
 
                                         return (
@@ -613,8 +695,8 @@ function ProductDetails() {
                                                     selectedSize === size.id
                                                 }
                                                 className={`min-w-14 rounded-xl border px-4 py-3 font-bold transition disabled:cursor-not-allowed disabled:opacity-35 ${selectedSize === size.id
-                                                    ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)] shadow-md shadow-[var(--color-blue-100)]"
-                                                    : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-pink-300)] hover:bg-[var(--color-pink-50)]"
+                                                        ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-[var(--color-on-primary)] shadow-md shadow-[var(--color-blue-100)]"
+                                                        : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-pink-300)] hover:bg-[var(--color-pink-50)]"
                                                     }`}
                                             >
                                                 {size.name}
@@ -625,9 +707,11 @@ function ProductDetails() {
                             )}
                         </div>
 
+                        {/* Stock information */}
                         {selectedVariant && (
                             <div className="mb-5 flex items-center gap-2 rounded-xl bg-[var(--color-blue-50)] px-4 py-3 text-sm text-[var(--color-blue-800)]">
                                 <Check size={18} />
+
                                 <span>
                                     In stock:{" "}
                                     <strong>
@@ -638,6 +722,7 @@ function ProductDetails() {
                             </div>
                         )}
 
+                        {/* Quantity */}
                         <div className="mb-5 flex flex-wrap items-center gap-4">
                             <span className="font-bold text-[var(--color-text)]">
                                 Quantity
@@ -647,7 +732,10 @@ function ProductDetails() {
                                 <button
                                     type="button"
                                     onClick={() => changeQuantity(-1)}
-                                    disabled={!selectedVariant || quantity <= 1}
+                                    disabled={
+                                        !selectedVariant ||
+                                        quantity <= 1
+                                    }
                                     aria-label="Decrease quantity"
                                     className="flex h-11 w-11 items-center justify-center text-[var(--color-text-muted)] transition hover:bg-[var(--color-page)] disabled:opacity-30"
                                 >
@@ -667,7 +755,9 @@ function ProductDetails() {
                                     disabled={
                                         !selectedVariant ||
                                         quantity >=
-                                        Number(selectedVariant.stock_quantity)
+                                        Number(
+                                            selectedVariant.stock_quantity
+                                        )
                                     }
                                     aria-label="Increase quantity"
                                     className="flex h-11 w-11 items-center justify-center text-[var(--color-text-muted)] transition hover:bg-[var(--color-page)] disabled:opacity-30"
@@ -677,6 +767,7 @@ function ProductDetails() {
                             </div>
                         </div>
 
+                        {/* Cart error */}
                         {cartError && (
                             <p
                                 role="alert"
@@ -686,23 +777,7 @@ function ProductDetails() {
                             </p>
                         )}
 
-                        {addedToCart && (
-                            <div
-                                role="status"
-                                className="mb-4 flex items-center gap-2 rounded-xl bg-[var(--color-success-bg)] px-4 py-3 text-sm font-semibold text-[var(--color-success-dark)]"
-                            >
-                                <Check size={18} />
-                                Product added to your cart successfully.
-
-                                <Link
-                                    to="/cart"
-                                    className="ml-auto underline underline-offset-4"
-                                >
-                                    View Cart
-                                </Link>
-                            </div>
-                        )}
-
+                        {/* Add to cart */}
                         <button
                             type="button"
                             onClick={addToCart}
@@ -710,11 +785,13 @@ function ProductDetails() {
                             className="flex w-full items-center justify-center gap-3 rounded-2xl bg-[var(--color-primary)] px-6 py-4 text-base font-extrabold text-[var(--color-on-primary)] shadow-lg shadow-[var(--color-blue-100)] transition hover:-translate-y-0.5 hover:bg-[var(--color-primary-dark)] disabled:cursor-not-allowed disabled:bg-[var(--color-slate-300)] disabled:shadow-none"
                         >
                             <ShoppingBag size={21} />
+
                             {selectedVariant
                                 ? "Add to Cart"
                                 : "Select Color and Size"}
                         </button>
 
+                        {/* Delivery and shopping information */}
                         <div className="mt-6 grid grid-cols-1 gap-3 border-t border-[var(--color-border-soft)] pt-6 sm:grid-cols-2">
                             <div className="flex items-center gap-3 rounded-2xl bg-[var(--color-page)] p-4">
                                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--color-blue-100)] text-[var(--color-primary-dark)]">
@@ -759,6 +836,7 @@ function ProductDetails() {
                     </section>
                 </div>
 
+                {/* Product image lightbox */}
                 {lightboxOpen && currentImage?.image_url && (
                     <div
                         className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
@@ -790,14 +868,23 @@ function ProductDetails() {
 
                         <div
                             className="flex max-h-full max-w-5xl flex-col items-center gap-3"
-                            onClick={(event) => event.stopPropagation()}
+                            onClick={(event) =>
+                                event.stopPropagation()
+                            }
                         >
                             <img
                                 src={currentImage.image_url}
-                                alt={currentImage.alt_text || product.name}
+                                alt={
+                                    currentImage.alt_text ||
+                                    product.name
+                                }
                                 className="max-h-[82vh] max-w-full rounded-xl object-contain"
                             />
-                            <p className="text-sm font-medium text-white/80" dir="ltr">
+
+                            <p
+                                className="text-sm font-medium text-white/80"
+                                dir="ltr"
+                            >
                                 {selectedImage + 1} / {images.length}
                             </p>
                         </div>
@@ -821,7 +908,3 @@ function ProductDetails() {
 }
 
 export default ProductDetails;
-
-
-
-

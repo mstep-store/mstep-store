@@ -11,8 +11,7 @@ import {
 import { createOrder } from "../../services/orderService";
 import { supabase } from "../../services/supabase";
 import { getEffectivePrice, getOriginalPrice } from "../../utils/pricing";
-
-const SHIPPING_COST = 0;
+import { getShippingLocations, getShippingSettings } from "../../services/shippingService";
 
 function getSavedCart() {
     try {
@@ -34,6 +33,9 @@ export default function Checkout() {
     const navigate = useNavigate();
 
     const [cart, setCart] = useState(getSavedCart);
+    const [shippingLocations, setShippingLocations] = useState([]);
+    const [shippingLoading, setShippingLoading] = useState(true);
+    const [shippingSettings, setShippingSettings] = useState({ mode: "governorate", fixed_price: 100 });
 
     const [priceChanges, setPriceChanges] = useState([]);
     const [approving, setApproving] = useState(false);
@@ -96,11 +98,33 @@ export default function Checkout() {
     const [form, setForm] = useState({
         customer_name: "",
         customer_email: "",
+        marketing_consent: true,
         customer_phone: "",
         shipping_address: "",
         shipping_city: "",
+        shipping_governorate_id: "",
+        shipping_city_id: "",
         shipping_notes: "",
     });
+
+    useEffect(() => {
+        let mounted = true;
+        Promise.all([getShippingLocations(), getShippingSettings()])
+            .then(([rows, settings]) => {
+                if (!mounted) return;
+                setShippingLocations(rows);
+                setShippingSettings(settings);
+            })
+            .catch((err) => { if (mounted) setError(err.message || "Unable to load shipping options."); })
+            .finally(() => { if (mounted) setShippingLoading(false); });
+        return () => { mounted = false; };
+    }, []);
+
+    const selectedGovernorate = shippingLocations.find((item) => String(item.id) === String(form.shipping_governorate_id));
+    const availableCities = selectedGovernorate?.shipping_cities ?? [];
+    const shippingCost = shippingSettings.mode === "fixed"
+        ? Number(shippingSettings.fixed_price)
+        : (selectedGovernorate ? Number(selectedGovernorate.shipping_price) : 0);
 
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState("");
@@ -131,14 +155,37 @@ export default function Checkout() {
         [cart]
     );
 
-    const total = subtotal + SHIPPING_COST;
+    const total = subtotal + shippingCost;
+
+    function handleGovernorateChange(event) {
+        const governorateId = event.target.value;
+        setForm((current) => ({
+            ...current,
+            shipping_governorate_id: governorateId,
+            shipping_governorate: shippingLocations.find((item) => String(item.id) === String(governorateId))?.name ?? "",
+            shipping_city_id: "",
+            shipping_city: "",
+        }));
+    }
+
+    function handleCityChange(event) {
+        const cityId = event.target.value;
+        const city = availableCities.find((item) => String(item.id) === String(cityId));
+        setForm((current) => ({ ...current, shipping_city_id: cityId, shipping_city: city?.name ?? "" }));
+    }
 
     function handleChange(event) {
-        const { name, value } = event.target;
+        const { name, value, type, checked } = event.target;
+        const fieldValue =
+            type === "checkbox"
+                ? checked
+                : name === "customer_phone"
+                    ? value.replace(/\D/g, "").slice(0, 11)
+                    : value;
 
         setForm((current) => ({
             ...current,
-            [name]: value,
+            [name]: fieldValue,
         }));
     }
 
@@ -201,6 +248,16 @@ export default function Checkout() {
             return;
         }
 
+        if (shippingSettings.mode === "fixed") {
+            if (!form.shipping_governorate.trim() || !form.shipping_city.trim() || !form.shipping_address.trim()) {
+                setError("Please enter your governorate, city, and full address.");
+                return;
+            }
+        } else if (!form.shipping_governorate_id || !form.shipping_city_id) {
+            setError("Please select your governorate and city.");
+            return;
+        }
+
         if (priceChanges.length > 0) {
             setError(
                 "Some prices changed. Please review and approve the new prices before placing the order."
@@ -213,8 +270,8 @@ export default function Checkout() {
         try {
             const order = await createOrder({
                 ...form,
+                shipping_mode: shippingSettings.mode,
                 cart,
-                shipping_cost: SHIPPING_COST,
             });
 
             // Clear the cart only after the order has been saved.
@@ -335,7 +392,7 @@ export default function Checkout() {
                                     value={form.customer_name}
                                     onChange={handleChange}
                                     placeholder="Enter your full name"
-                                    className="w-full rounded-xl border border-[var(--color-border)] px-4 py-3 outline-none transition focus:border-[var(--color-primary-hover)] focus:ring-2 focus:ring-[var(--color-blue-100)]"
+                                    className="w-full rounded-xl border border-[var(--color-border)] px-4 py-3 outline-none! transition focus:border-[var(--color-primary-hover)] focus:ring-2 focus:ring-[var(--color-blue-100)]"
                                 />
                             </div>
 
@@ -351,13 +408,15 @@ export default function Checkout() {
                                     id="customer_phone"
                                     name="customer_phone"
                                     type="tel"
+                                    inputMode="numeric"
                                     autoComplete="tel"
                                     required
-                                    maxLength={25}
+                                    maxLength={11}
+                                    pattern="[0-9]{11}"
                                     value={form.customer_phone}
                                     onChange={handleChange}
                                     placeholder="Your phone number"
-                                    className="w-full rounded-xl border border-[var(--color-border)] px-4 py-3 outline-none transition focus:border-[var(--color-primary-hover)] focus:ring-2 focus:ring-[var(--color-blue-100)]"
+                                    className="w-full rounded-xl border border-[var(--color-border)] px-4 py-3 outline-none! transition focus:border-[var(--color-primary-hover)] focus:ring-2 focus:ring-[var(--color-blue-100)]"
                                 />
                             </div>
 
@@ -366,10 +425,7 @@ export default function Checkout() {
                                     htmlFor="customer_email"
                                     className="mb-2 block text-sm font-semibold text-[var(--color-text-secondary)]"
                                 >
-                                    Email Address
-                                    <span className="font-normal text-[var(--color-subtle)]">
-                                        {" "}(Optional)
-                                    </span>
+                                    Email Address *
                                 </label>
 
                                 <input
@@ -377,14 +433,28 @@ export default function Checkout() {
                                     name="customer_email"
                                     type="email"
                                     autoComplete="email"
+                                    required
                                     maxLength={254}
                                     value={form.customer_email}
                                     onChange={handleChange}
                                     placeholder="you@example.com"
-                                    className="w-full rounded-xl border border-[var(--color-border)] px-4 py-3 outline-none transition focus:border-[var(--color-primary-hover)] focus:ring-2 focus:ring-[var(--color-blue-100)]"
+                                    className="w-full rounded-xl border border-[var(--color-border)] px-4 py-3 outline-none! transition focus:border-[var(--color-primary-hover)] focus:ring-2 focus:ring-[var(--color-blue-100)]"
                                 />
                             </div>
                         </div>
+
+                        <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--color-border)] p-3 text-sm leading-6 text-[var(--color-text-secondary)]">
+                            <input
+                                type="checkbox"
+                                name="marketing_consent"
+                                checked={Boolean(form.marketing_consent)}
+                                onChange={handleChange}
+                                className="mt-1 h-4 w-4 shrink-0 accent-[var(--color-navy)]"
+                            />
+                            <span dir="ltr" className="text-left">
+                                I agree to receive offers and discounts via email.
+                            </span>
+                        </label>
                     </section>
 
                     {/* Shipping Information */}
@@ -405,27 +475,45 @@ export default function Checkout() {
                         </div>
 
                         <div className="space-y-5">
-                            <div>
-                                <label
-                                    htmlFor="shipping_city"
-                                    className="mb-2 block text-sm font-semibold text-[var(--color-text-secondary)]"
-                                >
-                                    City *
-                                </label>
-
-                                <input
-                                    id="shipping_city"
-                                    name="shipping_city"
-                                    type="text"
-                                    autoComplete="address-level2"
-                                    required
-                                    maxLength={100}
-                                    value={form.shipping_city}
-                                    onChange={handleChange}
-                                    placeholder="Enter your city"
-                                    className="w-full rounded-xl border border-[var(--color-border)] px-4 py-3 outline-none transition focus:border-[var(--color-primary-hover)] focus:ring-2 focus:ring-[var(--color-blue-100)]"
-                                />
-                            </div>
+                            {shippingSettings.mode === "fixed" ? (
+                                <div className="space-y-5">
+                                    <div className="grid gap-5 sm:grid-cols-2">
+                                        <div>
+                                            <label htmlFor="shipping_governorate" className="mb-2 block text-sm font-semibold text-[var(--color-text-secondary)]">Governorate *</label>
+                                            <input id="shipping_governorate" name="shipping_governorate" required value={form.shipping_governorate} onChange={handleChange} placeholder="Enter governorate" className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 outline-none! focus:border-[var(--color-primary-hover)]" />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="shipping_city" className="mb-2 block text-sm font-semibold text-[var(--color-text-secondary)]">City / District *</label>
+                                            <input id="shipping_city" name="shipping_city" required value={form.shipping_city} onChange={handleChange} placeholder="Enter city or district" className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 outline-none! focus:border-[var(--color-primary-hover)]" />
+                                        </div>
+                                    </div>
+                                    <div dir="ltr" className="rounded-xl border border-[var(--color-success)]/20 bg-[var(--color-success-bg)] px-4 py-3 text-left text-sm">
+                                        <span className="text-[var(--color-text-secondary)]">Flat shipping fee: </span>
+                                        <strong className="text-[var(--color-success)]">{formatPrice(shippingCost)}</strong>
+                                    </div>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="grid gap-5 sm:grid-cols-2">
+                                        <div>
+                                            <label htmlFor="shipping_governorate_id" className="mb-2 block text-sm font-semibold text-[var(--color-text-secondary)]">Governorate *</label>
+                                            <select id="shipping_governorate_id" required value={form.shipping_governorate_id} onChange={handleGovernorateChange} disabled={shippingLoading} className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 outline-none! focus:border-[var(--color-primary-hover)]">
+                                                <option value="">{shippingLoading ? "Loading governorates..." : "Select governorate"}</option>
+                                                {shippingLocations.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label htmlFor="shipping_city_id" className="mb-2 block text-sm font-semibold text-[var(--color-text-secondary)]">City / District *</label>
+                                            <select id="shipping_city_id" required value={form.shipping_city_id} onChange={handleCityChange} disabled={!selectedGovernorate || availableCities.length === 0} className="w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 outline-none! focus:border-[var(--color-primary-hover)]">
+                                                <option value="">{!selectedGovernorate ? "Select a governorate first" : "Select city"}</option>
+                                                {availableCities.map((city) => <option key={city.id} value={city.id}>{city.name}</option>)}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    {selectedGovernorate && <div dir="ltr" className="rounded-xl border border-[var(--color-success)]/20 bg-[var(--color-success-bg)] px-4 py-3 text-left text-sm"><span className="text-[var(--color-text-secondary)]">Shipping to {selectedGovernorate.name}: </span><strong className="text-[var(--color-success)]">{formatPrice(shippingCost)}</strong></div>}
+                                    {!shippingLoading && shippingLocations.length === 0 && <p className="text-sm text-[var(--color-danger)]">No shipping locations are currently available. Please contact the store.</p>}
+                                </>
+                            )}
 
                             <div>
                                 <label
@@ -580,9 +668,11 @@ export default function Checkout() {
                         <div className="flex justify-between gap-3 text-sm text-[var(--color-text-muted)]">
                             <span>Shipping</span>
                             <span>
-                                {SHIPPING_COST === 0
-                                    ? "Free"
-                                    : formatPrice(SHIPPING_COST)}
+                                {shippingSettings.mode === "fixed"
+                                    ? formatPrice(shippingCost)
+                                    : selectedGovernorate
+                                        ? formatPrice(shippingCost)
+                                        : "Select governorate"}
                             </span>
                         </div>
 
@@ -616,7 +706,13 @@ export default function Checkout() {
 
                     <button
                         type="submit"
-                        disabled={submitting || cart.length === 0}
+                        disabled={
+                            submitting ||
+                            cart.length === 0 ||
+                            shippingLoading ||
+                            (shippingSettings.mode === "governorate" &&
+                                (!form.shipping_governorate_id || !form.shipping_city_id))
+                        }
                         className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-primary)] px-5 py-4 font-bold text-[var(--color-on-primary)] transition hover:bg-[var(--color-primary-dark)] disabled:cursor-not-allowed disabled:opacity-60"
                     >
                         {submitting ? (
@@ -629,10 +725,20 @@ export default function Checkout() {
                         )}
                     </button>
 
-                    <p className="mt-4 text-center text-xs leading-5 text-[var(--color-muted)]">
+
+                    <p className="mt-5! text-center text-xs leading-5 text-[var(--color-muted)]">
                         By placing your order, you confirm that your contact
                         and delivery details are correct.
                     </p>
+
+                    <Link
+                        to="/products"
+                        className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-3.5 font-bold text-[var(--color-text-secondary)] transition hover:border-[var(--color-primary)] hover:bg-[var(--color-page)] hover:text-[var(--color-primary)]"
+                    >
+                        <ArrowLeft size={18} />
+                        Continue Shopping
+                    </Link>
+
                 </aside>
             </form>
         </main>

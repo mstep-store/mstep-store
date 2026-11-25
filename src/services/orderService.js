@@ -132,72 +132,55 @@ export async function getBestSellingProducts(limit = 5) {
  * using a Supabase RPC/database function.
  */
 export async function createOrder({
-    customer_name,
-    customer_email = "",
-    customer_phone,
-    shipping_address,
-    shipping_city,
-    shipping_notes = "",
-    cart,
-    shipping_cost = 0,
+    customer_name, customer_email = "", marketing_consent = false, customer_phone, shipping_address,
+    shipping_city, shipping_governorate = "", shipping_governorate_id = "",
+    shipping_city_id = "", shipping_notes = "", shipping_mode = "governorate", cart,
 }) {
-    if (!Array.isArray(cart) || cart.length === 0) {
-        throw new Error("Your cart is empty.");
+    if (!Array.isArray(cart) || cart.length === 0) throw new Error("Your cart is empty.");
+    const common = { customer_name, customer_email, customer_phone, shipping_address, shipping_city };
+    for (const value of Object.values(common)) {
+        if (!String(value ?? "").trim()) throw new Error("Please complete all required customer details.");
     }
 
-    const requiredFields = {
-        customer_name,
-        customer_phone,
-        shipping_address,
-        shipping_city,
-    };
-
-    for (const value of Object.values(requiredFields)) {
-        if (!String(value ?? "").trim()) {
-            throw new Error("Please complete all required customer details.");
-        }
+    const cleanEmail = String(customer_email ?? "").trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(cleanEmail)) {
+        throw new Error("Please enter a valid email address.");
     }
-
-    const safeShippingCost = Number(shipping_cost);
-
-    if (!Number.isFinite(safeShippingCost) || safeShippingCost < 0) {
-        throw new Error("Invalid shipping cost.");
+    const cleanPhone = String(customer_phone ?? "").replace(/\D/g, "");
+    if (cleanPhone.length !== 11) {
+        throw new Error("Please enter a phone number with exactly 11 digits.");
     }
-
+    if (shipping_mode === "governorate" && (!shipping_governorate_id || !shipping_city_id)) {
+        throw new Error("Please select a governorate and city.");
+    }
+    if (shipping_mode === "fixed" && !String(shipping_governorate).trim()) {
+        throw new Error("Please enter your governorate.");
+    }
     const items = cart.map((item) => {
         const quantity = Number(item.quantity);
-
-        if (
-            item.variant_id == null ||
-            !Number.isInteger(quantity) ||
-            quantity < 1
-        ) {
-            throw new Error(
-                "One or more cart items contain invalid information."
-            );
+        if (item.variant_id == null || !Number.isInteger(quantity) || quantity < 1) {
+            throw new Error("One or more cart items contain invalid information.");
         }
-
-        return {
-            variant_id: Number(item.variant_id),
-            quantity,
-        };
+        return { variant_id: Number(item.variant_id), quantity };
     });
-
-    const { data, error } = await supabase.rpc("submit_checkout_order", {
+    const { data, error } = await supabase.rpc("submit_checkout_order_v2", {
         p_customer_name: customer_name.trim(),
-        p_customer_phone: customer_phone.trim(),
+        p_customer_phone: cleanPhone,
         p_shipping_address: shipping_address.trim(),
-        p_shipping_city: shipping_city.trim(),
+        p_shipping_mode: shipping_mode,
+        p_governorate_id: shipping_mode === "governorate" ? Number(shipping_governorate_id) : null,
+        p_city_id: shipping_mode === "governorate" ? Number(shipping_city_id) : null,
+        p_manual_governorate: shipping_mode === "fixed" ? shipping_governorate.trim() : null,
+        p_manual_city: shipping_city.trim(),
         p_items: items,
-        p_customer_email: String(customer_email ?? "").trim() || null,
+        p_customer_email: cleanEmail,
+        p_marketing_consent: Boolean(marketing_consent),
         p_shipping_notes: String(shipping_notes ?? "").trim() || null,
     });
-
     if (error) {
         console.error("Error creating order:", error);
         throw new Error(error.message || "Unable to create your order. Please try again.");
     }
-
     return data;
 }
 

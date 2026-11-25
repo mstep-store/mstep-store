@@ -5,11 +5,13 @@ import useAuth from "../hooks/useAuth";
 const links = [
     { to: "/admin", label: "الرئيسية", end: true },
     { to: "/admin/orders", label: "الطلبات" },
+    { to: "/admin/customers", label: "العملاء" },
     { to: "/admin/products", label: "المنتجات" },
     { to: "/admin/categories", label: "التصنيفات" },
     { to: "/admin/brands", label: "البراندات" },
     { to: "/admin/banners", label: "البانرات" },
     { to: "/admin/messages", label: "الرسائل" },
+    { to: "/admin/shipping", label: "أماكن الشحن" },
 ];
 
 function navClass({ isActive }) {

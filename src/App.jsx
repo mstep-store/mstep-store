@@ -20,11 +20,13 @@ import Login from "./pages/admin/Login";
 import Dashboard from "./pages/admin/Dashboard";
 import AdminProducts from "./pages/admin/Products";
 import AdminOrders from "./pages/admin/Orders";
+import AdminCustomers from "./pages/admin/Customers";
 import AdminCategories from "./pages/admin/Categories";
 import AdminBrands from "./pages/admin/Brands";
 import AdminBanners from "./pages/admin/Banners";
 import ProductVariants from "./pages/admin/ProductVariants";
 import AdminMessages from "./pages/admin/Messages";
+import AdminShipping from "./pages/admin/Shipping";
 import ProtectedRoute from "./components/admin/ProtectedRoute";
 
 export default function App() {
@@ -66,6 +68,7 @@ export default function App() {
           element={<ProductVariants />}
         />
         <Route path="orders" element={<AdminOrders />} />
+        <Route path="customers" element={<AdminCustomers />} />
         <Route
           path="categories"
           element={<AdminCategories />}
@@ -73,6 +76,7 @@ export default function App() {
         <Route path="brands" element={<AdminBrands />} />
         <Route path="banners" element={<AdminBanners />} />
         <Route path="messages" element={<AdminMessages />} />
+        <Route path="shipping" element={<AdminShipping />} />
       </Route>
 
       <Route element={<MainLayout />}>

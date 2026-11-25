@@ -59,6 +59,9 @@ export default function OrderDetails({ order }) {
                             </span>
                         </Detail>
                     )}
+                    {order.shipping_governorate && (
+                        <Detail label="المحافظة">{order.shipping_governorate}</Detail>
+                    )}
                     <Detail label="المدينة">{order.shipping_city}</Detail>
                     <div className="sm:col-span-2">
                         <Detail label="العنوان">{order.shipping_address}</Detail>

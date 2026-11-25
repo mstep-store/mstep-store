@@ -3,6 +3,47 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { Menu, X } from "lucide-react";
 
+const messages = [
+    "Step Into Style | Quality You Can Trust",
+    "Walk with Confidence | Style in Every Step",
+];
+
+function AnnouncementBar() {
+    const [activeMessage, setActiveMessage] = useState(0);
+    const [visible, setVisible] = useState(true);
+
+    useEffect(() => {
+        let timeout;
+
+        const interval = setInterval(() => {
+            setVisible(false);
+
+            timeout = setTimeout(() => {
+                setActiveMessage((prev) => (prev + 1) % messages.length);
+                setVisible(true);
+            }, 500);
+        }, 4000);
+
+        return () => {
+            clearInterval(interval);
+            clearTimeout(timeout);
+        };
+    }, []);
+
+    return (
+        <div className="flex min-h-8 items-center justify-center bg-(--color-topbar) px-3 py-1.5 text-center text-[10px] tracking-[0.15em] text-(--color-on-primary) sm:text-xs sm:tracking-[0.18em]">
+            <span
+                className={`transition-all duration-500 ${visible
+                        ? "translate-y-0 opacity-100"
+                        : "translate-y-1 opacity-0"
+                    }`}
+            >
+                {messages[activeMessage]}
+            </span>
+        </div>
+    );
+}
+
 function NavLink({ to, children }) {
     return (
         <Link
@@ -16,12 +57,15 @@ function NavLink({ to, children }) {
     );
 }
 
-
 function getCartCount() {
     try {
         const saved = JSON.parse(localStorage.getItem("cart") || "[]");
+
         return Array.isArray(saved)
-            ? saved.reduce((sum, item) => sum + Number(item.quantity || 0), 0)
+            ? saved.reduce(
+                (sum, item) => sum + Number(item.quantity || 0),
+                0
+            )
             : 0;
     } catch {
         return 0;
@@ -30,6 +74,7 @@ function getCartCount() {
 
 export default function Navbar() {
     const [cartCount, setCartCount] = useState(getCartCount);
+    const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
         const update = () => setCartCount(getCartCount());
@@ -43,15 +88,12 @@ export default function Navbar() {
         };
     }, []);
 
-    const [menuOpen, setMenuOpen] = useState(false);
     const closeMenu = () => setMenuOpen(false);
 
     return (
         <header className="sticky top-0 z-50 bg-(--color-surface) text-(--color-text) shadow-sm">
             {/* Announcement Bar */}
-            <div className="bg-(--color-topbar) px-3 py-1.5 text-center text-[10px] tracking-wide text-(--color-on-primary) sm:text-xs">
-                Free Shipping on Orders Over 750 EGP | 30-Day Returns
-            </div>
+            <AnnouncementBar />
 
             {/* Main Navigation */}
             <nav className="mx-auto flex min-h-17 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
@@ -68,6 +110,7 @@ export default function Navbar() {
                 <div className="hidden items-center gap-7 text-sm font-medium md:flex">
                     <NavLink to="/">Home</NavLink>
                     <NavLink to="/products">Shop</NavLink>
+
                     <a
                         href="/#store-benefits"
                         className="group relative py-2 transition-colors duration-300 hover:text-(--color-primary-hover)"
@@ -75,6 +118,7 @@ export default function Navbar() {
                         Our Services
                         <span className="absolute bottom-0 left-0 h-0.5 w-0 rounded-full bg-(--color-primary-hover) transition-all duration-300 ease-out group-hover:w-full" />
                     </a>
+
                     <NavLink to="/contact">Contact</NavLink>
                     <NavLink to="/track-order">Track Order</NavLink>
                 </div>
@@ -113,7 +157,6 @@ export default function Navbar() {
                             <path d="m15.5 15.5 4.2 4.2" />
                         </svg>
                     </Link>
-
 
                     {/* Cart */}
                     <Link
@@ -155,9 +198,15 @@ export default function Navbar() {
                         {[
                             { to: "/", label: "Home" },
                             { to: "/products", label: "Shop" },
-                            { to: "/#store-benefits", label: "Our Services" },
+                            {
+                                to: "/#store-benefits",
+                                label: "Our Services",
+                            },
                             { to: "/contact", label: "Contact" },
-                            { to: "/track-order", label: "Track Order" },
+                            {
+                                to: "/track-order",
+                                label: "Track Order",
+                            },
                         ].map((item) => (
                             <li key={item.label}>
                                 <Link

@@ -508,6 +508,12 @@ export default function TrackOrder() {
                                 <dt>Subtotal</dt>
                                 <dd>{money(order.subtotal)}</dd>
                             </div>
+                            {order.shipping_governorate && (
+                                <div className="flex justify-between text-[var(--color-muted)]">
+                                    <dt>Governorate / City</dt>
+                                    <dd>{[order.shipping_governorate, order.shipping_city].filter(Boolean).join(" · ")}</dd>
+                                </div>
+                            )}
                             <div className="flex justify-between text-[var(--color-muted)]">
                                 <dt>Shipping</dt>
                                 <dd>{money(order.shipping_cost)}</dd>
