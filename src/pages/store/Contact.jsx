@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router";
 import { Clock, Mail, MapPin, Phone, CheckCircle2 } from "lucide-react";
@@ -97,13 +98,31 @@ export default function Contact() {
                                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--color-blue-50)] text-[var(--color-primary)]">
                                     <Icon size={22} strokeWidth={1.8} />
                                 </span>
+
                                 <div>
                                     <h2 className="text-sm font-extrabold text-[var(--color-text-strong)]">
                                         {title}
                                     </h2>
-                                    <p className="mt-0.5 text-sm text-[var(--color-muted)]">
-                                        {text}
-                                    </p>
+
+                                    {title === "Email" ? (
+                                        <a
+                                            href={`mailto:${text}`}
+                                            className="mt-0.5 block text-sm text-[var(--color-muted)] transition hover:text-[var(--color-primary)] hover:underline"
+                                        >
+                                            {text}
+                                        </a>
+                                    ) : title === "Phone" ? (
+                                        <a
+                                            href={`tel:${text.replace(/[^\d+]/g, "")}`}
+                                            className="mt-0.5 block text-sm text-[var(--color-muted)] transition hover:text-[var(--color-primary)] hover:underline"
+                                        >
+                                            {text}
+                                        </a>
+                                    ) : (
+                                        <p className="mt-0.5 text-sm text-[var(--color-muted)]">
+                                            {text}
+                                        </p>
+                                    )}
                                 </div>
                             </li>
                         ))}
@@ -130,13 +149,16 @@ export default function Contact() {
                                 strokeWidth={1.6}
                                 className="text-(--color-success)"
                             />
+
                             <h2 className="mt-4 text-xl font-extrabold text-(--color-text-strong)">
                                 Message sent
                             </h2>
+
                             <p className="mt-2 max-w-sm text-sm leading-6 text-(--color-muted)">
                                 Thanks for reaching out. We&apos;ll reply to the email you provided
                                 as soon as possible.
                             </p>
+
                             <button
                                 type="button"
                                 onClick={() => setSent(false)}

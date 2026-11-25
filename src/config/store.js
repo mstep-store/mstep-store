@@ -1,7 +1,7 @@
 // Edit your real store details here. They are used by the Contact page and the footer.
 export const storeInfo = {
     email: "mstep0011@gmail.com",
-    phone: "+201023213149",
+    phone: "+201037550755",
     location: "Cairo, Egypt",
     hours: "Sat – Thu, 10 AM – 8 PM",
 };
